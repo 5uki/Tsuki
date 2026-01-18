@@ -1,0 +1,36 @@
+---
+import '@/styles/global.css'
+import '@/styles/themes.css'
+
+interface Props {
+  title: string
+  description?: string
+  noindex?: boolean
+}
+
+const { title, description = 'Orin 博客', noindex = false } = Astro.props
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
+    <title>{title}</title>
+    <script is:inline>
+      // 主题初始化（避免闪烁）
+      ;(function () {
+        const theme = localStorage.getItem('orin.theme') || 'paper'
+        document.documentElement.setAttribute('data-theme', theme)
+      })()
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,22 @@
+---
+import Default from '@/layouts/Default.astro'
+
+const { slug } = Astro.params
+---
+
+<Default title={`分组: ${slug} - Orin`} description={`分组 ${slug} 下的文章`}>
+  <h1>{slug}</h1>
+  <p class="placeholder">该分组下暂无文章</p>
+</Default>
+
+<style>
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .placeholder {
+    color: var(--orin-muted);
+    font-style: italic;
+  }
+</style>

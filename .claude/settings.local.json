@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm dev)",
+      "Bash(timeout:*)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Administrator\\\\Documents\\\\GitHub\\\\Orin\" -Recurse -Name)",
+      "Bash(Where-Object { $_ -notmatch \"node_modules|\\\\.git|dist|\\\\.astro\" })"
+    ]
+  }
+}

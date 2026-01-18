@@ -1,0 +1,35 @@
+---
+import Default from '@/layouts/Default.astro'
+
+const { slug } = Astro.params
+---
+
+<Default title={`文章: ${slug} - Orin`} description="文章详情">
+  <article class="post">
+    <header>
+      <h1>{slug}</h1>
+      <p class="meta">文章详情页占位</p>
+    </header>
+    <div class="prose">
+      <p>这是文章 "{slug}" 的详情页。M1 将实现完整功能。</p>
+    </div>
+  </article>
+</Default>
+
+<style>
+  .post header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--orin-border);
+  }
+
+  .post h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta {
+    color: var(--orin-muted);
+    font-size: 0.875rem;
+  }
+</style>

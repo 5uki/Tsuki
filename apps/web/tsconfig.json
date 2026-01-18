@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@entry/*": ["./entry/*"],
+      "@api/*": ["./api/*"],
+      "@usecases/*": ["./usecases/*"],
+      "@atoms/*": ["./atoms/*"],
+      "@contracts/*": ["./contracts/*"],
+      "@adapters/*": ["./adapters/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.astro",
+    "entry/**/*.ts",
+    "api/**/*.ts",
+    "usecases/**/*.ts",
+    "atoms/**/*.ts",
+    "contracts/**/*.ts",
+    "adapters/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

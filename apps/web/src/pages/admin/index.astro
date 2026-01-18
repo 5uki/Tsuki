@@ -1,0 +1,58 @@
+---
+import Default from '@/layouts/Default.astro'
+---
+
+<Default title="后台管理 - Orin" description="后台管理首页">
+  <div class="admin-page">
+    <h1>后台管理</h1>
+    <p class="description">这是后台管理首页。M6 将实现完整功能。</p>
+
+    <nav class="admin-nav">
+      <a href="/admin/posts">文章管理</a>
+      <a href="/admin/moments">动态管理</a>
+      <a href="/admin/comments">评论管理</a>
+      <a href="/admin/settings">站点配置</a>
+    </nav>
+  </div>
+</Default>
+
+<style>
+  .admin-page {
+    max-width: 32rem;
+    margin: 2rem auto;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .description {
+    color: var(--orin-muted);
+    margin-bottom: 2rem;
+  }
+
+  .admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .admin-nav a {
+    display: block;
+    padding: 1rem;
+    background: var(--orin-card-bg);
+    border: 1px solid var(--orin-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--orin-fg);
+    transition:
+      border-color 150ms,
+      background-color 150ms;
+  }
+
+  .admin-nav a:hover {
+    border-color: var(--orin-primary);
+    background: var(--orin-bg);
+  }
+</style>

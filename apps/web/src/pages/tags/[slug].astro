@@ -1,0 +1,22 @@
+---
+import Default from '@/layouts/Default.astro'
+
+const { slug } = Astro.params
+---
+
+<Default title={`标签: ${slug} - Orin`} description={`标签 ${slug} 下的内容`}>
+  <h1>#{slug}</h1>
+  <p class="placeholder">该标签下暂无内容</p>
+</Default>
+
+<style>
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .placeholder {
+    color: var(--orin-muted);
+    font-style: italic;
+  }
+</style>

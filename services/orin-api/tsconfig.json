@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types"],
+    "baseUrl": ".",
+    "paths": {
+      "@entry/*": ["./entry/*"],
+      "@api/*": ["./api/*"],
+      "@usecases/*": ["./usecases/*"],
+      "@atoms/*": ["./atoms/*"],
+      "@contracts/*": ["./contracts/*"],
+      "@adapters/*": ["./adapters/*"]
+    }
+  },
+  "include": [
+    "entry/**/*.ts",
+    "api/**/*.ts",
+    "usecases/**/*.ts",
+    "atoms/**/*.ts",
+    "contracts/**/*.ts",
+    "adapters/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

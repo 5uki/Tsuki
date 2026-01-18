@@ -1,0 +1,426 @@
+---
+import Default from '@/layouts/Default.astro'
+
+// 模拟数据 - 后续从 API 获取
+const recentPosts = [
+  {
+    slug: 'getting-started-with-cloudflare',
+    title: '使用 Cloudflare 构建现代 Web 应用',
+    summary: '探索如何利用 Cloudflare 的免费套餐构建高性能的全栈应用，包括 Pages、Workers 和 D1 数据库的实战经验。',
+    publishedAt: '2026-01-15',
+    tags: ['Cloudflare', 'Web开发'],
+    readingTime: 8,
+  },
+  {
+    slug: 'astro-ssr-deep-dive',
+    title: 'Astro SSR 深度解析：从零到生产',
+    summary: '深入了解 Astro 的服务端渲染机制，以及如何在 Cloudflare Pages 上部署 SSR 应用。',
+    publishedAt: '2026-01-12',
+    tags: ['Astro', 'SSR'],
+    readingTime: 12,
+  },
+  {
+    slug: 'typescript-best-practices',
+    title: 'TypeScript 最佳实践 2026',
+    summary: '总结 TypeScript 项目中的最佳实践，包括类型设计、错误处理和性能优化技巧。',
+    publishedAt: '2026-01-08',
+    tags: ['TypeScript'],
+    readingTime: 15,
+  },
+]
+
+const recentMoments = [
+  {
+    id: '1',
+    body: '今天把博客的主题系统重构了一遍，现在支持 6 套主题，切换丝滑无闪烁 ✨',
+    createdAt: '3 小时前',
+  },
+  {
+    id: '2',
+    body: '发现 Cloudflare D1 的性能比预期好很多，冷启动几乎感知不到延迟。',
+    createdAt: '昨天',
+  },
+  {
+    id: '3',
+    body: '周末准备写一篇关于 Hono 框架的文章，这个轻量级框架太适合 Edge 环境了。',
+    createdAt: '2 天前',
+  },
+]
+---
+
+<Default title="Orin" description="一个认真写字的地方">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Orin</h1>
+      <p class="hero-tagline">一个认真写字的地方</p>
+      <p class="hero-description">
+        分享技术思考、开发经验与生活点滴。<br />
+        用代码构建，用文字记录。
+      </p>
+    </div>
+    <div class="hero-decoration"></div>
+  </section>
+
+  <!-- Recent Posts -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">最新文章</h2>
+      <a href="/posts" class="section-link">查看全部 →</a>
+    </div>
+    <div class="posts-grid">
+      {recentPosts.map((post, index) => (
+        <article class={`post-card ${index === 0 ? 'featured' : ''}`}>
+          <div class="post-card-content">
+            <div class="post-meta">
+              <time>{post.publishedAt}</time>
+              <span class="separator">·</span>
+              <span>{post.readingTime} 分钟阅读</span>
+            </div>
+            <h3 class="post-title">
+              <a href={`/posts/${post.slug}`}>{post.title}</a>
+            </h3>
+            <p class="post-summary">{post.summary}</p>
+            <div class="post-tags">
+              {post.tags.map(tag => (
+                <a href={`/tags/${tag.toLowerCase()}`} class="tag">#{tag}</a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Recent Moments -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">最新动态</h2>
+      <a href="/moments" class="section-link">查看全部 →</a>
+    </div>
+    <div class="moments-list">
+      {recentMoments.map(moment => (
+        <article class="moment-card">
+          <p class="moment-body">{moment.body}</p>
+          <div class="moment-meta">
+            <time>{moment.createdAt}</time>
+            <a href={`/moments/${moment.id}`} class="moment-link">查看详情</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Quick Links -->
+  <section class="section quick-links">
+    <div class="quick-link-card">
+      <span class="quick-link-icon">📚</span>
+      <h3>标签</h3>
+      <p>按主题浏览内容</p>
+      <a href="/tags" class="quick-link-action">浏览标签</a>
+    </div>
+    <div class="quick-link-card">
+      <span class="quick-link-icon">📂</span>
+      <h3>分组</h3>
+      <p>系统化的知识体系</p>
+      <a href="/groups" class="quick-link-action">查看分组</a>
+    </div>
+    <div class="quick-link-card">
+      <span class="quick-link-icon">🔍</span>
+      <h3>搜索</h3>
+      <p>快速找到你想要的</p>
+      <a href="/search" class="quick-link-action">开始搜索</a>
+    </div>
+  </section>
+</Default>
+
+<style>
+  /* Hero Section */
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 4rem 0 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--orin-border);
+    overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    background: linear-gradient(135deg, var(--orin-primary), var(--orin-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    font-size: 1.25rem;
+    color: var(--orin-muted);
+    margin: 0 0 1rem;
+    font-weight: 500;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    color: var(--orin-muted);
+    margin: 0;
+    line-height: 1.8;
+  }
+
+  .hero-decoration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--orin-primary) 0%, transparent 70%);
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  /* Section Styles */
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--orin-border);
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--orin-fg);
+  }
+
+  .section-link {
+    font-size: 0.875rem;
+    color: var(--orin-primary);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .section-link:hover {
+    opacity: 0.8;
+    text-decoration: none;
+  }
+
+  /* Posts Grid */
+  .posts-grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .post-card {
+    background: var(--orin-card-bg);
+    border: 1px solid var(--orin-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+
+  .post-card:hover {
+    border-color: var(--orin-primary);
+    box-shadow: var(--orin-card-shadow);
+    transform: translateY(-2px);
+  }
+
+  .post-card.featured {
+    background: linear-gradient(135deg, var(--orin-card-bg) 0%, var(--orin-bg) 100%);
+    border-width: 2px;
+  }
+
+  .post-card-content {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .post-meta {
+    font-size: 0.8125rem;
+    color: var(--orin-muted);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .separator {
+    opacity: 0.5;
+  }
+
+  .post-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    line-height: 1.4;
+  }
+
+  .post-title a {
+    color: var(--orin-fg);
+    text-decoration: none;
+  }
+
+  .post-title a:hover {
+    color: var(--orin-primary);
+    text-decoration: none;
+  }
+
+  .post-summary {
+    font-size: 0.9375rem;
+    color: var(--orin-muted);
+    margin: 0 0 1rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: var(--orin-primary);
+    background: color-mix(in srgb, var(--orin-primary) 10%, transparent);
+    padding: 0.25rem 0.625rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: background-color 0.15s;
+  }
+
+  .tag:hover {
+    background: color-mix(in srgb, var(--orin-primary) 20%, transparent);
+    text-decoration: none;
+  }
+
+  /* Moments List */
+  .moments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .moment-card {
+    padding: 1.25rem;
+    background: var(--orin-card-bg);
+    border: 1px solid var(--orin-border);
+    border-radius: 0.75rem;
+    transition: border-color 0.15s;
+  }
+
+  .moment-card:hover {
+    border-color: var(--orin-primary);
+  }
+
+  .moment-body {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin: 0 0 0.75rem;
+    color: var(--orin-fg);
+  }
+
+  .moment-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    color: var(--orin-muted);
+  }
+
+  .moment-link {
+    color: var(--orin-primary);
+    text-decoration: none;
+  }
+
+  .moment-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Quick Links */
+  .quick-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .quick-link-card {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: var(--orin-card-bg);
+    border: 1px solid var(--orin-border);
+    border-radius: 0.75rem;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .quick-link-card:hover {
+    border-color: var(--orin-primary);
+    transform: translateY(-2px);
+  }
+
+  .quick-link-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .quick-link-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--orin-fg);
+  }
+
+  .quick-link-card p {
+    font-size: 0.8125rem;
+    color: var(--orin-muted);
+    margin: 0 0 1rem;
+  }
+
+  .quick-link-action {
+    font-size: 0.8125rem;
+    color: var(--orin-primary);
+    text-decoration: none;
+  }
+
+  .quick-link-action:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero {
+      padding: 3rem 0 2rem;
+    }
+
+    .quick-links {
+      grid-template-columns: 1fr;
+    }
+
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>

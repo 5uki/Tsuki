@@ -1,0 +1,27 @@
+---
+import Default from '@/layouts/Default.astro'
+
+const { id } = Astro.params
+---
+
+<Default title={`动态 - Orin`} description="动态详情">
+  <article class="moment">
+    <header>
+      <p class="meta">动态详情页占位</p>
+    </header>
+    <div class="prose">
+      <p>这是动态 "{id}" 的详情页。M2 将实现完整功能。</p>
+    </div>
+  </article>
+</Default>
+
+<style>
+  .moment header {
+    margin-bottom: 1rem;
+  }
+
+  .meta {
+    color: var(--orin-muted);
+    font-size: 0.875rem;
+  }
+</style>

@@ -1,0 +1,160 @@
+/**
+ * 主题变量定义
+ * 7 套内置主题：paper, ink, nord, rose, aurora, mono, violet
+ */
+
+/* Paper - 暖白纸张感，朴素为主 */
+[data-theme='paper'],
+:root {
+  --orin-bg: #fbf7ef;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #57606a;
+  --orin-border: #d8d8d8;
+  --orin-primary: #0b5fff;
+  --orin-accent: #d97706;
+  --orin-card-bg: rgba(255, 255, 255, 0.75);
+  --orin-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --orin-code-bg: #f6f3eb;
+  --orin-code-fg: #24292f;
+}
+
+[data-theme='paper'] body,
+:root body {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(11, 95, 255, 0.06) 0%, transparent 50%),
+    linear-gradient(160deg, #fbf7ef 0%, #fef3e2 30%, #fff8ee 70%, #fbf7ef 100%);
+  background-attachment: fixed;
+}
+
+/* Ink - 深色墨水感，冷静但不死黑 */
+[data-theme='ink'] {
+  --orin-bg: #0b0f19;
+  --orin-fg: #ffffff;
+  --orin-muted: #8b949e;
+  --orin-border: #30363d;
+  --orin-primary: #7aa2f7;
+  --orin-accent: #f7768e;
+  --orin-card-bg: rgba(22, 27, 34, 0.8);
+  --orin-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --orin-code-bg: #1a1f2c;
+  --orin-code-fg: #c9d1d9;
+}
+
+[data-theme='ink'] body {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(122, 162, 247, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(247, 118, 142, 0.1) 0%, transparent 50%),
+    linear-gradient(160deg, #0d1117 0%, #0b0f19 40%, #111827 70%, #0b0f19 100%);
+  background-attachment: fixed;
+}
+
+/* Nord - 北欧冷淡风，适合技术内容 */
+[data-theme='nord'] {
+  --orin-bg: #eceff4;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #4c566a;
+  --orin-border: #d8dee9;
+  --orin-primary: #5e81ac;
+  --orin-accent: #a3be8c;
+  --orin-card-bg: rgba(255, 255, 255, 0.7);
+  --orin-card-shadow: 0 1px 3px rgba(46, 52, 64, 0.1);
+  --orin-code-bg: #e5e9f0;
+  --orin-code-fg: #3b4252;
+}
+
+[data-theme='nord'] body {
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(94, 129, 172, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 50%, rgba(163, 190, 140, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #eceff4 0%, #e5e9f0 50%, #d8dee9 100%);
+  background-attachment: fixed;
+}
+
+/* Rose - 轻玫瑰点缀，带一点华丽 */
+[data-theme='rose'] {
+  --orin-bg: #fff7fb;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #6b5a5e;
+  --orin-border: #f0dde4;
+  --orin-primary: #db2777;
+  --orin-accent: #f59e0b;
+  --orin-card-bg: rgba(255, 255, 255, 0.75);
+  --orin-card-shadow: 0 1px 3px rgba(219, 39, 119, 0.08);
+  --orin-code-bg: #fdf2f8;
+  --orin-code-fg: #831843;
+}
+
+[data-theme='rose'] body {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(219, 39, 119, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+    linear-gradient(135deg, #fff7fb 0%, #fce7f3 30%, #fff1f2 60%, #fff7fb 100%);
+  background-attachment: fixed;
+}
+
+/* Aurora - 极低饱和渐变点缀（朴素中带华丽） */
+[data-theme='aurora'] {
+  --orin-bg: #f8fafc;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #475569;
+  --orin-border: #e2e8f0;
+  --orin-primary: #06b6d4;
+  --orin-accent: #a78bfa;
+  --orin-card-bg: rgba(255, 255, 255, 0.7);
+  --orin-card-shadow: 0 1px 3px rgba(6, 182, 212, 0.1);
+  --orin-code-bg: #f1f5f9;
+  --orin-code-fg: #1e293b;
+}
+
+[data-theme='aurora'] body {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 0%, rgba(167, 139, 250, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e0f2fe 100%);
+  background-attachment: fixed;
+}
+
+/* Mono - 纯黑白极简（华丽归零） */
+[data-theme='mono'] {
+  --orin-bg: #ffffff;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #6b7280;
+  --orin-border: #e5e7eb;
+  --orin-primary: #111827;
+  --orin-accent: #6b7280;
+  --orin-card-bg: rgba(249, 250, 251, 0.8);
+  --orin-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --orin-code-bg: #f3f4f6;
+  --orin-code-fg: #1f2937;
+}
+
+[data-theme='mono'] body {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%);
+  background-attachment: fixed;
+}
+
+/* Violet - 优雅紫罗兰，神秘而温柔 */
+[data-theme='violet'] {
+  --orin-bg: #faf8ff;
+  --orin-fg: #0b0b0b;
+  --orin-muted: #6b6687;
+  --orin-border: #e8e3f3;
+  --orin-primary: #7c3aed;
+  --orin-accent: #c026d3;
+  --orin-card-bg: rgba(255, 255, 255, 0.7);
+  --orin-card-shadow: 0 1px 3px rgba(124, 58, 237, 0.08);
+  --orin-code-bg: #f5f3ff;
+  --orin-code-fg: #4c1d95;
+}
+
+[data-theme='violet'] body {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 50%, rgba(192, 38, 211, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 100%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+    linear-gradient(160deg, #faf8ff 0%, #f3e8ff 30%, #ede9fe 60%, #faf8ff 100%);
+  background-attachment: fixed;
+}

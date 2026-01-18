@@ -1,0 +1,39 @@
+---
+import Base from './Base.astro'
+import Header from '@/components/Header.astro'
+import Footer from '@/components/Footer.astro'
+
+interface Props {
+  title: string
+  description?: string
+  noindex?: boolean
+}
+
+const { title, description, noindex } = Astro.props
+---
+
+<Base title={title} description={description} noindex={noindex}>
+  <div class="layout">
+    <Header />
+    <main class="main">
+      <slot />
+    </main>
+    <Footer />
+  </div>
+</Base>
+
+<style>
+  .layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--orin-content-width, 48rem);
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+</style>
