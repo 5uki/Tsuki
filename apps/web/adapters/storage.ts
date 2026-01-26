@@ -21,17 +21,17 @@ export function createStorageAdapter(): StorageAdapter {
   return {
     getTheme() {
       if (!isBrowser) return null
-      return localStorage.getItem('orin.theme')
+      return localStorage.getItem('tsuki.theme')
     },
 
     setTheme(theme) {
       if (!isBrowser) return
-      localStorage.setItem('orin.theme', theme)
+      localStorage.setItem('tsuki.theme', theme)
     },
 
     getCsrfToken() {
       if (!isBrowser) return null
-      const match = document.cookie.match(/orin_csrf=([^;]+)/)
+      const match = document.cookie.match(/tsuki_csrf=([^;]+)/)
       return match?.[1] || null
     },
   }

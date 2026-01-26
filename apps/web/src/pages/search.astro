@@ -4,7 +4,7 @@ import Default from '@/layouts/Default.astro'
 const query = Astro.url.searchParams.get('q') || ''
 ---
 
-<Default title="搜索 - Orin" description="搜索文章" noindex={true}>
+<Default title="搜索" description="搜索文章" noindex={true}>
   <h1>搜索</h1>
 
   <form class="search-form" method="get">
@@ -43,21 +43,21 @@ const query = Astro.url.searchParams.get('q') || ''
   .search-input {
     flex: 1;
     padding: 0.75rem 1rem;
-    border: 1px solid var(--orin-border);
+    border: 1px solid var(--tsuki-border);
     border-radius: 0.5rem;
     font-size: 1rem;
-    background: var(--orin-bg);
-    color: var(--orin-fg);
+    background: var(--tsuki-bg);
+    color: var(--tsuki-fg);
   }
 
   .search-input:focus {
     outline: none;
-    border-color: var(--orin-primary);
+    border-color: var(--tsuki-primary);
   }
 
   .search-button {
     padding: 0.75rem 1.5rem;
-    background: var(--orin-primary);
+    background: var(--tsuki-primary);
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -76,7 +76,7 @@ const query = Astro.url.searchParams.get('q') || ''
 
   .placeholder,
   .hint {
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     font-style: italic;
   }
 </style>

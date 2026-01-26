@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@tsuki/config':
+        specifier: workspace:*
+        version: link:packages/config
       '@types/node':
         specifier: ^22.10.5
         version: 22.19.7
@@ -32,6 +35,12 @@ importers:
       '@astrojs/react':
         specifier: ^4.2.0
         version: 4.4.2(@types/node@22.19.7)(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(yaml@2.8.2)
+      '@tsuki/config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@tsuki/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       astro:
         specifier: ^5.1.5
         version: 5.16.11(@types/node@22.19.7)(rollup@4.55.1)(typescript@5.9.3)(yaml@2.8.2)
@@ -67,8 +76,33 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.7)
 
-  services/orin-api:
+  packages/config:
     dependencies:
+      '@tsuki/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.7)
+
+  packages/shared:
+    devDependencies:
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.7)
+
+  services/tsuki-api:
+    dependencies:
+      '@tsuki/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       hono:
         specifier: ^4.6.17
         version: 4.11.4

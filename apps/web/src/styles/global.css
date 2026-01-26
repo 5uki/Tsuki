@@ -21,20 +21,155 @@ html {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 预留滚动条占位，避免不同页面“有/无滚动条”导致布局水平抖动 */
+  scrollbar-gutter: stable;
+  overflow-y: auto;
+}
+
+@supports not (scrollbar-gutter: stable) {
+  body {
+    /* 兜底：在不支持 scrollbar-gutter 的浏览器里，仍尽量避免滚动条出现/消失导致的水平抖动 */
+    padding-right: calc(100vw - 100%);
+  }
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: var(--orin-bg);
-  color: var(--orin-fg);
+  background: var(--tsuki-bg);
+  color: var(--tsuki-fg);
+  position: relative;
+  isolation: isolate;
   transition:
     background-color 150ms,
     color 150ms;
+  min-height: 100vh;
+}
+
+/* 顶部背景层：作为页面顶部“元素”，随页面滚动离开视口 */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--tsuki-top-bg-height);
+  z-index: -3;
+  pointer-events: none;
+  background-image: var(--tsuki-top-bg-image), var(--tsuki-top-bg);
+  background-repeat: no-repeat;
+  background-size: cover, 100% 100%;
+  background-position: left top, 0 0;
+  contain: paint;
+}
+
+/* 顶部动态波纹层（随主题色变化） */
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--tsuki-top-bg-height);
+  z-index: -2;
+  pointer-events: none;
+  opacity: var(--tsuki-ripple-opacity);
+  background-image:
+    repeating-radial-gradient(
+      circle at 18% 22%,
+      color-mix(in srgb, var(--tsuki-primary) 12%, transparent) 0 1px,
+      transparent 1px 26px
+    ),
+    repeating-radial-gradient(
+      circle at 78% 38%,
+      color-mix(in srgb, var(--tsuki-accent) 10%, transparent) 0 1px,
+      transparent 1px 30px
+    ),
+    radial-gradient(
+      1200px 800px at 50% -20%,
+      color-mix(in srgb, var(--tsuki-primary) 10%, transparent) 0%,
+      transparent 65%
+    );
+  background-size: 170% 170%, 190% 190%, cover;
+  background-position: 0% 0%, 100% 0%, center;
+  animation: tsuki-ripple-drift 18s ease-in-out infinite;
+  contain: paint;
+}
+
+@keyframes tsuki-ripple-drift {
+  0% {
+    background-position: 0% 0%, 100% 15%, center;
+  }
+  50% {
+    background-position: 35% 30%, 65% 70%, center;
+  }
+  100% {
+    background-position: 100% 10%, 0% 80%, center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
+}
+
+/* 顶部衔接波纹：把顶部背景与正文自然过渡 */
+.tsuki-top-wave {
+  position: absolute;
+  top: calc(var(--tsuki-top-bg-height) - 1px);
+  left: 0;
+  right: 0;
+  height: var(--tsuki-top-wave-height);
+  pointer-events: none;
+  z-index: -1;
+  color: var(--tsuki-bg);
+}
+
+.tsuki-top-wave-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 200%;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.tsuki-top-wave-track svg {
+  flex: 0 0 50%;
+  width: 50%;
+  height: 100%;
+}
+
+.tsuki-top-wave-track-back {
+  opacity: 0.55;
+  animation: tsuki-wave-move 14s linear infinite;
+}
+
+.tsuki-top-wave-track-front {
+  opacity: 0.92;
+  animation: tsuki-wave-move 9s linear infinite;
+}
+
+@keyframes tsuki-wave-move {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tsuki-top-wave-track-back,
+  .tsuki-top-wave-track-front {
+    animation: none;
+  }
 }
 
 a {
-  color: var(--orin-primary);
+  color: var(--tsuki-primary);
   text-decoration: none;
 }
 
@@ -53,7 +188,12 @@ button {
 
 /* 内容宽度变量 */
 :root {
-  --orin-content-width: 48rem;
+  --tsuki-content-width: 48rem;
+  --tsuki-header-width: 100%;
+  --tsuki-top-bg-image: none;
+  --tsuki-top-bg-height: 66.6667vh;
+  --tsuki-top-wave-height: 96px;
+  --tsuki-ripple-opacity: 0.55;
 }
 
 /* 文章排版 */
@@ -105,15 +245,15 @@ button {
 .prose blockquote {
   margin: 1.5rem 0;
   padding: 0.5rem 1rem;
-  border-left: 4px solid var(--orin-primary);
-  background: var(--orin-card-bg);
-  color: var(--orin-muted);
+  border-left: 4px solid var(--tsuki-primary);
+  background: var(--tsuki-card-bg);
+  color: var(--tsuki-muted);
 }
 
 .prose pre {
   margin: 1.5rem 0;
   padding: 1rem;
-  background: var(--orin-code-bg);
+  background: var(--tsuki-code-bg);
   border-radius: 0.5rem;
   overflow-x: auto;
 }
@@ -121,8 +261,8 @@ button {
 .prose code {
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
   font-size: 0.875em;
-  background: var(--orin-code-bg);
-  color: var(--orin-code-fg);
+  background: var(--tsuki-code-bg);
+  color: var(--tsuki-code-fg);
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
 }
@@ -140,7 +280,7 @@ button {
 .prose hr {
   margin: 2rem 0;
   border: none;
-  border-top: 1px solid var(--orin-border);
+  border-top: 1px solid var(--tsuki-border);
 }
 
 .prose table {
@@ -152,11 +292,11 @@ button {
 .prose th,
 .prose td {
   padding: 0.75rem;
-  border: 1px solid var(--orin-border);
+  border: 1px solid var(--tsuki-border);
   text-align: left;
 }
 
 .prose th {
-  background: var(--orin-card-bg);
+  background: var(--tsuki-card-bg);
   font-weight: 600;
 }

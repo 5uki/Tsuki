@@ -1,6 +1,6 @@
-# Orin：基于 Cloudflare + GitHub 的全栈博客框架（需求与设计文档）
+# Tsuki：基于 Cloudflare + GitHub 的全栈博客框架（需求与设计文档）
 
-> 本文档是 Orin 的“需求与设计”唯一事实来源（Single Source of Truth）。  
+> 本文档是 Tsuki 的“需求与设计”唯一事实来源（Single Source of Truth）。  
 > 文中出现“必须 / 禁止 / 不得 / 仅 / 只能 / 一律”等措辞均为强约束；除非修订本文档，否则实现不得偏离。
 
 ## 目录
@@ -25,7 +25,7 @@
 
 ### 1.1 项目定位
 
-Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Free 计划可用能力（Pages、Workers、D1、基础安全能力）和 GitHub（代码托管 + OAuth 登录），提供：
+Tsuki 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Free 计划可用能力（Pages、Workers、D1、基础安全能力）和 GitHub（代码托管 + OAuth 登录），提供：
 
 - 长文内容：文章（Post）
 - 短内容：动态（Moment，类似 Twitter/X 时间线）
@@ -45,7 +45,7 @@ Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Fr
 ### 1.3 非目标（明确不做，除非未来版本另行纳入）
 
 - NG1：多租户（一个部署承载多个独立站点/域名/作者体系）。
-- NG2：对外开放注册成为“作者”；Orin 的作者（管理员）由部署者在配置中显式指定。
+- NG2：对外开放注册成为“作者”；Tsuki 的作者（管理员）由部署者在配置中显式指定。
 - NG3：邮件订阅、推送通知、短信、站内信等外部通知通道。
 - NG4：富文本所见即所得编辑器（WYSIWYG）；后台编辑器以 Markdown 为主。
 
@@ -63,7 +63,7 @@ Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Fr
 
 | 术语 | 英文/标识 | 定义 |
 |---|---|---|
-| 站点 | Site | 一个 Orin 部署实例，对应一个域名与一套数据。单部署仅允许一个站点。 |
+| 站点 | Site | 一个 Tsuki 部署实例，对应一个域名与一套数据。单部署仅允许一个站点。 |
 | 文章 | Post | 长文内容，支持 Markdown、标签、分组、封面、摘要。 |
 | 动态 | Moment | 短内容时间线条目，类似 Twitter/X；支持 Markdown（受限子集）与图片。 |
 | 标签 | Tag | 文章/动态的轻量主题标记，多对多关系。 |
@@ -107,7 +107,7 @@ Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Fr
 
 - `visitor`：未登录
 - `user`：已通过 GitHub OAuth 登录
-- `admin`：已登录 + GitHub 用户 ID 在 `ORIN_ADMIN_GITHUB_IDS` 白名单内
+- `admin`：已登录 + GitHub 用户 ID 在 `TSUKI_ADMIN_GITHUB_IDS` 白名单内
 
 ### 3.2 权限矩阵（必须）
 
@@ -128,7 +128,7 @@ Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Fr
 
 ## 4. 用户侧信息架构（前端路由）
 
-> 下面路由是 Orin v1 的固定信息架构；除非修订本文档，否则不得随意更改（避免 SEO 与外链断裂）。
+> 下面路由是 Tsuki v1 的固定信息架构；除非修订本文档，否则不得随意更改（避免 SEO 与外链断裂）。
 
 - `/`：首页（文章列表 + 最新动态摘要 + 置顶内容）
 - `/posts`：文章列表（支持筛选/分页）
@@ -357,7 +357,7 @@ Orin 是一个面向个人/小团队的全栈博客框架，基于 Cloudflare Fr
 
 #### FR-MEDIA-002 图片来源策略（必须提供免费路径）
 
-Orin v1 必须提供以下两种来源策略，且默认启用 A：
+Tsuki v1 必须提供以下两种来源策略，且默认启用 A：
 
 - A（默认，零额外费用）：`static` 静态资源策略
   - 图片文件随前端工程一起发布（由 GitHub 管理，Cloudflare Pages 托管）
@@ -366,7 +366,7 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
   - 若启用 Cloudflare R2，则后台必须提供图片上传与管理
   - 启用 B 后，A 仍必须可用（允许混用）
 
-> 说明：B 是否启用由部署者自行决定；Orin 实现必须以“仅启用 A”也能完整运行作为底线。
+> 说明：B 是否启用由部署者自行决定；Tsuki 实现必须以“仅启用 A”也能完整运行作为底线。
 
 ### 5.7 主题与外观
 
@@ -375,7 +375,7 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 - 系统必须内置 ≥ 6 套主题（例如：`paper`、`ink`、`nord`、`rose`、`aurora`、`mono`）。
 - 必须提供主题切换入口（全站任意页面可达）。
 - 主题偏好必须持久化：
-  - 未登录：`localStorage`（key：`orin.theme`）
+  - 未登录：`localStorage`（key：`tsuki.theme`）
   - 已登录：同步到服务端用户偏好（D1），并在多设备生效
 
 #### FR-THEME-002 “朴素与华丽”的视觉约束
@@ -425,7 +425,6 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
   - 站点描述（`site_description`，长度 `0..160`）
   - 默认主题（`default_theme`，必须为内置主题名之一）
   - 导航栏链接（`nav_links`，0..10；每项包含 `label` 与 `href`）
-  - 页脚信息（`footer_text`，长度 `0..200`，允许 Markdown 受限子集）
 - 前台必须从后端读取并应用上述配置（不得仅靠前端静态常量）。
 
 ### 5.9 搜索、订阅与 SEO
@@ -549,8 +548,8 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 
 - R1：文章详情页必须 SSR（满足 NFR-PERF-002：无 JS 可阅读）。
 - R2：动态详情页必须 SSR（正文可阅读）；评论区允许 CSR 加载，但必须提供明确加载态与失败态。
-- R3：所有 SSR 渲染数据一律来自 `orin-api`（HTTP 调用），前端不得直连 D1。
-- R4：`/rss.xml`、`/sitemap.xml`、`/robots.txt` 必须由前端服务在 `<site-domain>` 侧输出（可通过 SSR route 生成），并以 `orin-api` 为数据来源。
+- R3：所有 SSR 渲染数据一律来自 `tsuki-api`（HTTP 调用），前端不得直连 D1。
+- R4：`/rss.xml`、`/sitemap.xml`、`/robots.txt` 必须由前端服务在 `<site-domain>` 侧输出（可通过 SSR route 生成），并以 `tsuki-api` 为数据来源。
 
 ---
 
@@ -584,15 +583,15 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 #### 8.1.4 身份与会话（必须）
 
 - 会话通过 Cookie 传递：
-  - Cookie 名：`orin_session`
+  - Cookie 名：`tsuki_session`
   - Cookie 域：Host-only（不设置 `Domain`，仅对 `api.<site-domain>` 生效）
   - Cookie 属性：`HttpOnly; Secure; SameSite=Lax; Path=/`
-  - 过期策略：`Max-Age` 必须等于 `ORIN_SESSION_TTL_MS / 1000`（向下取整）
+  - 过期策略：`Max-Age` 必须等于 `TSUKI_SESSION_TTL_MS / 1000`（向下取整）
 - CSRF 双提交 Cookie：
-  - Cookie 名：`orin_csrf`
+  - Cookie 名：`tsuki_csrf`
   - Cookie 域：Host-only（同上）
   - Cookie 属性：`Secure; SameSite=Lax; Path=/`（必须允许前端 JS 读取；不得设置 HttpOnly）
-  - 写接口要求：请求头 `X-CSRF-Token` 必须与 Cookie `orin_csrf` 完全一致，否则返回 `FORBIDDEN`
+  - 写接口要求：请求头 `X-CSRF-Token` 必须与 Cookie `tsuki_csrf` 完全一致，否则返回 `FORBIDDEN`
 - 前端跨域调用（`<site-domain>` → `api.<site-domain>`）必须使用 `fetch(..., { credentials: "include" })`。
 
 #### 8.1.5 错误码
@@ -756,17 +755,15 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 
 ```json
 {
-  "site_title": "Orin",
+  "site_title": "Tsuki",
   "site_description": "一个认真写字的地方",
   "default_theme": "paper",
   "nav_links": [{ "label": "关于", "href": "/about" }],
-  "footer_text_html": "<p>© 2026 Orin</p>"
 }
 ```
 
 说明（必须）：
 
-- `footer_text_html` 必须为净化后的 HTML（见 10.4），不得直接回传未净化的 Markdown 渲染结果
 
 ### 8.3 Auth
 
@@ -785,7 +782,7 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
   - 换取 access token
   - 拉取 GitHub 用户信息
   - upsert 用户
-  - 创建会话，写入 `orin_session` Cookie
+  - 创建会话，写入 `tsuki_session` Cookie
   - 302 重定向回 `return_to`
 
 #### 8.3.3 获取当前用户
@@ -1023,11 +1020,10 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 - Body（允许部分更新）：
 ```json
 {
-  "site_title": "Orin",
+  "site_title": "Tsuki",
   "site_description": "一个认真写字的地方",
   "default_theme": "paper",
   "nav_links": [{ "label": "关于", "href": "/about" }],
-  "footer_text_markdown": "© 2026 Orin"
 }
 ```
 - 响应：`SettingsPublicDTO`
@@ -1062,11 +1058,10 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 - 响应：
 ```json
 {
-  "site_title": "Orin",
+  "site_title": "Tsuki",
   "site_description": "一个认真写字的地方",
   "default_theme": "paper",
   "nav_links": [{ "label": "关于", "href": "/about" }],
-  "footer_text_markdown": "© 2026 Orin"
 }
 ```
 
@@ -1101,25 +1096,25 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 
 ### 9.2 主题系统（实现约束）
 
-- 主题必须以 CSS 变量实现（Design Tokens），变量名固定前缀 `--orin-`。
+- 主题必须以 CSS 变量实现（Design Tokens），变量名固定前缀 `--tsuki-`。
 - 至少包含以下 token：
-  - `--orin-bg`、`--orin-fg`、`--orin-muted`、`--orin-border`
-  - `--orin-primary`、`--orin-accent`
-  - `--orin-card-bg`、`--orin-card-shadow`
-  - `--orin-code-bg`、`--orin-code-fg`
+  - `--tsuki-bg`、`--tsuki-fg`、`--tsuki-muted`、`--tsuki-border`
+  - `--tsuki-primary`、`--tsuki-accent`
+  - `--tsuki-card-bg`、`--tsuki-card-shadow`
+  - `--tsuki-code-bg`、`--tsuki-code-fg`
 - 主题切换必须无刷新生效；切换动画时长固定 `150ms`，仅允许对 `color/background-color/border-color` 做 transition。
 
 ### 9.3 前端技术栈与渲染（必须）
 
-- Orin v1 前端必须采用 SSR 框架，以满足"无 JS 可阅读文章/动态正文"（见 NFR-PERF-002、7.4）。
+- Tsuki v1 前端必须采用 SSR 框架，以满足"无 JS 可阅读文章/动态正文"（见 NFR-PERF-002、7.4）。
 - 默认技术选型（v1 固定）：
   - **前台**：Astro（TypeScript），内容驱动，默认零 JS 输出
   - **后台**：React（TypeScript），可通过 Astro Islands 或独立 SPA 实现
   - 部署：Cloudflare Pages（SSR 通过 Pages Functions / Astro Adapter）
   - 样式：CSS Variables（主题 token）+ CSS Modules / Scoped CSS；禁止把颜色硬编码在组件里
 - 数据获取：
-  - SSR 时通过 `PUBLIC_ORIN_API_BASE` 调用 `orin-api`
-  - 浏览器端交互（评论发表、主题同步等）通过 `fetch` 调用 `orin-api`（`credentials: "include"`）
+  - SSR 时通过 `PUBLIC_TSUKI_API_BASE` 调用 `tsuki-api`
+  - 浏览器端交互（评论发表、主题同步等）通过 `fetch` 调用 `tsuki-api`（`credentials: "include"`）
   - 后台可使用 React 组件配合 Astro Islands（`client:load` / `client:only`）实现交互
 
 ### 9.4 全局布局（必须）
@@ -1131,14 +1126,13 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
   - 主题切换入口
   - 登录/头像入口（未登录显示“GitHub 登录”，已登录显示头像下拉）
 - 页脚必须包含：
-  - `SettingsPublicDTO.footer_text_html` 渲染结果（必须净化）
   - RSS 链接：`/rss.xml`
 
 ### 9.5 预设主题清单（v1 固定，≥ 6）
 
 > 每套主题必须提供完整 token；下表给出 v1 的默认配色（实现不得随意更名主题 ID）。
 
-| theme | `--orin-bg` | `--orin-fg` | `--orin-primary` | `--orin-accent` | 风格说明 |
+| theme | `--tsuki-bg` | `--tsuki-fg` | `--tsuki-primary` | `--tsuki-accent` | 风格说明 |
 |---|---|---|---|---|---|
 | `paper` | `#fbf7ef` | `#1f2328` | `#0b5fff` | `#d97706` | 暖白纸张感，朴素为主 |
 | `ink` | `#0b0f19` | `#e6edf3` | `#7aa2f7` | `#f7768e` | 深色墨水感，冷静但不死黑 |
@@ -1193,8 +1187,8 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 ### 10.2 安全策略（必须）
 
 - 所有写接口必须进行：
-  - `Origin` 校验（仅允许 `ORIN_PUBLIC_ORIGIN`）
-  - CSRF 防护：采用双提交 Cookie（`orin_csrf`）+ Header（`X-CSRF-Token`）；两者不一致直接拒绝
+  - `Origin` 校验（仅允许 `TSUKI_PUBLIC_ORIGIN`）
+  - CSRF 防护：采用双提交 Cookie（`tsuki_csrf`）+ Header（`X-CSRF-Token`）；两者不一致直接拒绝
   - 限速：见 5.5.6
 - OAuth：
   - 必须使用 `state` 防 CSRF
@@ -1288,7 +1282,7 @@ Orin v1 必须提供以下两种来源策略，且默认启用 A：
 
 ### 11.2 DDL（初始迁移：`0001_init.sql`）
 
-> 说明：下面 DDL 是 Orin v1 的“规范数据库结构”。迁移脚本必须与之保持一致，且必须开启 `PRAGMA foreign_keys = ON;`。
+> 说明：下面 DDL 是 Tsuki v1 的“规范数据库结构”。迁移脚本必须与之保持一致，且必须开启 `PRAGMA foreign_keys = ON;`。
 
 ```sql
 PRAGMA foreign_keys = ON;
@@ -1486,8 +1480,6 @@ CREATE INDEX idempotency_expires_at_idx ON idempotency_keys(expires_at);
   - `site_description`：`{ "value": "<string>" }`
   - `default_theme`：`{ "value": "<theme_name>" }`
   - `nav_links`：`{ "value": [{ "label": "<string>", "href": "<string>" }] }`
-  - `footer_text_markdown`：`{ "value": "<markdown>" }`
-  - `footer_text_html`：`{ "value": "<sanitized_html>" }`
 
 ### 11.4 索引与查询模式（必须匹配）
 
@@ -1526,15 +1518,15 @@ CREATE INDEX idempotency_expires_at_idx ON idempotency_keys(expires_at);
 ### 12.1 Cloudflare 资源清单（必须）
 
 - Pages：
-  - 项目名：`orin-web`
+  - 项目名：`tsuki-web`
   - 绑定域名：`<site-domain>`（apex 或 `www` 由部署者选择；本文默认 apex）
   - 必须启用 SSR（用于文章/动态详情与 `/rss.xml`、`/sitemap.xml`、`/robots.txt` 输出）
 - Workers：
-  - 服务名：`orin-api`
+  - 服务名：`tsuki-api`
   - 绑定域名：`api.<site-domain>`
 - D1：
-  - 数据库名：`orin_db`
-  - 仅绑定到 `orin-api`（禁止在前端直接连库）
+  - 数据库名：`tsuki_db`
+  - 仅绑定到 `tsuki-api`（禁止在前端直接连库）
 
 ### 12.2 DNS 与 HTTPS（必须）
 
@@ -1542,10 +1534,10 @@ CREATE INDEX idempotency_expires_at_idx ON idempotency_keys(expires_at);
 
 ### 12.3 CORS（必须，因 API 与前台跨域）
 
-后端 `orin-api` 必须设置：
+后端 `tsuki-api` 必须设置：
 
 - `Access-Control-Allow-Origin`：精确匹配 `https://<site-domain>`（不得使用 `*`）
-- `Access-Control-Allow-Origin`：精确匹配 `ORIN_PUBLIC_ORIGIN`（不得使用 `*`）
+- `Access-Control-Allow-Origin`：精确匹配 `TSUKI_PUBLIC_ORIGIN`（不得使用 `*`）
 - `Access-Control-Allow-Credentials: true`
 - `Access-Control-Allow-Methods: GET,POST,PATCH,DELETE,OPTIONS`
 - `Access-Control-Allow-Headers: Content-Type,X-CSRF-Token,Idempotency-Key`
@@ -1555,19 +1547,19 @@ CREATE INDEX idempotency_expires_at_idx ON idempotency_keys(expires_at);
 
 > 所有密钥通过 `wrangler secret put` 写入；不得提交到 GitHub。
 
-后端 `orin-api` 运行所需：
+后端 `tsuki-api` 运行所需：
 
 - `GITHUB_OAUTH_CLIENT_ID`（必填）
 - `GITHUB_OAUTH_CLIENT_SECRET`（必填，secret）
-- `ORIN_SESSION_SIGNING_SECRET`（必填，secret；用于签名/校验 session token 或加密 session id）
-- `ORIN_CSRF_SALT`（必填，secret；用于哈希 ip/ua）
-- `ORIN_PUBLIC_ORIGIN`（必填，例如：`https://<site-domain>`；用于 Origin 校验与重定向白名单）
-- `ORIN_ADMIN_GITHUB_IDS`（必填，例如：`123,456`）
-- `ORIN_SESSION_TTL_MS`（必填，例如：`1209600000`=14 天）
+- `TSUKI_SESSION_SIGNING_SECRET`（必填，secret；用于签名/校验 session token 或加密 session id）
+- `TSUKI_CSRF_SALT`（必填，secret；用于哈希 ip/ua）
+- `TSUKI_PUBLIC_ORIGIN`（必填，例如：`https://<site-domain>`；用于 Origin 校验与重定向白名单）
+- `TSUKI_ADMIN_GITHUB_IDS`（必填，例如：`123,456`）
+- `TSUKI_SESSION_TTL_MS`（必填，例如：`1209600000`=14 天）
 
-前端 `orin-web` 运行所需（公开）：
+前端 `tsuki-web` 运行所需（公开）：
 
-- `PUBLIC_ORIN_API_BASE`（必填，例如：`https://api.<site-domain>/v1`）
+- `PUBLIC_TSUKI_API_BASE`（必填，例如：`https://api.<site-domain>/v1`）
 
 GitHub OAuth App 配置（必须）：
 
@@ -1588,9 +1580,9 @@ GitHub OAuth App 配置（必须）：
   - 失败必须阻断合并
 - `push` 到 `main`：
   - 运行同样的质量门禁
-  - 部署 `orin-api`（wrangler）
+  - 部署 `tsuki-api`（wrangler）
   - 应用 D1 migrations（wrangler d1 migrations apply）
-  - 部署 `orin-web`（Pages：通过 GitHub 集成自动构建；或通过 wrangler pages deploy）
+  - 部署 `tsuki-web`（Pages：通过 GitHub 集成自动构建；或通过 wrangler pages deploy）
 
 ### 12.6 数据迁移（必须）
 
@@ -1623,7 +1615,7 @@ GitHub OAuth App 配置（必须）：
 #### 12.9.1 分区定义（必须）
 
 - `apps/web`：前端（Cloudflare Pages，SSR）
-- `services/orin-api`：后端（Cloudflare Workers）
+- `services/tsuki-api`：后端（Cloudflare Workers）
 - `migrations/d1`：数据库迁移（D1）
 - `packages/*`：共享包（可选，但若引入必须有明确边界）
 
@@ -1646,13 +1638,13 @@ GitHub OAuth App 配置（必须）：
 /apps/web/src/components/       # Astro 组件 + React 组件（后台交互）
 /apps/web/src/layouts/          # Astro 布局
 
-/services/orin-api/             # 后端 Worker
-/services/orin-api/entry/       # L1
-/services/orin-api/api/         # L2
-/services/orin-api/usecases/    # L3
-/services/orin-api/atoms/       # L4
-/services/orin-api/contracts/   # X1
-/services/orin-api/adapters/    # X2（D1/GitHub OAuth/可选 R2）
+/services/tsuki-api/             # 后端 Worker
+/services/tsuki-api/entry/       # L1
+/services/tsuki-api/api/         # L2
+/services/tsuki-api/usecases/    # L3
+/services/tsuki-api/atoms/       # L4
+/services/tsuki-api/contracts/   # X1
+/services/tsuki-api/adapters/    # X2（D1/GitHub OAuth/可选 R2）
 
 /migrations/d1/                 # D1 migrations（0001_init.sql...）
 /packages/ui/                   # 可选：共享 UI（主题 token/组件），纯前端包

@@ -1,12 +1,18 @@
 ---
 import Default from '@/layouts/Default.astro'
+import tsukiConfig from '@/config/tsuki-config'
 
-// 模拟数据 - 后续从 API 获取
+const heroTitleHtml = tsukiConfig.hero?.titleHtml
+const heroSubtitleHtml = tsukiConfig.hero?.subtitleHtml
+const hasHeroImage = Boolean(tsukiConfig.hero?.backgroundImageHref?.trim())
+
+// 模拟数据 - 后续接 API 获取
 const recentPosts = [
   {
     slug: 'getting-started-with-cloudflare',
     title: '使用 Cloudflare 构建现代 Web 应用',
-    summary: '探索如何利用 Cloudflare 的免费套餐构建高性能的全栈应用，包括 Pages、Workers 和 D1 数据库的实战经验。',
+    summary:
+      '探索如何利用 Cloudflare 的免费套餐构建高性能的全栈应用，包括 Pages、Workers 和 D1 数据库的实战经验。',
     publishedAt: '2026-01-15',
     tags: ['Cloudflare', 'Web开发'],
     readingTime: 8,
@@ -14,7 +20,8 @@ const recentPosts = [
   {
     slug: 'astro-ssr-deep-dive',
     title: 'Astro SSR 深度解析：从零到生产',
-    summary: '深入了解 Astro 的服务端渲染机制，以及如何在 Cloudflare Pages 上部署 SSR 应用。',
+    summary:
+      '深入了解 Astro 的服务端渲染机制，以及如何在 Cloudflare Pages 上部署 SSR 应用。',
     publishedAt: '2026-01-12',
     tags: ['Astro', 'SSR'],
     readingTime: 12,
@@ -32,7 +39,7 @@ const recentPosts = [
 const recentMoments = [
   {
     id: '1',
-    body: '今天把博客的主题系统重构了一遍，现在支持 6 套主题，切换丝滑无闪烁 ✨',
+    body: '今天把博客的主题系统重构了一遍，现在支持 7 套主题，切换丝滑无闪烁。',
     createdAt: '3 小时前',
   },
   {
@@ -48,18 +55,26 @@ const recentMoments = [
 ]
 ---
 
-<Default title="Orin" description="一个认真写字的地方">
+<Default description={tsukiConfig.site.description}>
   <!-- Hero Section -->
-  <section class="hero">
+  <section
+    class:list={['hero', hasHeroImage && 'has-image']}
+  >
     <div class="hero-content">
-      <h1 class="hero-title">Orin</h1>
-      <p class="hero-tagline">一个认真写字的地方</p>
-      <p class="hero-description">
-        分享技术思考、开发经验与生活点滴。<br />
-        用代码构建，用文字记录。
-      </p>
+      {heroTitleHtml ? (
+        <h1 class="hero-title" set:html={heroTitleHtml}></h1>
+      ) : (
+        <h1 class="hero-title">{tsukiConfig.site.title}</h1>
+      )}
+
+      {heroSubtitleHtml ? (
+        <p class="hero-tagline" set:html={heroSubtitleHtml}></p>
+      ) : (
+        <p class="hero-tagline">{tsukiConfig.site.description}</p>
+      )}
     </div>
-    <div class="hero-decoration"></div>
+
+    {!hasHeroImage && <div class="hero-decoration" aria-hidden="true"></div>}
   </section>
 
   <!-- Recent Posts -->
@@ -82,7 +97,7 @@ const recentMoments = [
             </h3>
             <p class="post-summary">{post.summary}</p>
             <div class="post-tags">
-              {post.tags.map(tag => (
+              {post.tags.map((tag) => (
                 <a href={`/tags/${tag.toLowerCase()}`} class="tag">#{tag}</a>
               ))}
             </div>
@@ -99,7 +114,7 @@ const recentMoments = [
       <a href="/moments" class="section-link">查看全部 →</a>
     </div>
     <div class="moments-list">
-      {recentMoments.map(moment => (
+      {recentMoments.map((moment) => (
         <article class="moment-card">
           <p class="moment-body">{moment.body}</p>
           <div class="moment-meta">
@@ -114,21 +129,21 @@ const recentMoments = [
   <!-- Quick Links -->
   <section class="section quick-links">
     <div class="quick-link-card">
-      <span class="quick-link-icon">📚</span>
+      <span class="quick-link-icon">🏷️</span>
       <h3>标签</h3>
       <p>按主题浏览内容</p>
       <a href="/tags" class="quick-link-action">浏览标签</a>
     </div>
     <div class="quick-link-card">
-      <span class="quick-link-icon">📂</span>
+      <span class="quick-link-icon">🗂️</span>
       <h3>分组</h3>
       <p>系统化的知识体系</p>
       <a href="/groups" class="quick-link-action">查看分组</a>
     </div>
     <div class="quick-link-card">
-      <span class="quick-link-icon">🔍</span>
+      <span class="quick-link-icon">🔎</span>
       <h3>搜索</h3>
-      <p>快速找到你想要的</p>
+      <p>快速找到你想要的内容</p>
       <a href="/search" class="quick-link-action">开始搜索</a>
     </div>
   </section>
@@ -139,39 +154,61 @@ const recentMoments = [
   .hero {
     position: relative;
     text-align: center;
-    padding: 4rem 0 3rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid var(--orin-border);
+    padding: 4rem 0 2.5rem;
+    margin-bottom: 2.5rem;
     overflow: hidden;
+  }
+
+  .hero.has-image {
+    padding-bottom: 5.25rem;
+  }
+
+  .hero.has-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    left: 50%;
+    width: 100vw;
+    width: 100dvw;
+    transform: translateX(-50%);
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 20%, rgba(0, 0, 0, 0.18) 0%, transparent 55%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--tsuki-bg) 12%, transparent) 0%,
+        color-mix(in srgb, var(--tsuki-bg) 35%, transparent) 55%,
+        var(--tsuki-bg) 100%
+      );
   }
 
   .hero-content {
     position: relative;
     z-index: 1;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 0 1rem;
   }
 
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 800;
-    margin: 0 0 0.5rem;
-    background: linear-gradient(135deg, var(--orin-primary), var(--orin-accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin: 0 0 0.75rem;
+    color: var(--tsuki-fg);
+    line-height: 1.1;
+  }
+
+  .hero.has-image .hero-title,
+  .hero.has-image .hero-tagline {
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
   }
 
   .hero-tagline {
-    font-size: 1.25rem;
-    color: var(--orin-muted);
-    margin: 0 0 1rem;
-    font-weight: 500;
-  }
-
-  .hero-description {
-    font-size: 1rem;
-    color: var(--orin-muted);
+    font-size: 1.125rem;
+    color: var(--tsuki-muted);
     margin: 0;
-    line-height: 1.8;
+    font-weight: 500;
+    line-height: 1.6;
   }
 
   .hero-decoration {
@@ -179,9 +216,9 @@ const recentMoments = [
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, var(--orin-primary) 0%, transparent 70%);
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, var(--tsuki-primary) 0%, transparent 70%);
     opacity: 0.03;
     pointer-events: none;
   }
@@ -197,19 +234,19 @@ const recentMoments = [
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--orin-border);
+    border-bottom: 1px solid var(--tsuki-border);
   }
 
   .section-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin: 0;
-    color: var(--orin-fg);
+    color: var(--tsuki-fg);
   }
 
   .section-link {
     font-size: 0.875rem;
-    color: var(--orin-primary);
+    color: var(--tsuki-primary);
     text-decoration: none;
     transition: opacity 0.15s;
   }
@@ -226,21 +263,21 @@ const recentMoments = [
   }
 
   .post-card {
-    background: var(--orin-card-bg);
-    border: 1px solid var(--orin-border);
+    background: var(--tsuki-card-bg);
+    border: 1px solid var(--tsuki-border);
     border-radius: 0.75rem;
     overflow: hidden;
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
   }
 
   .post-card:hover {
-    border-color: var(--orin-primary);
-    box-shadow: var(--orin-card-shadow);
+    border-color: var(--tsuki-primary);
+    box-shadow: var(--tsuki-card-shadow);
     transform: translateY(-2px);
   }
 
   .post-card.featured {
-    background: linear-gradient(135deg, var(--orin-card-bg) 0%, var(--orin-bg) 100%);
+    background: linear-gradient(135deg, var(--tsuki-card-bg) 0%, var(--tsuki-bg) 100%);
     border-width: 2px;
   }
 
@@ -250,7 +287,7 @@ const recentMoments = [
 
   .post-meta {
     font-size: 0.8125rem;
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -269,18 +306,18 @@ const recentMoments = [
   }
 
   .post-title a {
-    color: var(--orin-fg);
+    color: var(--tsuki-fg);
     text-decoration: none;
   }
 
   .post-title a:hover {
-    color: var(--orin-primary);
+    color: var(--tsuki-primary);
     text-decoration: none;
   }
 
   .post-summary {
     font-size: 0.9375rem;
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     margin: 0 0 1rem;
     line-height: 1.6;
     display: -webkit-box;
@@ -297,8 +334,8 @@ const recentMoments = [
 
   .tag {
     font-size: 0.75rem;
-    color: var(--orin-primary);
-    background: color-mix(in srgb, var(--orin-primary) 10%, transparent);
+    color: var(--tsuki-primary);
+    background: color-mix(in srgb, var(--tsuki-primary) 10%, transparent);
     padding: 0.25rem 0.625rem;
     border-radius: 1rem;
     text-decoration: none;
@@ -306,7 +343,7 @@ const recentMoments = [
   }
 
   .tag:hover {
-    background: color-mix(in srgb, var(--orin-primary) 20%, transparent);
+    background: color-mix(in srgb, var(--tsuki-primary) 20%, transparent);
     text-decoration: none;
   }
 
@@ -319,21 +356,21 @@ const recentMoments = [
 
   .moment-card {
     padding: 1.25rem;
-    background: var(--orin-card-bg);
-    border: 1px solid var(--orin-border);
+    background: var(--tsuki-card-bg);
+    border: 1px solid var(--tsuki-border);
     border-radius: 0.75rem;
     transition: border-color 0.15s;
   }
 
   .moment-card:hover {
-    border-color: var(--orin-primary);
+    border-color: var(--tsuki-primary);
   }
 
   .moment-body {
     font-size: 0.9375rem;
     line-height: 1.7;
     margin: 0 0 0.75rem;
-    color: var(--orin-fg);
+    color: var(--tsuki-fg);
   }
 
   .moment-meta {
@@ -341,11 +378,11 @@ const recentMoments = [
     justify-content: space-between;
     align-items: center;
     font-size: 0.8125rem;
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
   }
 
   .moment-link {
-    color: var(--orin-primary);
+    color: var(--tsuki-primary);
     text-decoration: none;
   }
 
@@ -363,14 +400,14 @@ const recentMoments = [
   .quick-link-card {
     text-align: center;
     padding: 1.5rem 1rem;
-    background: var(--orin-card-bg);
-    border: 1px solid var(--orin-border);
+    background: var(--tsuki-card-bg);
+    border: 1px solid var(--tsuki-border);
     border-radius: 0.75rem;
     transition: border-color 0.15s, transform 0.15s;
   }
 
   .quick-link-card:hover {
-    border-color: var(--orin-primary);
+    border-color: var(--tsuki-primary);
     transform: translateY(-2px);
   }
 
@@ -384,18 +421,18 @@ const recentMoments = [
     font-size: 1rem;
     font-weight: 600;
     margin: 0 0 0.25rem;
-    color: var(--orin-fg);
+    color: var(--tsuki-fg);
   }
 
   .quick-link-card p {
     font-size: 0.8125rem;
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     margin: 0 0 1rem;
   }
 
   .quick-link-action {
     font-size: 0.8125rem;
-    color: var(--orin-primary);
+    color: var(--tsuki-primary);
     text-decoration: none;
   }
 
@@ -411,6 +448,10 @@ const recentMoments = [
 
     .hero {
       padding: 3rem 0 2rem;
+    }
+
+    .hero.has-image {
+      padding-bottom: 4.25rem;
     }
 
     .quick-links {

@@ -1,10 +1,14 @@
 ---
 // 页脚组件
+import tsukiConfig from '@/config/tsuki-config'
+
+const siteTitle = tsukiConfig.site.title
+const year = new Date().getFullYear()
 ---
 
 <footer class="footer">
   <div class="footer-inner">
-    <p class="copyright">&copy; 2026 Orin. All rights reserved.</p>
+    <p class="copyright">&copy; {year} {siteTitle}. All rights reserved.</p>
     <nav class="footer-nav">
       <a href="/rss.xml">RSS</a>
       <a href="/sitemap.xml">Sitemap</a>
@@ -14,20 +18,20 @@
 
 <style>
   .footer {
-    border-top: 1px solid var(--orin-border);
+    border-top: 1px solid var(--tsuki-border);
     background: transparent;
     transition: border-color 150ms;
   }
 
   .footer-inner {
-    max-width: var(--orin-content-width, 48rem);
+    max-width: var(--tsuki-content-width, 48rem);
     margin: 0 auto;
     padding: 1.5rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.875rem;
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
   }
 
   .copyright {
@@ -40,12 +44,12 @@
   }
 
   .footer-nav a {
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     text-decoration: none;
     transition: color 150ms;
   }
 
   .footer-nav a:hover {
-    color: var(--orin-primary);
+    color: var(--tsuki-primary);
   }
 </style>

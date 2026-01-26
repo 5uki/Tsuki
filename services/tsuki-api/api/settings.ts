@@ -14,7 +14,7 @@ export function settingsRoutes() {
     return c.json({
       ok: true,
       data: {
-        site_title: 'Orin',
+        site_title: 'Tsuki',
         site_description: '一个认真写字的地方',
         default_theme: 'paper',
         nav_links: [
@@ -23,7 +23,6 @@ export function settingsRoutes() {
           { label: '标签', href: '/tags' },
           { label: '分组', href: '/groups' },
         ],
-        footer_text_html: '<p>&copy; 2026 Orin. All rights reserved.</p>',
       },
     })
   })

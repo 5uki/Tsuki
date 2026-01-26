@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@tsuki/config": ["packages/config/src/index.ts"],
+      "@tsuki/config/*": ["packages/config/src/*"],
+      "@tsuki/shared": ["packages/shared/src/index.ts"],
+      "@tsuki/shared/*": ["packages/shared/src/*"]
+    }
+  },
+  "include": ["tsuki.config.ts"],
+  "exclude": ["node_modules", "apps", "services", "packages"]
+}

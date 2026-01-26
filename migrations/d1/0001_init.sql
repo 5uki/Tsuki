@@ -1,4 +1,4 @@
--- Orin D1 初始迁移
+-- Tsuki D1 初始迁移
 -- 按照 REQUIREMENTS.md 11.2 规范创建
 
 PRAGMA foreign_keys = ON;
@@ -184,9 +184,7 @@ CREATE INDEX idempotency_expires_at_idx ON idempotency_keys(expires_at);
 
 -- 插入默认配置
 INSERT INTO settings (key, value_json, updated_at) VALUES
-  ('site_title', '{"value": "Orin"}', 1737203696789),
+  ('site_title', '{"value": "Tsuki"}', 1737203696789),
   ('site_description', '{"value": "一个认真写字的地方"}', 1737203696789),
   ('default_theme', '{"value": "paper"}', 1737203696789),
-  ('nav_links', '{"value": [{"label": "文章", "href": "/posts"}, {"label": "动态", "href": "/moments"}, {"label": "标签", "href": "/tags"}, {"label": "分组", "href": "/groups"}]}', 1737203696789),
-  ('footer_text_markdown', '{"value": "© 2026 Orin"}', 1737203696789),
-  ('footer_text_html', '{"value": "<p>© 2026 Orin</p>"}', 1737203696789);
+  ('nav_links', '{"value": [{"label": "文章", "href": "/posts"}, {"label": "动态", "href": "/moments"}, {"label": "标签", "href": "/tags"}, {"label": "分组", "href": "/groups"}]}', 1737203696789);

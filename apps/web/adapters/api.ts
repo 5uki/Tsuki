@@ -1,5 +1,5 @@
 /**
- * API 适配器 - 与后端 orin-api 通信
+ * API 适配器 - 与后端 tsuki-api 通信
  */
 
 import type {

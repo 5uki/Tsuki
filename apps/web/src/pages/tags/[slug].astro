@@ -1,10 +1,14 @@
 ---
 import Default from '@/layouts/Default.astro'
 
+export async function getStaticPaths() {
+  return []
+}
+
 const { slug } = Astro.params
 ---
 
-<Default title={`标签: ${slug} - Orin`} description={`标签 ${slug} 下的内容`}>
+<Default title={`标签: ${slug}`} description={`标签 ${slug} 下的内容`}>
   <h1>#{slug}</h1>
   <p class="placeholder">该标签下暂无内容</p>
 </Default>
@@ -16,7 +20,7 @@ const { slug } = Astro.params
   }
 
   .placeholder {
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     font-style: italic;
   }
 </style>

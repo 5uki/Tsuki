@@ -9,7 +9,7 @@ import type { SettingsPublicDTO } from '@contracts/dto'
  * 默认配置
  */
 const DEFAULT_SETTINGS: SettingsPublicDTO = {
-  site_title: 'Orin',
+  site_title: 'Tsuki',
   site_description: '一个认真写字的地方',
   default_theme: 'paper',
   nav_links: [
@@ -18,7 +18,6 @@ const DEFAULT_SETTINGS: SettingsPublicDTO = {
     { label: '标签', href: '/tags' },
     { label: '分组', href: '/groups' },
   ],
-  footer_text_html: '<p>&copy; 2026 Orin. All rights reserved.</p>',
 }
 
 /**

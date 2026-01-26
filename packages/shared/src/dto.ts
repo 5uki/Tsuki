@@ -109,7 +109,6 @@ export interface SettingsPublicDTO {
   site_description: string
   default_theme: string
   nav_links: NavLink[]
-  footer_text_html: string
 }
 
 // 分页响应

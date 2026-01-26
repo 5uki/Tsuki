@@ -2,7 +2,7 @@
 import Default from '@/layouts/Default.astro'
 ---
 
-<Default title="后台管理 - Orin" description="后台管理首页">
+<Default title="后台管理" description="后台管理首页">
   <div class="admin-page">
     <h1>后台管理</h1>
     <p class="description">这是后台管理首页。M6 将实现完整功能。</p>
@@ -28,7 +28,7 @@ import Default from '@/layouts/Default.astro'
   }
 
   .description {
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     margin-bottom: 2rem;
   }
 
@@ -41,18 +41,18 @@ import Default from '@/layouts/Default.astro'
   .admin-nav a {
     display: block;
     padding: 1rem;
-    background: var(--orin-card-bg);
-    border: 1px solid var(--orin-border);
+    background: var(--tsuki-card-bg);
+    border: 1px solid var(--tsuki-border);
     border-radius: 0.5rem;
     text-decoration: none;
-    color: var(--orin-fg);
+    color: var(--tsuki-fg);
     transition:
       border-color 150ms,
       background-color 150ms;
   }
 
   .admin-nav a:hover {
-    border-color: var(--orin-primary);
-    background: var(--orin-bg);
+    border-color: var(--tsuki-primary);
+    background: var(--tsuki-bg);
   }
 </style>

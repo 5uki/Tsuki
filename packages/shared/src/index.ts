@@ -1,5 +1,5 @@
 /**
- * @orin/shared - 前后端共享代码
+ * @tsuki/shared - 前后端共享代码
  */
 
 // DTO 类型

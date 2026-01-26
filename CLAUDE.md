@@ -8,7 +8,7 @@ Always reply in Chinese (简体中文). Code identifiers, commands, logs, and er
 
 ## Project Overview
 
-Orin is a full-stack blogging framework built on Cloudflare Free Plan (Pages, Workers, D1) and GitHub (OAuth, code hosting). The project is currently in the architecture/requirements phase with no implementation code yet.
+Tsuki is a full-stack blogging framework built on Cloudflare Free Plan (Pages, Workers, D1) and GitHub (OAuth, code hosting). The project is currently in the architecture/requirements phase with no implementation code yet.
 
 **Key Documents (Single Source of Truth):**
 - `REQUIREMENTS.md` - Complete feature spec, API design, database schema
@@ -21,12 +21,12 @@ Orin is a full-stack blogging framework built on Cloudflare Free Plan (Pages, Wo
 - **Frontend (Admin)**: React (TypeScript) via Astro Islands (`client:load`)
 - **Backend**: Cloudflare Workers (TypeScript), D1 (SQLite)
 - **Auth**: GitHub OAuth v2 (read:user scope only)
-- **Styling**: CSS Variables (design tokens with `--orin-*` prefix) + Scoped CSS
+- **Styling**: CSS Variables (design tokens with `--tsuki-*` prefix) + Scoped CSS
 
 ## Repository Structure
 
 ```
-Orin/
+Tsuki/
 ├── apps/web/                    # Frontend (Astro SSR on Pages)
 │   ├── entry/                   # L1: SSR entry, DI root
 │   ├── api/                     # L2: Route handlers, validation
@@ -39,7 +39,7 @@ Orin/
 │       ├── pages/admin/         # Admin routes (React Islands)
 │       ├── components/          # Astro + React components
 │       └── layouts/             # Astro layouts
-├── services/orin-api/           # Backend (Cloudflare Workers)
+├── services/tsuki-api/           # Backend (Cloudflare Workers)
 │   ├── entry/                   # L1: Worker entry, DI root
 │   ├── api/                     # L2: HTTP route handlers
 │   ├── usecases/                # L3: Business logic
@@ -81,11 +81,11 @@ pnpm install
 cd apps/web && pnpm dev          # Astro dev server on localhost:4321
 
 # Backend development
-cd services/orin-api && wrangler dev  # Worker on localhost:8787
+cd services/tsuki-api && wrangler dev  # Worker on localhost:8787
 
 # Local D1 database
-wrangler d1 execute orin_db --local --file migrations/d1/0001_init.sql
-wrangler d1 migrations apply orin_db --local
+wrangler d1 execute tsuki_db --local --file migrations/d1/0001_init.sql
+wrangler d1 migrations apply tsuki_db --local
 
 # Quality checks
 pnpm lint
@@ -94,8 +94,8 @@ pnpm test
 
 # Build & Deploy
 cd apps/web && pnpm build
-cd services/orin-api && wrangler publish
-wrangler d1 migrations apply orin_db --remote
+cd services/tsuki-api && wrangler publish
+wrangler d1 migrations apply tsuki_db --remote
 ```
 
 ## API Design Essentials
@@ -103,8 +103,8 @@ wrangler d1 migrations apply orin_db --remote
 - Base URL: `https://api.<site-domain>/v1`
 - Response envelope: `{ "ok": true, "data": ... }` or `{ "ok": false, "error": { "code": "...", "message": "..." } }`
 - Pagination: Cursor-based (`?limit=20&cursor=<opaque>`)
-- Auth: Cookie `orin_session` (HttpOnly, Secure, SameSite=Lax)
-- CSRF: Double-submit cookie `orin_csrf` + header `X-CSRF-Token`
+- Auth: Cookie `tsuki_session` (HttpOnly, Secure, SameSite=Lax)
+- CSRF: Double-submit cookie `tsuki_csrf` + header `X-CSRF-Token`
 
 **Error Codes**: `AUTH_REQUIRED` (401), `FORBIDDEN` (403), `NOT_FOUND` (404), `VALIDATION_FAILED` (400), `RATE_LIMITED` (429), `COMMENT_DEPTH_EXCEEDED` (400), `INTERNAL_ERROR` (500)
 
@@ -117,8 +117,8 @@ wrangler d1 migrations apply orin_db --remote
 
 ## Security Requirements
 
-- All writes: Validate `Origin` against `ORIN_PUBLIC_ORIGIN`
-- CSRF on all mutations: Check `X-CSRF-Token` matches `orin_csrf` cookie
+- All writes: Validate `Origin` against `TSUKI_PUBLIC_ORIGIN`
+- CSRF on all mutations: Check `X-CSRF-Token` matches `tsuki_csrf` cookie
 - Markdown: CommonMark + tables + code blocks; no raw HTML
 - Links: Only `http:`, `https:`, `mailto:` (reject `javascript:`, `data:`)
 - Images: Only `https://` or `/media/` paths
@@ -136,7 +136,7 @@ wrangler d1 migrations apply orin_db --remote
 - Articles/moments must be SSR (readable without JavaScript)
 - Front pages default to zero JS; use `client:visible` or `client:load` for interactive components
 - 6 built-in themes: `paper`, `ink`, `nord`, `rose`, `aurora`, `mono`
-- Theme preference: `localStorage` key `orin.theme`
+- Theme preference: `localStorage` key `tsuki.theme`
 - All colors via CSS variables, never hardcoded
 - Admin pages use React components via Astro Islands
 

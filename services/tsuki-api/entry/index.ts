@@ -27,7 +27,7 @@ app.use(
   '*',
   cors({
     origin: (origin, c) => {
-      const allowedOrigin = c.env.ORIN_PUBLIC_ORIGIN
+      const allowedOrigin = c.env.TSUKI_PUBLIC_ORIGIN
       if (origin === allowedOrigin) {
         return origin
       }

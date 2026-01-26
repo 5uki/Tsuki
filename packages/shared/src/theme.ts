@@ -34,7 +34,7 @@ export const THEME_METAS: ThemeMeta[] = [
  * 获取主题元数据
  */
 export function getThemeMeta(theme: Theme): ThemeMeta {
-  return THEME_METAS.find((t) => t.id === theme) || THEME_METAS[0]
+  return THEME_METAS.find((t) => t.id === theme) ?? THEME_METAS[0]!
 }
 
 /**

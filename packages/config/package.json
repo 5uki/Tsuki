@@ -1,5 +1,5 @@
 {
-  "name": "@tsuki/shared",
+  "name": "@tsuki/config",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -7,16 +7,15 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./dto": "./src/dto.ts",
-    "./errors": "./src/errors.ts",
-    "./validation": "./src/validation.ts",
-    "./theme": "./src/theme.ts",
-    "./time": "./src/time.ts"
+    "./types": "./src/types.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "@tsuki/shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.3",

@@ -1,5 +1,5 @@
 {
-  "name": "@orin/api",
+  "name": "@tsuki/api",
   "version": "0.0.1",
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@orin/shared": "workspace:*",
+    "@tsuki/shared": "workspace:*",
     "hono": "^4.6.17"
   },
   "devDependencies": {

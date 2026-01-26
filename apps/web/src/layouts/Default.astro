@@ -2,14 +2,19 @@
 import Base from './Base.astro'
 import Header from '@/components/Header.astro'
 import Footer from '@/components/Footer.astro'
+import tsukiConfig from '@/config/tsuki-config'
 
 interface Props {
-  title: string
+  title?: string
   description?: string
   noindex?: boolean
 }
 
-const { title, description, noindex } = Astro.props
+const siteTitle = tsukiConfig.site.title
+const rawTitle = Astro.props.title?.trim()
+const title = rawTitle ? `${rawTitle} - ${siteTitle}` : siteTitle
+const description = Astro.props.description ?? tsukiConfig.site.description
+const { noindex } = Astro.props
 ---
 
 <Base title={title} description={description} noindex={noindex}>
@@ -32,7 +37,7 @@ const { title, description, noindex } = Astro.props
   .main {
     flex: 1;
     width: 100%;
-    max-width: var(--orin-content-width, 48rem);
+    max-width: var(--tsuki-content-width, 48rem);
     margin: 0 auto;
     padding: 2rem 1rem;
   }

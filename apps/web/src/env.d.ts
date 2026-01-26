@@ -3,7 +3,7 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_ORIN_API_BASE: string
+  readonly PUBLIC_TSUKI_API_BASE: string
 }
 
 interface ImportMeta {

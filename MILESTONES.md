@@ -1,4 +1,4 @@
-# Orin 任务清单 / 里程碑（前端优先）
+# Tsuki 任务清单 / 里程碑（前端优先）
 
 > 原则：先把“用户看得到、用得顺”的东西做出来，再补齐后台与运维硬化。每个里程碑都必须可演示、可验收。
 
@@ -6,13 +6,13 @@
 
 - 初始化单仓库目录（按 `REQUIREMENTS.md` 的 12.9：分区 + 六层）
 - 前端：`/apps/web`（Astro + TypeScript + SSR on Pages；后台用 React Islands）
-- 后端：`/services/orin-api`（Workers + D1 绑定占位）
+- 后端：`/services/tsuki-api`（Workers + D1 绑定占位）
 - 约束门禁：`lint`、`typecheck`、`test` 脚手架（先空测试也行，但 pipeline 必须跑通）
 
 ## M1：前台 UI 基线（1~2天）
 
 - 全站 Layout：导航/页脚/主题切换入口（读 `GET /settings/public`，无则用默认值）
-- 主题系统：实现 ≥ 6 套主题 token，`localStorage` 持久化（`orin.theme`）
+- 主题系统：实现 ≥ 6 套主题 token，`localStorage` 持久化（`tsuki.theme`）
 - 路由骨架全部可访问：
   - `/`、`/posts`、`/posts/:slug`、`/moments`、`/moments/:id`、`/tags`、`/groups`、`/search`
 - 文章/动态详情必须 SSR（无 JS 可阅读正文）

@@ -9,11 +9,11 @@ export interface Env {
   // 环境变量
   GITHUB_OAUTH_CLIENT_ID?: string
   GITHUB_OAUTH_CLIENT_SECRET?: string
-  ORIN_SESSION_SIGNING_SECRET?: string
-  ORIN_CSRF_SALT?: string
-  ORIN_PUBLIC_ORIGIN: string
-  ORIN_ADMIN_GITHUB_IDS?: string
-  ORIN_SESSION_TTL_MS?: string
+  TSUKI_SESSION_SIGNING_SECRET?: string
+  TSUKI_CSRF_SALT?: string
+  TSUKI_PUBLIC_ORIGIN: string
+  TSUKI_ADMIN_GITHUB_IDS?: string
+  TSUKI_SESSION_TTL_MS?: string
 }
 
 /**

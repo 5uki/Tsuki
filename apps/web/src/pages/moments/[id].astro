@@ -1,10 +1,14 @@
 ---
 import Default from '@/layouts/Default.astro'
 
+export async function getStaticPaths() {
+  return []
+}
+
 const { id } = Astro.params
 ---
 
-<Default title={`动态 - Orin`} description="动态详情">
+<Default title="动态" description="动态详情">
   <article class="moment">
     <header>
       <p class="meta">动态详情页占位</p>
@@ -21,7 +25,7 @@ const { id } = Astro.params
   }
 
   .meta {
-    color: var(--orin-muted);
+    color: var(--tsuki-muted);
     font-size: 0.875rem;
   }
 </style>

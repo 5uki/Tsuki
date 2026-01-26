@@ -3,4 +3,4 @@
  * 重新导出共享包内容
  */
 
-export * from '@orin/shared/validation'
+export * from '@tsuki/shared/validation'

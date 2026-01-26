@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css'
 import '@/styles/themes.css'
+import tsukiConfig from '@/config/tsuki-config'
 
 interface Props {
   title: string
@@ -8,8 +9,27 @@ interface Props {
   noindex?: boolean
 }
 
-const { title, description = 'Orin 博客', noindex = false } = Astro.props
+const defaultTheme = tsukiConfig.site.defaultTheme ?? 'paper'
+const { title, description = tsukiConfig.site.description ?? 'Tsuki 博客', noindex = false } = Astro.props
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url
+const rawFaviconHref = tsukiConfig.site.faviconHref ?? '/favicon.svg'
+const faviconHref =
+  rawFaviconHref.startsWith('http://') ||
+  rawFaviconHref.startsWith('https://') ||
+  rawFaviconHref.startsWith('/')
+    ? rawFaviconHref
+    : `/${rawFaviconHref}`
+const faviconType = faviconHref.endsWith('.svg') ? 'image/svg+xml' : undefined
+
+const rawTopBgImageHref = tsukiConfig.hero?.backgroundImageHref?.trim()
+const topBgImageHref =
+  rawTopBgImageHref &&
+  (rawTopBgImageHref.startsWith('http://') ||
+  rawTopBgImageHref.startsWith('https://') ||
+  rawTopBgImageHref.startsWith('/')
+    ? rawTopBgImageHref
+    : `/${rawTopBgImageHref}`)
+const bodyStyle = topBgImageHref ? `--tsuki-top-bg-image: url('${topBgImageHref}');` : undefined
 ---
 
 <!doctype html>
@@ -21,16 +41,50 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astr
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
+    <link rel="icon" href={faviconHref} type={faviconType} />
+    <link rel="apple-touch-icon" href={faviconHref} />
     <title>{title}</title>
-    <script is:inline>
+    <script is:inline define:vars={{ defaultTheme }}>
       // 主题初始化（避免闪烁）
       ;(function () {
-        const theme = localStorage.getItem('orin.theme') || 'paper'
+        const theme = localStorage.getItem('tsuki.theme') || defaultTheme
         document.documentElement.setAttribute('data-theme', theme)
       })()
     </script>
   </head>
-  <body>
+  <body style={bodyStyle}>
+    {topBgImageHref && (
+      <div class="tsuki-top-wave" aria-hidden="true">
+        <div class="tsuki-top-wave-track tsuki-top-wave-track-back">
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path
+              d="M0,64 C240,90 480,38 720,64 C960,90 1200,38 1440,64 L1440,120 L0,120 Z"
+              fill="currentColor"
+            />
+          </svg>
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path
+              d="M0,64 C240,90 480,38 720,64 C960,90 1200,38 1440,64 L1440,120 L0,120 Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+        <div class="tsuki-top-wave-track tsuki-top-wave-track-front">
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path
+              d="M0,72 C240,96 480,44 720,72 C960,100 1200,48 1440,72 L1440,120 L0,120 Z"
+              fill="currentColor"
+            />
+          </svg>
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path
+              d="M0,72 C240,96 480,44 720,72 C960,100 1200,48 1440,72 L1440,120 L0,120 Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
+    )}
     <slot />
   </body>
 </html>

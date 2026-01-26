@@ -15,7 +15,7 @@ import { createApiAdapter } from '@adapters/api'
 import { createStorageAdapter } from '@adapters/storage'
 
 export function createAppContext(): AppContext {
-  const apiBase = import.meta.env.PUBLIC_ORIN_API_BASE || 'http://localhost:8787/v1'
+  const apiBase = import.meta.env.PUBLIC_TSUKI_API_BASE || 'http://localhost:8787/v1'
 
   return {
     api: createApiAdapter(apiBase),
