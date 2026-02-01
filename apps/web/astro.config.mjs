@@ -13,6 +13,7 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   integrations: [react()],
+  outDir: path.resolve(workspaceRoot, 'dist'),
   vite: {
     server: {
       fs: {

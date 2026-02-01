@@ -1,0 +1,98 @@
+---
+import tsukiConfig from '@/config/tsuki-config'
+
+const { stats } = tsukiConfig
+
+const mockStats = {
+  posts: 12,
+  tags: 8,
+  groups: 3,
+}
+
+function formatNumber(num: number): string {
+  return num.toLocaleString()
+}
+---
+
+{stats?.enable && (
+  <div class="stats-widget sidebar-card">
+    <h3 class="stats-title">站点统计</h3>
+    <div class="stats-list">
+      <div class="stat-item">
+        <span class="stat-label">文章</span>
+        <span class="stat-value">{formatNumber(mockStats.posts)}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">标签</span>
+        <span class="stat-value">{formatNumber(mockStats.tags)}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">分组</span>
+        <span class="stat-value">{formatNumber(mockStats.groups)}</span>
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .stats-widget {
+  }
+
+  .stats-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: var(--tsuki-fg);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stats-title::before {
+    content: '';
+    width: 4px;
+    height: 1rem;
+    background: var(--tsuki-primary);
+    border-radius: 2px;
+  }
+
+  .stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--tsuki-border);
+  }
+
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--tsuki-muted);
+  }
+
+  .stat-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+
+  @media (max-width: 640px) {
+    .stats-title {
+      font-size: 0.9375rem;
+    }
+
+    .stat-label,
+    .stat-value {
+      font-size: 0.8125rem;
+    }
+  }
+</style>

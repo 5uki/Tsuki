@@ -1,0 +1,295 @@
+---
+import tsukiConfig from '@/config/tsuki-config'
+
+const { profile, stats } = tsukiConfig
+const safeProfile = profile ?? { name: '', links: [] }
+const mockStats = {
+  posts: 12,
+  tags: 8,
+  groups: 3,
+}
+
+const overlayIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="52" height="52" fill="currentColor"><path d="M528 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 176c0-44.2 35.8-80 80-80s80 35.8 80 80-35.8 80-80 80-80-35.8-80-80zm256 208H64v-16c0-53 43-96 96-96h32c53 0 96 43 96 96v16zm160 0H384v-64h128v64zm0-128H384v-64h128v64z"/></svg>`
+
+const iconMap: Record<string, string> = {
+  'fa6-brands:github': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`,
+  'fa6-brands:x-twitter': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+  'fa6-solid:envelope': `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.25v8.25a2.25 2.25 0 002.25 2.25h16.5a2.25 2.25 0 002.25-2.25V8.25m-16.5 6A2.25 2.25 0 004.5 16.5h15A2.25 2.25 0 0021.75 14.25m-16.5 0V8.25m16.5 6v-6m0 6l-7.5-4.5m7.5 4.5l-7.5 4.5m-7.5-9l7.5 4.5m-7.5-4.5l7.5-4.5"/></svg>`,
+}
+
+const isExternalLink = (url: string) => /^https?:\/\//i.test(url)
+const isInlineSvg = (icon: string) => icon.trim().startsWith('<svg')
+const isImageIcon = (icon: string) =>
+  /^https?:\/\//i.test(icon) ||
+  icon.startsWith('/') ||
+  /^data:image\//i.test(icon) ||
+  /\.(svg|png|jpe?g|webp|gif)$/i.test(icon)
+
+const resolveIcon = (icon: string) => {
+  if (iconMap[icon]) {
+    return { type: 'inline', value: iconMap[icon] }
+  }
+  if (isInlineSvg(icon)) {
+    return { type: 'inline', value: icon }
+  }
+  if (isImageIcon(icon)) {
+    return { type: 'image', value: icon }
+  }
+  return { type: 'text', value: icon.slice(0, 1).toUpperCase() }
+}
+
+function formatNumber(num: number): string {
+  return num.toLocaleString()
+}
+---
+
+<div class="profile-widget sidebar-card">
+  {safeProfile.avatar && (
+    <a
+      href={safeProfile.avatarLink || '#'}
+      class="avatar-link"
+      aria-label="查看个人资料"
+    >
+      <span class="avatar-overlay" aria-hidden="true">
+        <span class="avatar-overlay-icon" set:html={overlayIcon}></span>
+      </span>
+      <img
+        src={safeProfile.avatar}
+        alt={safeProfile.name}
+        class="avatar-image"
+      />
+    </a>
+  )}
+  <h2 class="profile-name">{safeProfile.name}</h2>
+  {safeProfile.bio && <p class="profile-bio">{safeProfile.bio}</p>}
+
+  {stats?.enable && (
+    <div class="profile-stats" aria-label="站点统计">
+      <div class="profile-stat-col">
+        <span class="profile-stat-label">文章</span>
+        <span class="profile-stat-value">{formatNumber(mockStats.posts)}</span>
+      </div>
+      <div class="profile-stat-col">
+        <span class="profile-stat-label">标签</span>
+        <span class="profile-stat-value">{formatNumber(mockStats.tags)}</span>
+      </div>
+      <div class="profile-stat-col">
+        <span class="profile-stat-label">分组</span>
+        <span class="profile-stat-value">{formatNumber(mockStats.groups)}</span>
+      </div>
+    </div>
+  )}
+
+  {safeProfile.links && safeProfile.links.length > 0 && (
+    <div class="social-links">
+      {safeProfile.links.map((link) => {
+        const icon = resolveIcon(link.icon)
+        return (
+          <a
+            href={link.url}
+            target={isExternalLink(link.url) ? '_blank' : undefined}
+            rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
+            class="social-link icon-only"
+            aria-label={link.name}
+          >
+            {icon.type === 'image' ? (
+              <img src={icon.value} alt="" class="social-icon-image" />
+            ) : icon.type === 'inline' ? (
+              <span class="social-icon" set:html={icon.value}></span>
+            ) : (
+              <span class="social-icon-fallback">{icon.value}</span>
+            )}
+          </a>
+        )
+      })}
+    </div>
+  )}
+</div>
+
+<style>
+  .profile-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .avatar-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .avatar-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .avatar-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    opacity: 1;
+    transition: background 0.2s ease;
+    z-index: 1;
+  }
+
+  .avatar-overlay-icon {
+    color: var(--tsuki-profile-avatar-overlay-icon);
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
+    opacity: 0;
+    transform: scale(0.92);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .avatar-link:hover .avatar-overlay,
+  .avatar-link:focus-visible .avatar-overlay {
+    background: var(--tsuki-profile-avatar-overlay);
+  }
+
+  .avatar-link:hover .avatar-overlay-icon,
+  .avatar-link:focus-visible .avatar-overlay-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .avatar-link:hover .avatar-image,
+  .avatar-link:focus-visible .avatar-image {
+    transform: scale(1.02);
+  }
+
+  .profile-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--tsuki-fg);
+    text-align: center;
+  }
+
+  .profile-bio {
+    font-size: 0.875rem;
+    color: var(--tsuki-muted);
+    margin: 0 0 0.75rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.9rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .profile-stat-col {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0 0.75rem;
+  }
+
+  .profile-stat-col + .profile-stat-col {
+    border-left: 1px solid var(--tsuki-border);
+  }
+
+  .profile-stat-value {
+    font-weight: 600;
+    color: var(--tsuki-fg);
+    font-size: 1rem;
+  }
+
+  .profile-stat-label {
+    font-size: 0.75rem;
+    color: var(--tsuki-muted);
+  }
+
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--tsuki-bg-secondary);
+    border: 1px solid var(--tsuki-border);
+    border-radius: 0.5rem;
+    color: var(--tsuki-fg);
+    text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+  }
+
+  .social-link:hover {
+    background: var(--tsuki-bg-hover);
+    border-color: var(--tsuki-primary);
+    transform: translateY(-1px);
+  }
+
+  .social-link.icon-only {
+    width: 2.5rem;
+    height: 2.5rem;
+    justify-content: center;
+    padding: 0;
+    background: var(--tsuki-link-icon-bg);
+    border-color: transparent;
+    color: var(--tsuki-fg);
+    box-shadow: var(--tsuki-card-shadow);
+    line-height: 1;
+  }
+
+  .social-link.icon-only:hover {
+    background: var(--tsuki-link-icon-bg-hover);
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .social-icon svg {
+    display: block;
+  }
+
+  .social-icon-image {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+  }
+
+  .social-icon-fallback {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .profile-name {
+      font-size: 1.125rem;
+    }
+
+    .profile-bio {
+      font-size: 0.8125rem;
+    }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Profile from './Profile.astro'
+import Announcement from './Announcement.astro'
+import Categories from './Categories.astro'
+import Tags from './Tags.astro'
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<div class={`main-layout ${className || ''}`}>
+  <aside class="sidebar">
+    <Profile />
+    <Announcement />
+    <Categories />
+    <Tags />
+  </aside>
+  <main class="content">
+    <slot />
+  </main>
+</div>
+
+<style>
+  .main-layout {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 4fr);
+    gap: var(--tsuki-sidebar-gap);
+    max-width: var(--tsuki-page-width);
+    margin: 0 auto;
+    padding: 0 var(--tsuki-page-inline-padding);
+    align-items: start;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-sidebar-gap);
+  }
+
+  .content {
+    min-width: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .main-layout {
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 3fr);
+      gap: var(--tsuki-sidebar-gap);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--tsuki-sidebar-gap-compact);
+    }
+
+    .sidebar {
+      order: -1;
+      gap: var(--tsuki-sidebar-gap-compact);
+    }
+  }
+</style>

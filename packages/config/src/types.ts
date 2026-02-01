@@ -1,6 +1,63 @@
 import type { Theme } from '@tsuki/shared/theme'
 
 /**
+ * 社交链接配置
+ */
+export interface SocialLink {
+  /** Link label */
+  name: string
+  /** Icon: builtin name, inline SVG string, or image URL */
+  icon: string
+  /** Link href */
+  url: string
+}
+
+/**
+ * 个人资料配置
+ */
+export interface ProfileConfig {
+  /** 头像地址（支持本地路径或 URL） */
+  avatar?: string
+  /** 头像跳转链接（可选） */
+  avatarLink?: string
+  /** 名称 */
+  name: string
+  /** 个人简介 */
+  bio?: string
+  /** 社交链接列表 */
+  links?: SocialLink[]
+}
+
+/**
+ * 公告配置
+ */
+export interface AnnouncementConfig {
+  /** 是否启用 */
+  enable?: boolean
+  /** 公告标题 */
+  title?: string
+  /** 公告内容（支持 HTML） */
+  content?: string
+  /** 公告链接配置 */
+  link?: {
+    /** 是否启用 */
+    enable?: boolean
+    /** 链接文本 */
+    text?: string
+    /** 链接地址 */
+    url?: string
+  }
+}
+
+/**
+ * 站点统计配置
+ */
+export interface StatsConfig {
+  /** 是否启用 */
+  enable?: boolean
+}
+
+/**
  * 导航链接配置
  */
 export interface NavLink {
@@ -54,6 +111,12 @@ export interface TsukiConfig {
   nav?: NavLink[]
   /** 首页 Hero 配置 */
   hero?: HeroConfig
+  /** 个人资料配置 */
+  profile?: ProfileConfig
+  /** 公告配置 */
+  announcement?: AnnouncementConfig
+  /** 站点统计配置 */
+  stats?: StatsConfig
 }
 
 /**
@@ -63,4 +126,7 @@ export interface TsukiUserConfig {
   site?: Partial<SiteConfig>
   nav?: NavLink[]
   hero?: Partial<HeroConfig>
+  profile?: Partial<ProfileConfig>
+  announcement?: Partial<AnnouncementConfig>
+  stats?: Partial<StatsConfig>
 }

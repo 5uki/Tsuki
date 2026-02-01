@@ -1,5 +1,6 @@
 ---
 import Default from '@/layouts/Default.astro'
+import MainLayout from '@/components/MainLayout.astro'
 import tsukiConfig from '@/config/tsuki-config'
 
 // 模拟数据 - 后续接 API 获取
@@ -32,142 +33,53 @@ const recentPosts = [
   },
 ]
 
-const recentMoments = [
-  {
-    id: '1',
-    body: '今天把博客的主题系统重构了一遍，现在支持 7 套主题，切换丝滑无闪烁。',
-    createdAt: '3 小时前',
-  },
-  {
-    id: '2',
-    body: '发现 Cloudflare D1 的性能比预期好很多，冷启动几乎感知不到延迟。',
-    createdAt: '昨天',
-  },
-  {
-    id: '3',
-    body: '周末准备写一篇关于 Hono 框架的文章，这个轻量级框架太适合 Edge 环境了。',
-    createdAt: '2 天前',
-  },
-]
+
 ---
 
 <Default description={tsukiConfig.site.description}>
-  <!-- Recent Posts -->
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">最新文章</h2>
-      <a href="/posts" class="section-link">查看全部 →</a>
-    </div>
-    <div class="posts-grid">
-      {recentPosts.map((post, index) => (
-        <article class={`post-card ${index === 0 ? 'featured' : ''}`}>
-          <div class="post-card-content">
-            <div class="post-meta">
-              <time>{post.publishedAt}</time>
-              <span class="separator">·</span>
-              <span>{post.readingTime} 分钟阅读</span>
+  <MainLayout>
+    <section class="posts-section">
+      <div class="posts-list">
+        {recentPosts.map((post) => (
+          <article class="post-card">
+            <div class="post-card-content">
+              <div class="post-meta">
+                <time>{post.publishedAt}</time>
+                <span class="separator">·</span>
+                <span>{post.readingTime} 分钟阅读</span>
+              </div>
+              <h3 class="post-title">
+                <a href={`/posts/${post.slug}`}>{post.title}</a>
+              </h3>
+              <p class="post-summary">{post.summary}</p>
+              <div class="post-tags">
+                {post.tags.map((tag) => (
+                  <a href={`/tags/${tag.toLowerCase()}`} class="tag">#{tag}</a>
+                ))}
+              </div>
             </div>
-            <h3 class="post-title">
-              <a href={`/posts/${post.slug}`}>{post.title}</a>
-            </h3>
-            <p class="post-summary">{post.summary}</p>
-            <div class="post-tags">
-              {post.tags.map((tag) => (
-                <a href={`/tags/${tag.toLowerCase()}`} class="tag">#{tag}</a>
-              ))}
-            </div>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- Recent Moments -->
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">最新动态</h2>
-      <a href="/moments" class="section-link">查看全部 →</a>
-    </div>
-    <div class="moments-list">
-      {recentMoments.map((moment) => (
-        <article class="moment-card">
-          <p class="moment-body">{moment.body}</p>
-          <div class="moment-meta">
-            <time>{moment.createdAt}</time>
-            <a href={`/moments/${moment.id}`} class="moment-link">查看详情</a>
-          </div>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- Quick Links -->
-  <section class="section quick-links">
-    <div class="quick-link-card">
-      <span class="quick-link-icon">🏷️</span>
-      <h3>标签</h3>
-      <p>按主题浏览内容</p>
-      <a href="/tags" class="quick-link-action">浏览标签</a>
-    </div>
-    <div class="quick-link-card">
-      <span class="quick-link-icon">🗂️</span>
-      <h3>分组</h3>
-      <p>系统化的知识体系</p>
-      <a href="/groups" class="quick-link-action">查看分组</a>
-    </div>
-    <div class="quick-link-card">
-      <span class="quick-link-icon">🔎</span>
-      <h3>搜索</h3>
-      <p>快速找到你想要的内容</p>
-      <a href="/search" class="quick-link-action">开始搜索</a>
-    </div>
-  </section>
+          </article>
+        ))}
+      </div>
+    </section>
+  </MainLayout>
 </Default>
 
 <style>
-  /* Section Styles */
-  .section {
-    margin-bottom: 3rem;
+  .posts-section {
+    margin-bottom: 2rem;
   }
 
-  .section-header {
+  .posts-list {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--tsuki-border);
-  }
-
-  .section-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0;
-    color: var(--tsuki-fg);
-  }
-
-  .section-link {
-    font-size: 0.875rem;
-    color: var(--tsuki-primary);
-    text-decoration: none;
-    transition: opacity 0.15s;
-  }
-
-  .section-link:hover {
-    opacity: 0.8;
-    text-decoration: none;
-  }
-
-  /* Posts Grid */
-  .posts-grid {
-    display: grid;
-    gap: 1.25rem;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .post-card {
     background: var(--tsuki-card-bg);
     border: 1px solid var(--tsuki-border);
-    border-radius: 0.75rem;
+    border-radius: var(--tsuki-sidebar-card-radius);
     overflow: hidden;
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
   }
@@ -176,11 +88,6 @@ const recentMoments = [
     border-color: var(--tsuki-primary);
     box-shadow: var(--tsuki-card-shadow);
     transform: translateY(-2px);
-  }
-
-  .post-card.featured {
-    background: linear-gradient(135deg, var(--tsuki-card-bg) 0%, var(--tsuki-bg) 100%);
-    border-width: 2px;
   }
 
   .post-card-content {
@@ -249,109 +156,17 @@ const recentMoments = [
     text-decoration: none;
   }
 
-  /* Moments List */
-  .moments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .moment-card {
-    padding: 1.25rem;
-    background: var(--tsuki-card-bg);
-    border: 1px solid var(--tsuki-border);
-    border-radius: 0.75rem;
-    transition: border-color 0.15s;
-  }
-
-  .moment-card:hover {
-    border-color: var(--tsuki-primary);
-  }
-
-  .moment-body {
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-  }
-
-  .moment-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8125rem;
-    color: var(--tsuki-muted);
-  }
-
-  .moment-link {
-    color: var(--tsuki-primary);
-    text-decoration: none;
-  }
-
-  .moment-link:hover {
-    text-decoration: underline;
-  }
-
-  /* Quick Links */
-  .quick-links {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-
-  .quick-link-card {
-    text-align: center;
-    padding: 1.5rem 1rem;
-    background: var(--tsuki-card-bg);
-    border: 1px solid var(--tsuki-border);
-    border-radius: 0.75rem;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-
-  .quick-link-card:hover {
-    border-color: var(--tsuki-primary);
-    transform: translateY(-2px);
-  }
-
-  .quick-link-icon {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 0.75rem;
-  }
-
-  .quick-link-card h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem;
-    color: var(--tsuki-fg);
-  }
-
-  .quick-link-card p {
-    font-size: 0.8125rem;
-    color: var(--tsuki-muted);
-    margin: 0 0 1rem;
-  }
-
-  .quick-link-action {
-    font-size: 0.8125rem;
-    color: var(--tsuki-primary);
-    text-decoration: none;
-  }
-
-  .quick-link-action:hover {
-    text-decoration: underline;
-  }
-
-  /* Responsive */
   @media (max-width: 640px) {
-    .quick-links {
-      grid-template-columns: 1fr;
+    .post-card-content {
+      padding: 1rem 1.25rem;
     }
 
-    .section-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
+    .post-title {
+      font-size: 1rem;
+    }
+
+    .post-summary {
+      font-size: 0.875rem;
     }
   }
 </style>

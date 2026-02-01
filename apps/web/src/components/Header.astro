@@ -87,6 +87,7 @@ const siteTitle = tsukiConfig.site.title
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
   import { createStorageAdapter } from '@adapters/storage'
 
+  const header = document.querySelector('.header')
   const toggle = document.getElementById('theme-toggle')
   const dropdown = document.getElementById('theme-dropdown')
   const themeOptions = document.querySelectorAll('.theme-option')
@@ -130,6 +131,10 @@ const siteTitle = tsukiConfig.site.title
     closeMobileNav()
   }
 
+  function updateHeaderState() {
+    header?.classList.toggle('scrolled', window.scrollY > 8)
+  }
+
   // 主题切换事件
   toggle?.addEventListener('click', (e) => {
     e.stopPropagation()
@@ -170,6 +175,10 @@ const siteTitle = tsukiConfig.site.title
     }
   })
 
+  // 滚动样式
+  updateHeaderState()
+  window.addEventListener('scroll', updateHeaderState, { passive: true })
+
   // 初始化
   updateActiveTheme()
 </script>
@@ -186,43 +195,84 @@ const siteTitle = tsukiConfig.site.title
 
   .header-inner {
     width: 100%;
-    max-width: var(--tsuki-header-width, 88rem);
+    max-width: var(--tsuki-page-width);
     margin: 0 auto;
-    padding: 0.875rem clamp(1rem, 3vw, 2.75rem);
+    padding: 0.875rem var(--tsuki-page-inline-padding);
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    gap: clamp(1.5rem, 4vw, 3rem);
+    gap: clamp(1.1rem, 3vw, 2.4rem);
+    position: relative;
+  }
+
+  .header-inner::before {
+    content: '';
+    position: absolute;
+    top: -0.75rem;
+    left: 0;
+    right: 0;
+    bottom: 0.2rem;
+    border-radius: var(--tsuki-header-frame-radius);
+    background: var(--tsuki-header-frame-bg);
+    border: 1px solid var(--tsuki-header-frame-border);
+    box-shadow: var(--tsuki-header-frame-shadow);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 180ms ease, transform 180ms ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .header.scrolled .header-inner::before {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .header-pill {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    height: 48px;
-    padding: 0 1.1rem;
+    gap: 0.8rem;
+    height: 52px;
+    padding: 0 1.35rem;
     border-radius: 999px;
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+    transition:
+      background-color 150ms,
+      border-color 150ms,
+      box-shadow 150ms;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-pill {
     background: color-mix(in srgb, var(--tsuki-card-bg) 92%, transparent);
-    border: 1px solid var(--tsuki-border);
+    border-color: var(--tsuki-border);
     box-shadow: var(--tsuki-shadow-header);
   }
 
+  .mobile-menu-btn {
+    position: relative;
+    z-index: 1;
+  }
+
   .header-brand {
-    padding: 0 1.25rem;
+    padding: 0 1.45rem;
     justify-self: start;
   }
 
   .nav {
     flex: 0 0 auto;
     justify-content: center;
-    gap: 1.75rem;
-    padding: 0 1.75rem;
+    gap: 1.4rem;
+    padding: 0 1.9rem;
     justify-self: center;
   }
 
   .actions {
-    gap: 0.5rem;
-    padding: 0 1.05rem;
+    gap: 0.45rem;
+    padding: 0 1.15rem;
     justify-self: end;
     position: relative;
   }
@@ -233,7 +283,7 @@ const siteTitle = tsukiConfig.site.title
 
   .logo-text {
     font-size: 1.375rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--tsuki-primary);
     transition: color 150ms;
   }
@@ -245,10 +295,11 @@ const siteTitle = tsukiConfig.site.title
   .nav a {
     color: var(--tsuki-muted);
     text-decoration: none;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     font-weight: 500;
     transition: color 150ms;
     position: relative;
+    padding: 0 0.35rem;
   }
 
   .nav a:hover {
@@ -281,8 +332,8 @@ const siteTitle = tsukiConfig.site.title
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     background: none;
     border: 1px solid color-mix(in srgb, var(--tsuki-border) 60%, transparent);
     border-radius: 999px;
@@ -296,7 +347,7 @@ const siteTitle = tsukiConfig.site.title
   .nav a,
   .action-btn,
   .login-btn {
-    height: 36px;
+    height: 38px;
     display: inline-flex;
     align-items: center;
   }
@@ -363,7 +414,7 @@ const siteTitle = tsukiConfig.site.title
     transition: all 180ms ease;
     text-align: left;
     position: relative;
-    --theme-color: var(--tsuki-bg);
+    --theme-color: var(--tsuki-card-bg);
     --theme-border: color-mix(in srgb, var(--tsuki-primary) 40%, transparent);
     --theme-tint: var(--tsuki-primary);
   }
@@ -443,12 +494,12 @@ const siteTitle = tsukiConfig.site.title
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0 0.8rem;
+    padding: 0 0.95rem;
     background: color-mix(in srgb, var(--tsuki-primary) 10%, transparent);
     color: var(--tsuki-fg);
     border-radius: 999px;
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     transition: opacity 150ms;
     border: 1px solid color-mix(in srgb, var(--tsuki-primary) 30%, transparent);

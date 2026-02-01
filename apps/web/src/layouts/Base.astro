@@ -33,7 +33,7 @@ const topBgImageHref =
 const isHome = Astro.url.pathname === '/'
 const bodyVars: string[] = []
 if (isHome && topBgImageHref) {
-  bodyVars.push(`--tsuki-top-bg-image: url('${topBgImageHref}');`)
+  bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
 }
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
 
@@ -56,12 +56,14 @@ const VALID_THEMES = ['paper', 'ink', 'nord', 'rose', 'aurora', 'mono', 'violet'
     <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
       // 主题初始化 - 内联脚本确保在渲染前执行
       (function() {
-        var storageKey = 'tsuki.theme'
-        var persisted = null
+        const storageKey = 'tsuki.theme'
+        let persisted = null
         try {
           persisted = localStorage.getItem(storageKey)
-        } catch (e) {}
-        var theme = persisted || defaultTheme
+        } catch (error) {
+          void error
+        }
+        let theme = persisted || defaultTheme
         if (validThemes.indexOf(theme) === -1) {
           theme = defaultTheme
         }

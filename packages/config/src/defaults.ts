@@ -25,4 +25,24 @@ export const DEFAULT_CONFIG: TsukiConfig = {
     subtitleHtml: undefined,
     backgroundImageHref: undefined,
   },
+  profile: {
+    avatar: undefined,
+    avatarLink: undefined,
+    name: 'Tsuki',
+    bio: undefined,
+    links: [],
+  },
+  announcement: {
+    enable: false,
+    title: '公告',
+    content: '',
+    link: {
+      enable: false,
+      text: '查看详情',
+      url: '',
+    },
+  },
+  stats: {
+    enable: true,
+  },
 }

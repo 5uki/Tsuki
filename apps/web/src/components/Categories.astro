@@ -1,0 +1,99 @@
+---
+const categories = [
+  { name: '技术', count: 5, slug: 'tech' },
+  { name: '生活', count: 4, slug: 'life' },
+  { name: '随笔', count: 3, slug: 'essay' },
+]
+---
+
+<div class="categories-widget sidebar-card">
+  <h3 class="categories-title">分类</h3>
+  <div class="categories-list">
+    {categories.map((category) => (
+      <a
+        href={`/groups/${category.slug}`}
+        class="category-item"
+      >
+        <span class="category-name">{category.name}</span>
+        <span class="category-count">{category.count}</span>
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .categories-widget {
+  }
+
+  .categories-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: var(--tsuki-fg);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .categories-title::before {
+    content: '';
+    width: 4px;
+    height: 1rem;
+    background: var(--tsuki-primary);
+    border-radius: 2px;
+  }
+
+  .categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--tsuki-bg-secondary);
+    border: 1px solid var(--tsuki-border);
+    border-radius: 0.5rem;
+    color: var(--tsuki-fg);
+    text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+  }
+
+  .category-item:hover {
+    background: var(--tsuki-bg-hover);
+    border-color: var(--tsuki-primary);
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+
+  .category-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .category-count {
+    font-size: 0.75rem;
+    color: var(--tsuki-muted);
+    background: var(--tsuki-primary);
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+  }
+
+  @media (max-width: 640px) {
+    .categories-title {
+      font-size: 0.9375rem;
+    }
+
+    .category-name {
+      font-size: 0.8125rem;
+    }
+
+    .category-count {
+      font-size: 0.6875rem;
+    }
+  }
+</style>

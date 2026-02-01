@@ -8,6 +8,20 @@ import { DEFAULT_CONFIG } from './defaults'
  */
 export function defineConfig(config: TsukiUserConfig): TsukiConfig {
   const hero = config.hero
+  const profile = config.profile
+  const announcement = config.announcement
+  const stats = config.stats
+  const defaultProfile = DEFAULT_CONFIG.profile ?? { name: 'Tsuki', links: [] }
+  const defaultAnnouncement = DEFAULT_CONFIG.announcement ?? {
+    enable: false,
+    title: '公告',
+    content: '',
+    link: {
+      enable: false,
+      text: '查看详情',
+      url: '',
+    },
+  }
 
   return {
     site: {
@@ -21,5 +35,30 @@ export function defineConfig(config: TsukiUserConfig): TsukiConfig {
           ...hero,
         }
       : DEFAULT_CONFIG.hero,
+    profile: profile
+      ? {
+          ...defaultProfile,
+          ...profile,
+          name: profile.name ?? defaultProfile.name,
+        }
+      : defaultProfile,
+    announcement: announcement
+      ? {
+          ...defaultAnnouncement,
+          ...announcement,
+          link: announcement.link
+            ? {
+                ...defaultAnnouncement.link,
+                ...announcement.link,
+              }
+            : defaultAnnouncement.link,
+        }
+      : defaultAnnouncement,
+    stats: stats
+      ? {
+          ...DEFAULT_CONFIG.stats,
+          ...stats,
+        }
+      : DEFAULT_CONFIG.stats,
   }
 }
