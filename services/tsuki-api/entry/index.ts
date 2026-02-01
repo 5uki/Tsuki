@@ -16,6 +16,7 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { createRoutes } from '@api/routes'
 import type { Env, AppContext } from '@contracts/env'
+import { createSettingsAdapter } from '@adapters/settings'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
 
@@ -43,6 +44,9 @@ app.use(
 // 上下文装配
 app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID())
+  c.set('ports', {
+    settings: createSettingsAdapter(c.env.DB),
+  })
   await next()
 })
 

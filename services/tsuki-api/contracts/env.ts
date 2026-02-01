@@ -2,6 +2,8 @@
  * Worker 环境变量类型
  */
 
+import type { SettingsPort } from './ports'
+
 export interface Env {
   // D1 数据库绑定
   DB: D1Database
@@ -21,4 +23,7 @@ export interface Env {
  */
 export interface AppContext {
   requestId: string
+  ports: {
+    settings: SettingsPort
+  }
 }

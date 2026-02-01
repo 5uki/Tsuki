@@ -37,3 +37,6 @@ coverage/
 
 # Misc
 *.local
+
+# Local-only scratch
+*-master/

@@ -29,11 +29,20 @@ const topBgImageHref =
   rawTopBgImageHref.startsWith('/')
     ? rawTopBgImageHref
     : `/${rawTopBgImageHref}`)
-const bodyStyle = topBgImageHref ? `--tsuki-top-bg-image: url('${topBgImageHref}');` : undefined
+
+const isHome = Astro.url.pathname === '/'
+const bodyVars: string[] = []
+if (isHome && topBgImageHref) {
+  bodyVars.push(`--tsuki-top-bg-image: url('${topBgImageHref}');`)
+}
+const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
+
+// 主题列表用于验证
+const VALID_THEMES = ['paper', 'ink', 'nord', 'rose', 'aurora', 'mono', 'violet']
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-default-theme={defaultTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -44,47 +53,26 @@ const bodyStyle = topBgImageHref ? `--tsuki-top-bg-image: url('${topBgImageHref}
     <link rel="icon" href={faviconHref} type={faviconType} />
     <link rel="apple-touch-icon" href={faviconHref} />
     <title>{title}</title>
-    <script is:inline define:vars={{ defaultTheme }}>
-      // 主题初始化（避免闪烁）
-      ;(function () {
-        const theme = localStorage.getItem('tsuki.theme') || defaultTheme
+    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
+      // 主题初始化 - 内联脚本确保在渲染前执行
+      (function() {
+        var storageKey = 'tsuki.theme'
+        var persisted = null
+        try {
+          persisted = localStorage.getItem(storageKey)
+        } catch (e) {}
+        var theme = persisted || defaultTheme
+        if (validThemes.indexOf(theme) === -1) {
+          theme = defaultTheme
+        }
         document.documentElement.setAttribute('data-theme', theme)
       })()
     </script>
   </head>
   <body style={bodyStyle}>
-    {topBgImageHref && (
-      <div class="tsuki-top-wave" aria-hidden="true">
-        <div class="tsuki-top-wave-track tsuki-top-wave-track-back">
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path
-              d="M0,64 C240,90 480,38 720,64 C960,90 1200,38 1440,64 L1440,120 L0,120 Z"
-              fill="currentColor"
-            />
-          </svg>
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path
-              d="M0,64 C240,90 480,38 720,64 C960,90 1200,38 1440,64 L1440,120 L0,120 Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-        <div class="tsuki-top-wave-track tsuki-top-wave-track-front">
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path
-              d="M0,72 C240,96 480,44 720,72 C960,100 1200,48 1440,72 L1440,120 L0,120 Z"
-              fill="currentColor"
-            />
-          </svg>
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path
-              d="M0,72 C240,96 480,44 720,72 C960,100 1200,48 1440,72 L1440,120 L0,120 Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </div>
-    )}
-    <slot />
+    <div class="tsuki-top-backdrop" aria-hidden="true"></div>
+    <div class="tsuki-root">
+      <slot />
+    </div>
   </body>
 </html>

@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro'
 import Header from '@/components/Header.astro'
+import Banner from '@/components/Banner.astro'
 import Footer from '@/components/Footer.astro'
 import tsukiConfig from '@/config/tsuki-config'
 
@@ -15,11 +16,14 @@ const rawTitle = Astro.props.title?.trim()
 const title = rawTitle ? `${rawTitle} - ${siteTitle}` : siteTitle
 const description = Astro.props.description ?? tsukiConfig.site.description
 const { noindex } = Astro.props
+
+const isHome = Astro.url.pathname === '/'
 ---
 
 <Base title={title} description={description} noindex={noindex}>
   <div class="layout">
     <Header />
+    {isHome && <Banner />}
     <main class="main">
       <slot />
     </main>
@@ -32,6 +36,10 @@ const { noindex } = Astro.props
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background: var(--tsuki-top-bg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: 0 0;
   }
 
   .main {

@@ -2,10 +2,9 @@
  * 应用上下文类型定义
  */
 
-import type { ApiAdapter } from '@adapters/api'
-import type { StorageAdapter } from '@adapters/storage'
+import type { ApiPort, StoragePort } from './ports'
 
 export interface AppContext {
-  api: ApiAdapter
-  storage: StorageAdapter
+  api: ApiPort
+  storage: StoragePort
 }

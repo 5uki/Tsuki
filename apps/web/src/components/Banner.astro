@@ -1,0 +1,214 @@
+---
+import tsukiConfig from '@/config/tsuki-config'
+
+const titleHtml = tsukiConfig.hero?.titleHtml
+const subtitleHtml = tsukiConfig.hero?.subtitleHtml
+const fallbackTitle = tsukiConfig.site.title
+const fallbackSubtitle = tsukiConfig.site.description
+---
+
+<section class="tsuki-banner" aria-label="Banner">
+  <div class="tsuki-banner-content">
+    {titleHtml ? (
+      <h1 class="tsuki-banner-title" set:html={titleHtml}></h1>
+    ) : (
+      <h1 class="tsuki-banner-title">{fallbackTitle}</h1>
+    )}
+
+    {subtitleHtml ? (
+      <p class="tsuki-banner-subtitle" set:html={subtitleHtml}></p>
+    ) : (
+      <p class="tsuki-banner-subtitle">{fallbackSubtitle}</p>
+    )}
+  </div>
+
+  <div id="header-waves" class="tsuki-banner-waves waves" aria-hidden="true">
+    <svg
+      class="waves"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28"
+      preserveAspectRatio="none"
+      shape-rendering="geometricPrecision"
+    >
+      <defs>
+        <path
+          id="gentle-wave"
+          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
+        ></path>
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" opacity="0.25">
+          <animateTransform
+            attributeName="transform"
+            type="translate"
+            from="-90 0"
+            to="85 0"
+            dur="7s"
+            repeatCount="indefinite"
+            begin="-2s"
+            calcMode="spline"
+            keySplines="0.5 0.5 0.45 0.5"
+            keyTimes="0;1"
+          />
+        </use>
+        <use xlink:href="#gentle-wave" x="48" y="3" opacity="0.5">
+          <animateTransform
+            attributeName="transform"
+            type="translate"
+            from="-90 0"
+            to="85 0"
+            dur="10s"
+            repeatCount="indefinite"
+            begin="-3s"
+            calcMode="spline"
+            keySplines="0.5 0.5 0.45 0.5"
+            keyTimes="0;1"
+          />
+        </use>
+        <use xlink:href="#gentle-wave" x="48" y="5" opacity="0.65">
+          <animateTransform
+            attributeName="transform"
+            type="translate"
+            from="-90 0"
+            to="85 0"
+            dur="13s"
+            repeatCount="indefinite"
+            begin="-4s"
+            calcMode="spline"
+            keySplines="0.5 0.5 0.45 0.5"
+            keyTimes="0;1"
+          />
+        </use>
+        <use xlink:href="#gentle-wave" x="48" y="7" opacity="0.75">
+          <animateTransform
+            attributeName="transform"
+            type="translate"
+            from="-90 0"
+            to="85 0"
+            dur="20s"
+            repeatCount="indefinite"
+            begin="-5s"
+            calcMode="spline"
+            keySplines="0.5 0.5 0.45 0.5"
+            keyTimes="0;1"
+          />
+        </use>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<style is:global>
+  .tsuki-banner {
+    position: relative;
+    height: var(--tsuki-top-bg-height);
+    margin-top: calc(-1 * var(--tsuki-header-block-size));
+    padding:
+      var(--tsuki-header-block-size)
+      var(--tsuki-banner-inline-padding)
+      var(--tsuki-banner-wave-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--tsuki-top-bg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: 0 0;
+  }
+
+  .tsuki-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: var(--tsuki-top-bg-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: var(--tsuki-banner-image-opacity);
+    filter: var(--tsuki-banner-image-filter);
+    mask-image: var(--tsuki-banner-image-mask);
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: var(--tsuki-banner-image-mask);
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  .tsuki-banner-content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, var(--tsuki-banner-content-max-width));
+    padding: 0;
+  }
+
+  .tsuki-banner-title {
+    margin: 0 0 var(--tsuki-banner-title-gap);
+    font-size: var(--tsuki-banner-title-size);
+    font-weight: 800;
+    line-height: 1.08;
+    color: var(--tsuki-banner-title-fg);
+    text-shadow: var(--tsuki-shadow-banner-title);
+    letter-spacing: -0.02em;
+  }
+
+  .tsuki-banner-subtitle {
+    margin: 0;
+    font-size: var(--tsuki-banner-subtitle-size);
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--tsuki-banner-subtitle-fg);
+    text-shadow: var(--tsuki-shadow-banner-subtitle);
+  }
+
+  .tsuki-banner-waves {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: var(--tsuki-banner-wave-height);
+    max-height: var(--tsuki-banner-wave-max-height);
+    min-height: var(--tsuki-banner-wave-min-height);
+    overflow: visible;
+    z-index: 5;
+    transform: translateZ(0);
+    will-change: transform;
+    pointer-events: none;
+    contain: none;
+    margin-bottom: -1px;
+  }
+
+  .tsuki-banner-waves svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .tsuki-banner-waves use {
+    fill: var(--tsuki-banner-wave-fill, var(--tsuki-bg));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tsuki-banner-waves animateTransform {
+      dur: 0s;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tsuki-banner {
+      padding-left: var(--tsuki-banner-inline-padding-mobile);
+      padding-right: var(--tsuki-banner-inline-padding-mobile);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .tsuki-banner-waves {
+      height: var(--tsuki-banner-wave-height-md);
+    }
+  }
+</style>

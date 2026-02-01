@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
+import cloudflare from '@astrojs/cloudflare'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -9,7 +10,8 @@ const workspaceRoot = path.resolve(projectRoot, '..', '..')
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  adapter: cloudflare(),
   integrations: [react()],
   vite: {
     server: {

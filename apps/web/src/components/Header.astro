@@ -85,12 +85,14 @@ const siteTitle = tsukiConfig.site.title
 <script>
   // 主题切换功能
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
+  import { createStorageAdapter } from '@adapters/storage'
 
   const toggle = document.getElementById('theme-toggle')
   const dropdown = document.getElementById('theme-dropdown')
   const themeOptions = document.querySelectorAll('.theme-option')
   const mobileMenuBtn = document.getElementById('mobile-menu-btn')
   const mobileNav = document.getElementById('mobile-nav')
+  const storage = createStorageAdapter()
 
   function getCurrentTheme(): Theme {
     const theme = document.documentElement.getAttribute('data-theme')
@@ -99,7 +101,7 @@ const siteTitle = tsukiConfig.site.title
 
   function setTheme(theme: Theme) {
     document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('tsuki.theme', theme)
+    storage.setTheme(theme)
     updateActiveTheme()
   }
 
@@ -202,7 +204,7 @@ const siteTitle = tsukiConfig.site.title
     border-radius: 999px;
     background: color-mix(in srgb, var(--tsuki-card-bg) 92%, transparent);
     border: 1px solid var(--tsuki-border);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--tsuki-shadow-header);
   }
 
   .header-brand {
@@ -320,7 +322,7 @@ const siteTitle = tsukiConfig.site.title
     border: 1px solid var(--tsuki-border);
     border-radius: 0.875rem;
     box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.08),
+      var(--tsuki-shadow-popover),
       0 0 0 1px color-mix(in srgb, var(--tsuki-primary) 5%, transparent);
     opacity: 0;
     visibility: hidden;
@@ -400,7 +402,7 @@ const siteTitle = tsukiConfig.site.title
     border-radius: 50%;
     flex-shrink: 0;
     border: 2px solid var(--theme-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--tsuki-shadow-theme-preview);
     transition: transform 200ms ease, box-shadow 200ms ease;
     z-index: 1;
     background: var(--theme-color);
@@ -408,7 +410,7 @@ const siteTitle = tsukiConfig.site.title
 
   .theme-option:hover .theme-preview {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--tsuki-shadow-theme-preview-hover);
   }
 
   .theme-name {

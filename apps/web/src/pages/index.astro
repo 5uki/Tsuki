@@ -2,10 +2,6 @@
 import Default from '@/layouts/Default.astro'
 import tsukiConfig from '@/config/tsuki-config'
 
-const heroTitleHtml = tsukiConfig.hero?.titleHtml
-const heroSubtitleHtml = tsukiConfig.hero?.subtitleHtml
-const hasHeroImage = Boolean(tsukiConfig.hero?.backgroundImageHref?.trim())
-
 // 模拟数据 - 后续接 API 获取
 const recentPosts = [
   {
@@ -56,27 +52,6 @@ const recentMoments = [
 ---
 
 <Default description={tsukiConfig.site.description}>
-  <!-- Hero Section -->
-  <section
-    class:list={['hero', hasHeroImage && 'has-image']}
-  >
-    <div class="hero-content">
-      {heroTitleHtml ? (
-        <h1 class="hero-title" set:html={heroTitleHtml}></h1>
-      ) : (
-        <h1 class="hero-title">{tsukiConfig.site.title}</h1>
-      )}
-
-      {heroSubtitleHtml ? (
-        <p class="hero-tagline" set:html={heroSubtitleHtml}></p>
-      ) : (
-        <p class="hero-tagline">{tsukiConfig.site.description}</p>
-      )}
-    </div>
-
-    {!hasHeroImage && <div class="hero-decoration" aria-hidden="true"></div>}
-  </section>
-
   <!-- Recent Posts -->
   <section class="section">
     <div class="section-header">
@@ -150,79 +125,6 @@ const recentMoments = [
 </Default>
 
 <style>
-  /* Hero Section */
-  .hero {
-    position: relative;
-    text-align: center;
-    padding: 4rem 0 2.5rem;
-    margin-bottom: 2.5rem;
-    overflow: hidden;
-  }
-
-  .hero.has-image {
-    padding-bottom: 5.25rem;
-  }
-
-  .hero.has-image::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    left: 50%;
-    width: 100vw;
-    width: 100dvw;
-    transform: translateX(-50%);
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse at 50% 20%, rgba(0, 0, 0, 0.18) 0%, transparent 55%),
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--tsuki-bg) 12%, transparent) 0%,
-        color-mix(in srgb, var(--tsuki-bg) 35%, transparent) 55%,
-        var(--tsuki-bg) 100%
-      );
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .hero-title {
-    font-size: 3rem;
-    font-weight: 800;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    line-height: 1.1;
-  }
-
-  .hero.has-image .hero-title,
-  .hero.has-image .hero-tagline {
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
-  }
-
-  .hero-tagline {
-    font-size: 1.125rem;
-    color: var(--tsuki-muted);
-    margin: 0;
-    font-weight: 500;
-    line-height: 1.6;
-  }
-
-  .hero-decoration {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, var(--tsuki-primary) 0%, transparent 70%);
-    opacity: 0.03;
-    pointer-events: none;
-  }
-
   /* Section Styles */
   .section {
     margin-bottom: 3rem;
@@ -442,18 +344,6 @@ const recentMoments = [
 
   /* Responsive */
   @media (max-width: 640px) {
-    .hero-title {
-      font-size: 2.5rem;
-    }
-
-    .hero {
-      padding: 3rem 0 2rem;
-    }
-
-    .hero.has-image {
-      padding-bottom: 4.25rem;
-    }
-
     .quick-links {
       grid-template-columns: 1fr;
     }
