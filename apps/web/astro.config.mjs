@@ -12,6 +12,9 @@ const workspaceRoot = path.resolve(projectRoot, '..', '..')
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
+  session: {
+    driver: 'memory',
+  },
   integrations: [react()],
   outDir: path.resolve(workspaceRoot, 'dist'),
   vite: {
