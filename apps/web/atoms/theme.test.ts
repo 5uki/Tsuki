@@ -1,35 +1,29 @@
-import { describe, it, expect } from 'vitest'
+﻿import { describe, it, expect } from 'vitest'
 import { isValidTheme, getSafeTheme, THEMES, DEFAULT_THEME } from '@atoms/theme'
 
 describe('theme', () => {
   describe('THEMES', () => {
-    it('should have 7 themes', () => {
-      expect(THEMES.length).toBe(7)
-      expect(THEMES).toContain('paper')
-      expect(THEMES).toContain('ink')
-      expect(THEMES).toContain('nord')
-      expect(THEMES).toContain('rose')
-      expect(THEMES).toContain('aurora')
-      expect(THEMES).toContain('mono')
-      expect(THEMES).toContain('violet')
+    it('should only keep mauve theme', () => {
+      expect(THEMES).toEqual(['mauve'])
+      expect(DEFAULT_THEME).toBe('mauve')
     })
   })
 
   describe('isValidTheme', () => {
-    it('should return true for valid themes', () => {
-      expect(isValidTheme('paper')).toBe(true)
-      expect(isValidTheme('ink')).toBe(true)
+    it('should return true for mauve', () => {
+      expect(isValidTheme('mauve')).toBe(true)
     })
 
-    it('should return false for invalid themes', () => {
+    it('should return false for removed themes', () => {
+      expect(isValidTheme('paper')).toBe(false)
+      expect(isValidTheme('ink')).toBe(false)
       expect(isValidTheme('invalid')).toBe(false)
-      expect(isValidTheme('')).toBe(false)
     })
   })
 
   describe('getSafeTheme', () => {
-    it('should return valid theme', () => {
-      expect(getSafeTheme('ink')).toBe('ink')
+    it('should return mauve for valid input', () => {
+      expect(getSafeTheme('mauve')).toBe('mauve')
     })
 
     it('should return default for invalid input', () => {

@@ -2,6 +2,7 @@
 import '@/styles/global.css'
 import '@/styles/themes.css'
 import tsukiConfig from '@/config/tsuki-config'
+import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
 
 interface Props {
   title: string
@@ -9,7 +10,7 @@ interface Props {
   noindex?: boolean
 }
 
-const defaultTheme = tsukiConfig.site.defaultTheme ?? 'paper'
+const defaultTheme = getSafeTheme(tsukiConfig.site.defaultTheme ?? DEFAULT_THEME)
 const { title, description = tsukiConfig.site.description ?? 'Tsuki 博客', noindex = false } = Astro.props
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url
 const rawFaviconHref = tsukiConfig.site.faviconHref ?? '/favicon.svg'
@@ -35,10 +36,13 @@ const bodyVars: string[] = []
 if (isHome && topBgImageHref) {
   bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
 }
+if (isHome) {
+  bodyVars.push('--tsuki-top-backdrop-bg: transparent;')
+}
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
 
 // 主题列表用于验证
-const VALID_THEMES = ['paper', 'ink', 'nord', 'rose', 'aurora', 'mono', 'violet']
+const VALID_THEMES = ['mauve']
 ---
 
 <!doctype html>
@@ -64,6 +68,9 @@ const VALID_THEMES = ['paper', 'ink', 'nord', 'rose', 'aurora', 'mono', 'violet'
           void error
         }
         let theme = persisted || defaultTheme
+        if (theme === 'violet') {
+          theme = 'mauve'
+        }
         if (validThemes.indexOf(theme) === -1) {
           theme = defaultTheme
         }

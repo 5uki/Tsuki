@@ -1,11 +1,11 @@
-/**
+﻿/**
  * 共享主题定义
  */
 
-export const THEMES = ['paper', 'ink', 'nord', 'rose', 'aurora', 'mono', 'violet'] as const
+export const THEMES = ['mauve'] as const
 export type Theme = (typeof THEMES)[number]
 
-export const DEFAULT_THEME: Theme = 'paper'
+export const DEFAULT_THEME: Theme = 'mauve'
 
 /**
  * 主题元数据
@@ -21,13 +21,7 @@ export interface ThemeMeta {
  * 主题元数据列表（单一数据源）
  */
 export const THEME_METAS: ThemeMeta[] = [
-  { id: 'paper', name: '纸张', primaryColor: '#0b5fff', bgColor: '#fbf7ef' },
-  { id: 'ink', name: '墨水', primaryColor: '#7aa2f7', bgColor: '#0b0f19' },
-  { id: 'nord', name: '北欧', primaryColor: '#5e81ac', bgColor: '#eceff4' },
-  { id: 'rose', name: '玫瑰', primaryColor: '#db2777', bgColor: '#fff7fb' },
-  { id: 'aurora', name: '极光', primaryColor: '#06b6d4', bgColor: '#f8fafc' },
-  { id: 'mono', name: '极简', primaryColor: '#111827', bgColor: '#ffffff' },
-  { id: 'violet', name: '紫罗兰', primaryColor: '#7c3aed', bgColor: '#faf8ff' },
+  { id: 'mauve', name: '紫绯', primaryColor: '#7c3aed', bgColor: '#e0c3fc' },
 ]
 
 /**
