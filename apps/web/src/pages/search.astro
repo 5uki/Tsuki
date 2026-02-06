@@ -1,30 +1,30 @@
----
+﻿---
 import Default from '@/layouts/Default.astro'
 
 const query = Astro.url.searchParams.get('q') || ''
 ---
 
-<Default title="搜索" description="搜索文章" noindex={true}>
-  <h1>搜索</h1>
+<Default title="鎼滅储" description="鎼滅储鏂囩珷" noindex={true}>
+  <h1>鎼滅储</h1>
 
   <form class="search-form" method="get">
     <input
       type="search"
       name="q"
       value={query}
-      placeholder="输入关键词搜索..."
+      placeholder="杈撳叆鍏抽敭璇嶆悳绱?.."
       class="search-input"
     />
-    <button type="submit" class="search-button">搜索</button>
+    <button type="submit" class="search-button">鎼滅储</button>
   </form>
 
   {query ? (
     <section class="results">
-      <h2>搜索结果："{query}"</h2>
-      <p class="placeholder">未找到相关内容</p>
+      <h2>鎼滅储缁撴灉锛?{query}"</h2>
+      <p class="placeholder">鏈壘鍒扮浉鍏冲唴瀹?/p>
     </section>
   ) : (
-    <p class="hint">请输入关键词进行搜索</p>
+    <p class="hint">璇疯緭鍏ュ叧閿瘝杩涜鎼滅储</p>
   )}
 </Default>
 
@@ -43,21 +43,21 @@ const query = Astro.url.searchParams.get('q') || ''
   .search-input {
     flex: 1;
     padding: 0.75rem 1rem;
-    border: 1px solid var(--tsuki-border);
+    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
     border-radius: 0.5rem;
     font-size: 1rem;
-    background: var(--tsuki-card-bg);
+    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
     color: var(--tsuki-fg);
   }
 
   .search-input:focus {
     outline: none;
-    border-color: var(--tsuki-primary);
+    border-color: var(--tsuki-theme-accent);
   }
 
   .search-button {
     padding: 0.75rem 1.5rem;
-    background: var(--tsuki-primary);
+    background: var(--tsuki-theme-accent);
     color: var(--tsuki-color-on-primary);
     border: none;
     border-radius: 0.5rem;
@@ -76,7 +76,7 @@ const query = Astro.url.searchParams.get('q') || ''
 
   .placeholder,
   .hint {
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     font-style: italic;
   }
 </style>

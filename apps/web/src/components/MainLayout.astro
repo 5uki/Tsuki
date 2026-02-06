@@ -1,4 +1,4 @@
----
+﻿---
 import Profile from './Profile.astro'
 import Announcement from './Announcement.astro'
 import Categories from './Categories.astro'
@@ -59,6 +59,7 @@ const { class: className } = Astro.props
     .main-layout {
       grid-template-columns: minmax(0, 1fr);
       gap: var(--tsuki-sidebar-gap-compact);
+      padding: 0;
     }
 
     .sidebar {

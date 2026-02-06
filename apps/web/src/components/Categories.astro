@@ -1,4 +1,4 @@
----
+﻿---
 const categories = [
   { name: '技术', count: 5, slug: 'tech' },
   { name: '生活', count: 4, slug: 'life' },
@@ -39,7 +39,7 @@ const categories = [
     content: '';
     width: 4px;
     height: 1rem;
-    background: var(--tsuki-primary);
+    background: var(--tsuki-theme-accent);
     border-radius: 2px;
   }
 
@@ -54,8 +54,8 @@ const categories = [
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0.75rem;
-    background: var(--tsuki-bg-secondary);
-    border: 1px solid var(--tsuki-border);
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
+    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
     border-radius: 0.5rem;
     color: var(--tsuki-fg);
     text-decoration: none;
@@ -63,8 +63,8 @@ const categories = [
   }
 
   .category-item:hover {
-    background: var(--tsuki-bg-hover);
-    border-color: var(--tsuki-primary);
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
+    border-color: var(--tsuki-theme-accent);
     transform: translateX(4px);
     text-decoration: none;
   }
@@ -76,9 +76,9 @@ const categories = [
 
   .category-count {
     font-size: 0.75rem;
-    color: var(--tsuki-muted);
-    background: var(--tsuki-primary);
-    color: white;
+    color: #0b0b0b;
+    background: var(--tsuki-theme-secondary);
+    color: var(--tsuki-fg);
     padding: 0.125rem 0.5rem;
     border-radius: 0.375rem;
   }

@@ -1,4 +1,4 @@
----
+﻿---
 import Default from '@/layouts/Default.astro'
 
 export async function getStaticPaths() {
@@ -8,14 +8,14 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 ---
 
-<Default title={`文章: ${slug}`} description="文章详情">
+<Default title={`鏂囩珷: ${slug}`} description="鏂囩珷璇︽儏">
   <article class="post">
     <header>
       <h1>{slug}</h1>
-      <p class="meta">文章详情页占位</p>
+      <p class="meta">鏂囩珷璇︽儏椤靛崰浣?/p>
     </header>
     <div class="prose">
-      <p>这是文章 "{slug}" 的详情页。M1 将实现完整功能。</p>
+      <p>杩欐槸鏂囩珷 "{slug}" 鐨勮鎯呴〉銆侻1 灏嗗疄鐜板畬鏁村姛鑳姐€?/p>
     </div>
   </article>
 </Default>
@@ -24,7 +24,7 @@ const { slug } = Astro.params
   .post header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--tsuki-border);
+    border-bottom: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   }
 
   .post h1 {
@@ -33,7 +33,7 @@ const { slug } = Astro.params
   }
 
   .meta {
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     font-size: 0.875rem;
   }
 </style>

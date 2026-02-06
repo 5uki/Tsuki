@@ -2,13 +2,13 @@ import { defineConfig } from '@tsuki/config'
 
 export default defineConfig({
   site: {
-    title: "Suki's Blog",
+    title: 'Tsuki',
     description: '一个认真写字的地方',
-    defaultTheme: 'violet',
+    defaultTheme: 'mauve',
     faviconHref: '/favicon.svg',
   },
   hero: {
-    titleHtml: "<span style=\"letter-spacing: -0.02em;\">Suki's Blog</span>",
+    titleHtml: '<span style="letter-spacing: -0.02em;">Tsuki</span>',
     subtitleHtml: '<span>一个认真写字的地方</span>',
     backgroundImageHref: '/background.png',
   },

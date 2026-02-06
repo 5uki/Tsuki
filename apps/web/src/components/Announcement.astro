@@ -1,4 +1,4 @@
----
+﻿---
 import tsukiConfig from '@/config/tsuki-config'
 
 const { announcement } = tsukiConfig
@@ -44,13 +44,13 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
     content: '';
     width: 4px;
     height: 1rem;
-    background: var(--tsuki-primary);
+    background: var(--tsuki-theme-accent);
     border-radius: 2px;
   }
 
   .announcement-content {
     font-size: 0.875rem;
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     line-height: 1.6;
     margin-bottom: 0.75rem;
   }
@@ -69,8 +69,8 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
     align-self: flex-end;
     margin-top: auto;
     padding: 0.35rem 0.9rem;
-    background: var(--tsuki-primary);
-    color: white;
+    background: var(--tsuki-theme-secondary);
+    color: var(--tsuki-fg);
     border-radius: 0.5rem;
     font-size: 0.8125rem;
     font-weight: 500;

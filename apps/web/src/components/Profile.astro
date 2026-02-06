@@ -1,4 +1,4 @@
----
+﻿---
 import tsukiConfig from '@/config/tsuki-config'
 
 const { profile, stats } = tsukiConfig
@@ -179,7 +179,7 @@ function formatNumber(num: number): string {
 
   .profile-bio {
     font-size: 0.875rem;
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     margin: 0 0 0.75rem;
     text-align: center;
     line-height: 1.6;
@@ -202,7 +202,7 @@ function formatNumber(num: number): string {
   }
 
   .profile-stat-col + .profile-stat-col {
-    border-left: 1px solid var(--tsuki-border);
+    border-left: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   }
 
   .profile-stat-value {
@@ -213,7 +213,7 @@ function formatNumber(num: number): string {
 
   .profile-stat-label {
     font-size: 0.75rem;
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
   }
 
   .social-links {
@@ -229,8 +229,8 @@ function formatNumber(num: number): string {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    background: var(--tsuki-bg-secondary);
-    border: 1px solid var(--tsuki-border);
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
+    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
     border-radius: 0.5rem;
     color: var(--tsuki-fg);
     text-decoration: none;
@@ -238,8 +238,8 @@ function formatNumber(num: number): string {
   }
 
   .social-link:hover {
-    background: var(--tsuki-bg-hover);
-    border-color: var(--tsuki-primary);
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
+    border-color: var(--tsuki-theme-accent);
     transform: translateY(-1px);
   }
 
@@ -251,7 +251,7 @@ function formatNumber(num: number): string {
     background: var(--tsuki-link-icon-bg);
     border-color: transparent;
     color: var(--tsuki-fg);
-    box-shadow: var(--tsuki-card-shadow);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
     line-height: 1;
   }
 

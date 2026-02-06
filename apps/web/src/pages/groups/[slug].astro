@@ -1,4 +1,4 @@
----
+﻿---
 import Default from '@/layouts/Default.astro'
 
 export async function getStaticPaths() {
@@ -8,9 +8,9 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 ---
 
-<Default title={`分组: ${slug}`} description={`分组 ${slug} 下的文章`}>
+<Default title={`鍒嗙粍: ${slug}`} description={`鍒嗙粍 ${slug} 涓嬬殑鏂囩珷`}>
   <h1>{slug}</h1>
-  <p class="placeholder">该分组下暂无文章</p>
+  <p class="placeholder">璇ュ垎缁勪笅鏆傛棤鏂囩珷</p>
 </Default>
 
 <style>
@@ -20,7 +20,7 @@ const { slug } = Astro.params
   }
 
   .placeholder {
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     font-style: italic;
   }
 </style>

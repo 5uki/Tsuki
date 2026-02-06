@@ -1,17 +1,17 @@
----
+﻿---
 import Default from '@/layouts/Default.astro'
 ---
 
-<Default title="后台管理" description="后台管理首页">
+<Default title="鍚庡彴绠＄悊" description="鍚庡彴绠＄悊棣栭〉">
   <div class="admin-page">
-    <h1>后台管理</h1>
-    <p class="description">这是后台管理首页。M6 将实现完整功能。</p>
+    <h1>鍚庡彴绠＄悊</h1>
+    <p class="description">杩欐槸鍚庡彴绠＄悊棣栭〉銆侻6 灏嗗疄鐜板畬鏁村姛鑳姐€?/p>
 
     <nav class="admin-nav">
-      <a href="/admin/posts">文章管理</a>
-      <a href="/admin/moments">动态管理</a>
-      <a href="/admin/comments">评论管理</a>
-      <a href="/admin/settings">站点配置</a>
+      <a href="/admin/posts">鏂囩珷绠＄悊</a>
+      <a href="/admin/moments">鍔ㄦ€佺鐞?/a>
+      <a href="/admin/comments">璇勮绠＄悊</a>
+      <a href="/admin/settings">绔欑偣閰嶇疆</a>
     </nav>
   </div>
 </Default>
@@ -28,7 +28,7 @@ import Default from '@/layouts/Default.astro'
   }
 
   .description {
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     margin-bottom: 2rem;
   }
 
@@ -41,8 +41,8 @@ import Default from '@/layouts/Default.astro'
   .admin-nav a {
     display: block;
     padding: 1rem;
-    background: var(--tsuki-card-bg);
-    border: 1px solid var(--tsuki-border);
+    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
     border-radius: 0.5rem;
     text-decoration: none;
     color: var(--tsuki-fg);
@@ -52,7 +52,7 @@ import Default from '@/layouts/Default.astro'
   }
 
   .admin-nav a:hover {
-    border-color: var(--tsuki-primary);
-    background: var(--tsuki-card-bg);
+    border-color: var(--tsuki-theme-accent);
+    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
   }
 </style>

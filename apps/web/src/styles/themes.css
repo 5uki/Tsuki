@@ -1,21 +1,10 @@
 ﻿/**
  * 主题变量定义
- * 当前仅保留单主题：mauve（紫绯）
  */
 
 :root,
 [data-theme='mauve'] {
-  --tsuki-fg: #0b0b0b;
-  --tsuki-muted: #6b6687;
-  --tsuki-border: #e8e3f3;
-  --tsuki-primary: #7c3aed;
-  --tsuki-accent: #c026d3;
-  --tsuki-card-bg: rgba(255, 255, 255, 0.7);
-  --tsuki-card-shadow: 0 1px 3px rgba(124, 58, 237, 0.08);
-  --tsuki-code-bg: #f5f3ff;
-  --tsuki-code-fg: #5b21b6;
-  --tsuki-banner-wave-top: #f0e8ff;
-  --tsuki-banner-wave-bottom: #e8e0ff;
-  --tsuki-banner-wave-fill: var(--tsuki-banner-wave-bottom);
-  --tsuki-bg: radial-gradient(circle, #e8d4d9 15%, #e0c3fc 100%);
+  --tsuki-theme-gradient: radial-gradient(circle, #ece4ff 12%, #e0c3fc 100%);
+  --tsuki-theme-accent: #a78bfa;
+  --tsuki-theme-secondary: #ece4ff;
 }

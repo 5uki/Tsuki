@@ -1,4 +1,4 @@
----
+﻿---
 import Base from './Base.astro'
 import Header from '@/components/Header.astro'
 import Banner from '@/components/Banner.astro'
@@ -36,7 +36,7 @@ const isHome = Astro.url.pathname === '/'
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--tsuki-bg);
+    background: var(--tsuki-theme-gradient);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: 0 0;
@@ -47,5 +47,11 @@ const isHome = Astro.url.pathname === '/'
     width: 100%;
     margin: 0 auto;
     padding: 2rem var(--tsuki-main-inline-padding);
+  }
+
+  @media (max-width: 768px) {
+    .main {
+      padding-inline: 5px;
+    }
   }
 </style>

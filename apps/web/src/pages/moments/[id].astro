@@ -1,4 +1,4 @@
----
+﻿---
 import Default from '@/layouts/Default.astro'
 
 export async function getStaticPaths() {
@@ -8,13 +8,13 @@ export async function getStaticPaths() {
 const { id } = Astro.params
 ---
 
-<Default title="动态" description="动态详情">
+<Default title="鍔ㄦ€? description="鍔ㄦ€佽鎯?>
   <article class="moment">
     <header>
-      <p class="meta">动态详情页占位</p>
+      <p class="meta">鍔ㄦ€佽鎯呴〉鍗犱綅</p>
     </header>
     <div class="prose">
-      <p>这是动态 "{id}" 的详情页。M2 将实现完整功能。</p>
+      <p>杩欐槸鍔ㄦ€?"{id}" 鐨勮鎯呴〉銆侻2 灏嗗疄鐜板畬鏁村姛鑳姐€?/p>
     </div>
   </article>
 </Default>
@@ -25,7 +25,7 @@ const { id } = Astro.params
   }
 
   .meta {
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
     font-size: 0.875rem;
   }
 </style>

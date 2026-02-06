@@ -1,8 +1,4 @@
-/**
- * 全局基础样式
- */
-
-*,
+﻿*,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -13,14 +9,18 @@ html {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* 预留滚动条占位，避免不同页面“有/无滚动条”导致布局水平抖动 */
   scrollbar-gutter: stable;
   overflow-y: auto;
 }
 
+@media (max-width: 768px) {
+  html {
+    scrollbar-gutter: auto;
+  }
+}
+
 @supports not (scrollbar-gutter: stable) {
   body {
-    /* 兜底：在不支持 scrollbar-gutter 的浏览器里，仍尽量避免滚动条出现/消失导致的水平抖动 */
     padding-right: calc(100vw - 100%);
   }
 }
@@ -41,7 +41,6 @@ body {
   z-index: 1;
 }
 
-/* 顶部背景容器：负责渐变底色 + 图片叠加 + 动态涟漪（仅用变量控制开关） */
 .tsuki-top-backdrop {
   position: absolute;
   top: 0;
@@ -50,7 +49,7 @@ body {
   height: var(--tsuki-banner-height);
   z-index: 0;
   pointer-events: none;
-  background: var(--tsuki-top-backdrop-bg, var(--tsuki-bg));
+  background: var(--tsuki-top-backdrop-bg, var(--tsuki-theme-gradient));
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: 0 0;
@@ -58,7 +57,7 @@ body {
 }
 
 a {
-  color: var(--tsuki-primary);
+  color: var(--tsuki-theme-accent);
   text-decoration: none;
 }
 
@@ -75,7 +74,6 @@ button {
   font-family: inherit;
 }
 
-/* 内容宽度变量 */
 .sidebar-card {
   background: var(--tsuki-sidebar-card-bg);
   border: 1px solid var(--tsuki-sidebar-card-border);
@@ -103,6 +101,13 @@ button {
 
 :root {
   --font-family-fallback: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* 仅保留三色主题 token；黑白中性色独立 */
+  --tsuki-fg: #0b0b0b;
+  --tsuki-banner-wave-top: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
+  --tsuki-banner-wave-bottom: color-mix(in srgb, var(--tsuki-theme-secondary) 58%, #ffffff);
+  --tsuki-banner-wave-fill: var(--tsuki-banner-wave-bottom);
+
   --tsuki-content-width: 48rem;
   --tsuki-header-width: 100%;
   --tsuki-header-block-size: calc(
@@ -150,8 +155,8 @@ button {
   --tsuki-shadow-theme-preview: 0 2px 8px rgba(0, 0, 0, 0.1);
   --tsuki-shadow-theme-preview-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
   --tsuki-header-dropdown-bg: #ffffff;
-  --tsuki-header-frame-bg: color-mix(in srgb, var(--tsuki-card-bg) 88%, transparent);
-  --tsuki-header-frame-border: color-mix(in srgb, var(--tsuki-border) 80%, transparent);
+  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 88%, transparent);
+  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
   --tsuki-header-frame-shadow: var(--tsuki-shadow-header);
   --tsuki-header-frame-radius: 1.25rem;
   --tsuki-main-inline-padding: 1rem;
@@ -184,23 +189,18 @@ button {
   --tsuki-sidebar-card-radius: 1.25rem;
   --tsuki-sidebar-card-padding: 1rem;
   --tsuki-sidebar-card-padding-compact: 0.875rem;
-  --tsuki-sidebar-card-bg: var(--tsuki-card-bg);
-  --tsuki-sidebar-card-border: color-mix(in srgb, var(--tsuki-border) 80%, transparent);
-  --tsuki-sidebar-card-border-hover: color-mix(
-    in srgb,
-    var(--tsuki-primary) 45%,
-    var(--tsuki-border) 55%
-  );
-  --tsuki-sidebar-card-shadow: var(--tsuki-card-shadow);
+  --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
+  --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
   --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
   --tsuki-sidebar-card-hover-translate: -0.125rem;
   --tsuki-profile-avatar-overlay: rgba(0, 0, 0, 0.55);
   --tsuki-profile-avatar-overlay-icon: var(--tsuki-color-on-primary);
-  --tsuki-link-icon-bg: color-mix(in srgb, var(--tsuki-card-bg) 82%, var(--tsuki-primary) 18%);
-  --tsuki-link-icon-bg-hover: color-mix(in srgb, var(--tsuki-card-bg) 72%, var(--tsuki-primary) 28%);
+  --tsuki-link-icon-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 82%, var(--tsuki-theme-accent) 18%);
+  --tsuki-link-icon-bg-hover: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 72%, var(--tsuki-theme-accent) 28%);
 }
 
-/* 文章排版 */
 .prose {
   font-size: 1rem;
   line-height: 1.8;
@@ -249,15 +249,15 @@ button {
 .prose blockquote {
   margin: 1.5rem 0;
   padding: 0.5rem 1rem;
-  border-left: 4px solid var(--tsuki-primary);
-  background: var(--tsuki-card-bg);
-  color: var(--tsuki-muted);
+  border-left: 4px solid var(--tsuki-theme-accent);
+  background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+  color: #0b0b0b;
 }
 
 .prose pre {
   margin: 1.5rem 0;
   padding: 1rem;
-  background: var(--tsuki-code-bg);
+  background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, #ffffff);
   border-radius: 0.5rem;
   overflow-x: auto;
 }
@@ -265,8 +265,8 @@ button {
 .prose code {
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
   font-size: 0.875em;
-  background: var(--tsuki-code-bg);
-  color: var(--tsuki-code-fg);
+  background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, #ffffff);
+  color: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);
   padding: 0.2em 0.4em;
   border-radius: 0.25rem;
 }
@@ -284,7 +284,7 @@ button {
 .prose hr {
   margin: 2rem 0;
   border: none;
-  border-top: 1px solid var(--tsuki-border);
+  border-top: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
 }
 
 .prose table {
@@ -296,12 +296,11 @@ button {
 .prose th,
 .prose td {
   padding: 0.75rem;
-  border: 1px solid var(--tsuki-border);
+  border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   text-align: left;
 }
 
 .prose th {
-  background: var(--tsuki-card-bg);
+  background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
   font-weight: 600;
 }
-

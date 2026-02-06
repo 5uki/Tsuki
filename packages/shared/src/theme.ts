@@ -13,15 +13,22 @@ export const DEFAULT_THEME: Theme = 'mauve'
 export interface ThemeMeta {
   id: Theme
   name: string
-  primaryColor: string
-  bgColor: string
+  gradientColor: string
+  accentColor: string
+  secondaryColor: string
 }
 
 /**
  * 主题元数据列表（单一数据源）
  */
 export const THEME_METAS: ThemeMeta[] = [
-  { id: 'mauve', name: '紫绯', primaryColor: '#7c3aed', bgColor: '#e0c3fc' },
+  {
+    id: 'mauve',
+    name: '紫绯',
+    gradientColor: 'radial-gradient(circle, #ece4ff 12%, #e0c3fc 100%)',
+    accentColor: '#a78bfa',
+    secondaryColor: '#ece4ff',
+  },
 ]
 
 /**

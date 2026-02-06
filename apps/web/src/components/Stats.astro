@@ -1,4 +1,4 @@
----
+﻿---
 import tsukiConfig from '@/config/tsuki-config'
 
 const { stats } = tsukiConfig
@@ -52,7 +52,7 @@ function formatNumber(num: number): string {
     content: '';
     width: 4px;
     height: 1rem;
-    background: var(--tsuki-primary);
+    background: var(--tsuki-theme-accent);
     border-radius: 2px;
   }
 
@@ -67,7 +67,7 @@ function formatNumber(num: number): string {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--tsuki-border);
+    border-bottom: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   }
 
   .stat-item:last-child {
@@ -76,7 +76,7 @@ function formatNumber(num: number): string {
 
   .stat-label {
     font-size: 0.875rem;
-    color: var(--tsuki-muted);
+    color: #0b0b0b;
   }
 
   .stat-value {
