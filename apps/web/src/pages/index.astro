@@ -41,8 +41,8 @@ const recentPosts: PostCardItem[] = [
 
 <Default description={tsukiConfig.site.description}>
   <MainLayout>
-    <section class="posts-section">
-      <div class="posts-list">
+    <section class="mb-8">
+      <div class="flex flex-col gap-4">
         {recentPosts.map((post) => (
           <PostCard post={post} />
         ))}
@@ -50,15 +50,3 @@ const recentPosts: PostCardItem[] = [
     </section>
   </MainLayout>
 </Default>
-
-<style>
-  .posts-section {
-    margin-bottom: 2rem;
-  }
-
-  .posts-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-</style>

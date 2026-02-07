@@ -5,78 +5,25 @@ const query = Astro.url.searchParams.get('q') || ''
 ---
 
 <Default title="搜索" description="搜索文章" noindex={true}>
-  <h1>搜索</h1>
+  <h1 class="mb-[var(--tsuki-space-6)] text-[var(--tsuki-text-5xl)]">搜索</h1>
 
-  <form class="search-form" method="get">
+  <form class="mb-8 flex gap-2" method="get">
     <input
       type="search"
       name="q"
       value={query}
       placeholder="输入关键词搜索..."
-      class="search-input"
+      class="flex-1 rounded-[var(--tsuki-radius-md)] border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)] px-4 py-3 text-[var(--tsuki-text-lg)] text-[var(--tsuki-fg)] transition-[border-color] duration-150 focus:outline-none focus:border-[var(--tsuki-theme-accent)]"
     />
-    <button type="submit" class="search-button">搜索</button>
+    <button type="submit" class="rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-theme-accent)] px-6 py-3 text-[var(--tsuki-text-lg)] text-[var(--tsuki-color-on-primary)] transition-opacity duration-150 hover:opacity-90">搜索</button>
   </form>
 
   {query ? (
-    <section class="results">
-      <h2>搜索结果: "{query}"</h2>
-      <p class="placeholder">未找到相关内容</p>
+    <section>
+      <h2 class="mb-4 text-[var(--tsuki-text-xl)]">搜索结果: "{query}"</h2>
+      <p class="italic text-[var(--tsuki-fg)]">未找到相关内容</p>
     </section>
   ) : (
-    <p class="hint">请输入关键词进行搜索</p>
+    <p class="italic text-[var(--tsuki-fg)]">请输入关键词进行搜索</p>
   )}
 </Default>
-
-<style>
-  h1 {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .search-form {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .search-input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-    color: var(--tsuki-fg);
-  }
-
-  .search-input:focus {
-    outline: none;
-    border-color: var(--tsuki-theme-accent);
-  }
-
-  .search-button {
-    padding: 0.75rem 1.5rem;
-    background: var(--tsuki-theme-accent);
-    color: var(--tsuki-color-on-primary);
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-
-  .search-button:hover {
-    opacity: 0.9;
-  }
-
-  .results h2 {
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
-  }
-
-  .placeholder,
-  .hint {
-    color: #0b0b0b;
-    font-style: italic;
-  }
-</style>

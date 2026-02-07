@@ -11,73 +11,16 @@ const tags = [
 ]
 ---
 
-<div class="tags-widget sidebar-card">
-  <h3 class="tags-title">标签</h3>
-  <div class="tags-list">
+<div class="rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] transition-[transform,box-shadow,border-color] duration-[140ms] ease-out hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] max-sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+  <h3 class="mb-3 flex items-center gap-2 text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)] before:h-4 before:w-1 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] before:content-[''] max-sm:text-[var(--tsuki-text-md)]">标签</h3>
+  <div class="flex flex-wrap gap-2">
     {tags.map((tag) => (
       <a
         href={`/tags/${tag.slug}`}
-        class="tag-item"
+        class="inline-flex items-center rounded-[var(--tsuki-radius-md)] bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_10%,transparent)] px-3 py-1.5 text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-theme-accent)] transition-[background-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_20%,transparent)] max-sm:px-2.5 max-sm:py-[0.3125rem]"
       >
         {tag.name}
       </a>
     ))}
   </div>
 </div>
-
-<style>
-  .tags-widget {
-  }
-
-  .tags-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .tags-title::before {
-    content: '';
-    width: 4px;
-    height: 1rem;
-    background: var(--tsuki-theme-accent);
-    border-radius: 2px;
-  }
-
-  .tags-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag-item {
-    display: inline-block;
-    padding: 0.375rem 0.75rem;
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
-    color: var(--tsuki-theme-accent);
-    font-size: 0.8125rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.15s, transform 0.15s;
-  }
-
-  .tag-item:hover {
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 20%, transparent);
-    transform: translateY(-2px);
-    text-decoration: none;
-  }
-
-  @media (max-width: 640px) {
-    .tags-title {
-      font-size: 0.9375rem;
-    }
-
-    .tag-item {
-      padding: 0.3125rem 0.625rem;
-    }
-  }
-</style>

@@ -9,18 +9,6 @@ const { slug } = Astro.params
 ---
 
 <Default title={`鍒嗙粍: ${slug}`} description={`鍒嗙粍 ${slug} 涓嬬殑鏂囩珷`}>
-  <h1>{slug}</h1>
-  <p class="placeholder">璇ュ垎缁勪笅鏆傛棤鏂囩珷</p>
+  <h1 class="mb-[var(--tsuki-space-6)] text-[var(--tsuki-text-5xl)]">{slug}</h1>
+  <p class="italic text-[var(--tsuki-fg)]">璇ュ垎缁勪笅鏆傛棤鏂囩珷</p>
 </Default>
-
-<style>
-  h1 {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .placeholder {
-    color: #0b0b0b;
-    font-style: italic;
-  }
-</style>

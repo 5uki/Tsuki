@@ -1,111 +1,110 @@
-﻿*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-html {
-  font-family: var(--font-family-fallback);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scrollbar-gutter: stable;
-  overflow-y: auto;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-@media (max-width: 768px) {
   html {
-    scrollbar-gutter: auto;
+    font-family: var(--font-family-fallback);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-gutter: stable;
+    overflow-y: auto;
   }
-}
 
-@supports not (scrollbar-gutter: stable) {
+  @media (max-width: 768px) {
+    html {
+      scrollbar-gutter: auto;
+    }
+  }
+
+  @supports not (scrollbar-gutter: stable) {
+    body {
+      padding-right: calc(100vw - 100%);
+    }
+  }
+
   body {
-    padding-right: calc(100vw - 100%);
+    margin: 0;
+    padding: 0;
+    color: var(--tsuki-fg);
+    position: relative;
+    isolation: isolate;
+    transition: color 150ms;
+    min-height: 100vh;
   }
-}
 
-body {
-  margin: 0;
-  padding: 0;
-  color: var(--tsuki-fg);
-  position: relative;
-  isolation: isolate;
-  transition:
-    color 150ms;
-  min-height: 100vh;
-}
+  a {
+    color: var(--tsuki-theme-accent);
+    text-decoration: none;
+  }
 
-.tsuki-root {
-  position: relative;
-  z-index: 1;
-}
+  a:hover {
+    text-decoration: underline;
+  }
 
-.tsuki-top-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--tsuki-banner-height);
-  z-index: 0;
-  pointer-events: none;
-  background: var(--tsuki-top-backdrop-bg, var(--tsuki-theme-gradient));
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-position: 0 0;
-  contain: paint;
-}
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 
-a {
-  color: var(--tsuki-theme-accent);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-button {
-  font-family: inherit;
-}
-
-.sidebar-card {
-  background: var(--tsuki-sidebar-card-bg);
-  border: 1px solid var(--tsuki-sidebar-card-border);
-  border-radius: var(--tsuki-sidebar-card-radius);
-  box-shadow: var(--tsuki-sidebar-card-shadow);
-  padding: var(--tsuki-sidebar-card-padding);
-  will-change: transform, box-shadow, border-color;
-  transition:
-    transform 130ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 140ms ease-out,
-    border-color 130ms ease-out;
-}
-
-.sidebar-card:hover {
-  border-color: var(--tsuki-sidebar-card-border-hover);
-  box-shadow: var(--tsuki-sidebar-card-shadow-hover);
-  transform: translateY(var(--tsuki-sidebar-card-hover-translate));
-}
-
-@media (max-width: 640px) {
-  .sidebar-card {
-    padding: var(--tsuki-sidebar-card-padding-compact);
+  button {
+    font-family: inherit;
   }
 }
 
 :root {
   --font-family-fallback: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tsuki-space-1: 0.25rem;
+  --tsuki-space-2: 0.5rem;
+  --tsuki-space-3: 0.75rem;
+  --tsuki-space-4: 1rem;
+  --tsuki-space-5: 1.25rem;
+  --tsuki-space-6: 1.5rem;
+  --tsuki-space-7: 1.75rem;
+  --tsuki-space-8: 2rem;
+  --tsuki-space-9: 2.25rem;
+  --tsuki-space-10: 2.5rem;
+  --tsuki-space-12: 3rem;
+
+  --tsuki-radius-2xs: 0.125rem;
+  --tsuki-radius-xs: 0.25rem;
+  --tsuki-radius-2sm: 0.3rem;
+  --tsuki-radius-3sm: 0.35rem;
+  --tsuki-radius-sm: 0.375rem;
+  --tsuki-radius-4sm: 0.4rem;
+  --tsuki-radius-5sm: 0.45rem;
+  --tsuki-radius-md: 0.5rem;
+  --tsuki-radius-lg: 0.75rem;
+  --tsuki-radius-xl: 0.875rem;
+  --tsuki-radius-pill: 999px;
+
+  --tsuki-text-xxs: 0.6875rem;
+  --tsuki-text-xs: 0.75rem;
+  --tsuki-text-sm: 0.8125rem;
+  --tsuki-text-base: 0.875rem;
+  --tsuki-text-base-tight: 0.84rem;
+  --tsuki-text-md-tight: 0.96rem;
+  --tsuki-text-md: 0.9375rem;
+  --tsuki-text-lg: 1rem;
+  --tsuki-text-xl: 1.125rem;
+  --tsuki-text-2xl: 1.25rem;
+  --tsuki-text-3xl: 1.375rem;
+  --tsuki-text-4xl: 1.5rem;
+  --tsuki-text-5xl: 1.75rem;
+  --tsuki-text-6xl: 2rem;
+  --tsuki-text-arrow: 0.9em;
 
   /* 仅保留三色主题 token；黑白中性色独立 */
   --tsuki-fg: #0b0b0b;
-  --tsuki-banner-wave-top: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
-  --tsuki-banner-wave-bottom: color-mix(in srgb, var(--tsuki-theme-secondary) 58%, #ffffff);
+  --tsuki-banner-wave-top: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, var(--tsuki-color-on-primary));
+  --tsuki-banner-wave-bottom: color-mix(in srgb, var(--tsuki-theme-secondary) 58%, var(--tsuki-color-on-primary));
   --tsuki-banner-wave-fill: var(--tsuki-banner-wave-bottom);
 
   --tsuki-content-width: 48rem;
@@ -147,16 +146,21 @@ button {
 
   --tsuki-banner-image: none;
   --tsuki-color-on-primary: #ffffff;
+  --tsuki-mask-clear: transparent;
+  --tsuki-mask-soft: rgba(0, 0, 0, 0.6);
+  --tsuki-mask-opaque: #000;
   --tsuki-btn-github-bg: #24292f;
   --tsuki-btn-github-bg-hover: #32383f;
-  --tsuki-btn-github-fg: #ffffff;
+  --tsuki-btn-github-fg: var(--tsuki-color-on-primary);
   --tsuki-shadow-header: 0 8px 24px rgba(0, 0, 0, 0.08);
   --tsuki-shadow-popover: 0 4px 24px rgba(0, 0, 0, 0.08);
   --tsuki-shadow-theme-preview: 0 2px 8px rgba(0, 0, 0, 0.1);
   --tsuki-shadow-theme-preview-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --tsuki-header-dropdown-bg: #ffffff;
-  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 88%, transparent);
-  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-shadow-avatar-overlay: 0 6px 12px rgba(0, 0, 0, 0.3);
+  --tsuki-shadow-link-icon: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
+  --tsuki-header-dropdown-bg: var(--tsuki-color-on-primary);
+  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 88%, transparent);
+  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary)) 80%, transparent);
   --tsuki-header-frame-shadow: var(--tsuki-shadow-header);
   --tsuki-header-frame-radius: 1.25rem;
   --tsuki-main-inline-padding: 1rem;
@@ -189,16 +193,16 @@ button {
   --tsuki-sidebar-card-radius: 1.25rem;
   --tsuki-sidebar-card-padding: 1rem;
   --tsuki-sidebar-card-padding-compact: 0.875rem;
-  --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-sidebar-card-bg: color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%);
+  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary)) 80%, transparent);
   --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
   --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
   --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
   --tsuki-sidebar-card-hover-translate: -0.125rem;
   --tsuki-profile-avatar-overlay: rgba(0, 0, 0, 0.55);
   --tsuki-profile-avatar-overlay-icon: var(--tsuki-color-on-primary);
-  --tsuki-link-icon-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 82%, var(--tsuki-theme-accent) 18%);
-  --tsuki-link-icon-bg-hover: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 72%, var(--tsuki-theme-accent) 28%);
+  --tsuki-link-icon-bg: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 82%, var(--tsuki-theme-accent) 18%);
+  --tsuki-link-icon-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 72%, var(--tsuki-theme-accent) 28%);
 }
 
 .prose {
@@ -246,30 +250,30 @@ button {
   margin-bottom: 0.5rem;
 }
 
-.prose blockquote {
-  margin: 1.5rem 0;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid var(--tsuki-theme-accent);
-  background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-  color: #0b0b0b;
-}
+  .prose blockquote {
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid var(--tsuki-theme-accent);
+    background: color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%);
+    color: var(--tsuki-fg);
+  }
 
-.prose pre {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, #ffffff);
-  border-radius: 0.5rem;
-  overflow-x: auto;
-}
+  .prose pre {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, var(--tsuki-color-on-primary));
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
 
-.prose code {
-  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-  font-size: 0.875em;
-  background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, #ffffff);
-  color: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);
-  padding: 0.2em 0.4em;
-  border-radius: 0.25rem;
-}
+  .prose code {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.875em;
+    background: color-mix(in srgb, var(--tsuki-theme-secondary) 30%, var(--tsuki-color-on-primary));
+    color: color-mix(in srgb, var(--tsuki-theme-accent) 76%, var(--tsuki-fg));
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+  }
 
 .prose pre code {
   background: transparent;
@@ -281,11 +285,11 @@ button {
   margin: 1.5rem 0;
 }
 
-.prose hr {
-  margin: 2rem 0;
-  border: none;
-  border-top: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-}
+  .prose hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary));
+  }
 
 .prose table {
   width: 100%;
@@ -293,14 +297,14 @@ button {
   margin: 1.5rem 0;
 }
 
-.prose th,
-.prose td {
-  padding: 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  text-align: left;
-}
+  .prose th,
+  .prose td {
+    padding: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary));
+    text-align: left;
+  }
 
-.prose th {
-  background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-  font-weight: 600;
-}
+  .prose th {
+    background: color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%);
+    font-weight: 600;
+  }

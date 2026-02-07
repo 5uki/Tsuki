@@ -8,31 +8,36 @@ const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
 ---
 
-<header class="header">
-  <div class="header-inner">
-    <div class="header-track">
-      <div class="header-pill header-brand">
-        <a href="/" class="logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="22" height="22" />
-          <span class="logo-text">{siteTitle}</span>
+<header class="header group sticky top-0 z-[100] bg-transparent transition-[background-color] duration-150 [--tsuki-header-collapse-offset:-78px] [--tsuki-header-track-duration:220ms] max-md:[--tsuki-header-frame-bottom-gap:0px] max-md:[--tsuki-header-pill-height:50px]">
+  <div class="header-inner relative mx-auto w-full max-w-[var(--tsuki-page-width)] px-[var(--tsuki-page-inline-padding)] py-[var(--tsuki-header-inner-padding-block)] max-md:mx-0 max-md:max-w-none max-md:px-0">
+    <div class="header-track relative grid items-center [grid-template-columns:minmax(0,1fr)_auto_minmax(0,1fr)] gap-[clamp(1.1rem,3vw,2.4rem)] [margin-top:calc(-1*(var(--tsuki-header-frame-top-gap)+var(--tsuki-header-frame-top-overflow)))] [margin-inline:calc(var(--tsuki-main-inline-padding)+var(--tsuki-header-card-align-offset))] px-[var(--tsuki-header-frame-side-gap)] pt-[calc(var(--tsuki-header-frame-top-gap)+var(--tsuki-header-frame-top-overflow))] pb-[var(--tsuki-header-frame-bottom-gap)] rounded-[var(--tsuki-header-frame-radius)] border border-transparent bg-transparent shadow-none [--tsuki-header-track-shift-y:0px] [transform:translateY(var(--tsuki-header-track-shift-y))] transition-[transform,background-color,border-color,box-shadow] [transition-duration:var(--tsuki-header-track-duration),160ms,160ms,160ms] [transition-timing-function:linear,ease-out,ease-out,ease-out] group-[.scrolled]:bg-[var(--tsuki-header-frame-bg)] group-[.scrolled]:border-[var(--tsuki-header-frame-border)] group-[.scrolled]:shadow-[var(--tsuki-header-frame-shadow)] group-[.in-main]:[--tsuki-header-track-shift-y:var(--tsuki-header-collapse-offset)] group-[.in-main]:pointer-events-none group-[.in-main-approach]:pointer-events-none max-md:grid-cols-[1fr] max-md:mx-0 max-md:px-0">
+      <div class="header-pill header-brand relative z-[1] flex h-[var(--tsuki-header-pill-height)] items-center gap-[0.8rem] rounded-full border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)_92%,transparent)] px-[1.45rem] shadow-[var(--tsuki-shadow-header)] transition-[background-color,border-color,box-shadow,transform] duration-150 [transform:translateY(0)] justify-self-start max-md:hidden">
+        <a href="/" class="logo inline-flex h-[38px] items-center gap-[0.6rem] text-inherit no-underline">
+          <img src="/favicon.svg" alt="" class="logo-favicon inline-block h-5 w-5 shrink-0 rounded-[var(--tsuki-radius-3sm)]" width="22" height="22" />
+          <span class="logo-text text-[var(--tsuki-text-3xl)] font-bold text-[var(--tsuki-theme-accent)] transition-colors duration-150">{siteTitle}</span>
         </a>
       </div>
 
-      <nav class="header-pill nav">
+      <nav class="header-pill nav relative z-[1] hidden h-[var(--tsuki-header-pill-height)] items-center justify-center gap-[1.4rem] rounded-full border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)_92%,transparent)] px-[1.9rem] shadow-[var(--tsuki-shadow-header)] transition-[background-color,border-color,box-shadow,transform] duration-150 [transform:translateY(var(--tsuki-header-center-pill-shift-y))] mx-[var(--tsuki-header-center-safe-inline)] justify-self-center md:flex">
         {navLinks.map(link => (
-          <a href={link.href}>{link.label}</a>
+          <a
+            href={link.href}
+            class="relative inline-flex h-[38px] items-center px-[0.35rem] text-[var(--tsuki-text-lg)] font-medium text-[var(--tsuki-fg)] transition-colors duration-150 after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:scale-x-0 after:bg-[var(--tsuki-theme-accent)] after:transition-transform after:duration-150 hover:text-[var(--tsuki-fg)] hover:after:scale-x-100"
+          >
+            {link.label}
+          </a>
         ))}
       </nav>
 
-      <div class="header-pill actions">
-      <div class="mobile-left">
-        <a href="/" class="logo mobile-logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
-          <span class="logo-text">{siteTitle}</span>
+      <div class="header-pill actions relative z-[1] flex h-[var(--tsuki-header-pill-height)] items-center gap-[0.5rem] rounded-full border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)_92%,transparent)] px-[1.15rem] shadow-[var(--tsuki-shadow-header)] transition-[background-color,border-color,box-shadow,transform] duration-150 justify-self-end [transform:translateY(var(--tsuki-actions-base-shift-y))] max-md:justify-self-stretch max-md:mx-[5px] max-md:min-w-[calc(100%-10px)] max-md:justify-start max-md:gap-[0.45rem] max-md:px-[1.05rem] max-md:[--tsuki-actions-base-shift-y:-10px]">
+      <div class="mobile-left hidden min-w-0 items-center max-md:flex max-md:mr-auto">
+        <a href="/" class="logo mobile-logo inline-flex h-[38px] items-center gap-[0.6rem] text-inherit no-underline">
+          <img src="/favicon.svg" alt="" class="logo-favicon inline-block h-[1.15rem] w-[1.15rem] shrink-0 rounded-[var(--tsuki-radius-2sm)]" width="20" height="20" />
+          <span class="logo-text text-[var(--tsuki-text-2xl)] font-bold leading-none text-[var(--tsuki-theme-accent)]">{siteTitle}</span>
         </a>
       </div>
 
-      <a href="/search" class="action-btn search-btn" aria-label="搜索">
+      <a href="/search" class="action-btn search-btn inline-flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_60%,transparent)] bg-transparent text-[var(--tsuki-fg)] transition-[background-color,color,border-color] duration-150 hover:border-[var(--tsuki-theme-accent)] hover:bg-[color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)] hover:text-[var(--tsuki-fg)] max-md:h-[36px] max-md:w-[36px]" aria-label="搜索">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.35-4.35"></path>
@@ -40,7 +45,7 @@ const siteTitle = tsukiConfig.site.title
       </a>
 
       <div class="theme-switcher">
-        <button id="theme-toggle" class="action-btn" aria-label="切换主题" aria-haspopup="true">
+        <button id="theme-toggle" class="action-btn inline-flex h-[38px] w-[38px] items-center justify-center rounded-full border border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_60%,transparent)] bg-transparent text-[var(--tsuki-fg)] transition-[background-color,color,border-color] duration-150 hover:border-[var(--tsuki-theme-accent)] hover:bg-[color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)] hover:text-[var(--tsuki-fg)] max-md:h-[36px] max-md:w-[36px]" aria-label="切换主题" aria-haspopup="true">
           <svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3a9 9 0 1 0 0 18h1.2a2.3 2.3 0 0 0 2.3-2.3c0-.8-.4-1.5-1.1-1.9-.6-.4-.9-1-.9-1.7 0-1.1.9-2 2-2h2.1A5.4 5.4 0 0 0 18.6 8.4 9 9 0 0 0 12 3z"></path>
             <circle cx="8.6" cy="9.6" r="1" fill="currentColor" stroke="none"></circle>
@@ -48,39 +53,40 @@ const siteTitle = tsukiConfig.site.title
             <circle cx="8.1" cy="13.7" r="1" fill="currentColor" stroke="none"></circle>
           </svg>
         </button>
-        <div id="theme-dropdown" class="theme-dropdown" role="menu">
-          <div class="theme-dropdown-header">选择主题</div>
+        <div id="theme-dropdown" class="theme-dropdown absolute left-0 right-0 top-[calc(100%+0.85rem)] w-auto overflow-hidden rounded-[var(--tsuki-radius-xl)] border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[var(--tsuki-header-dropdown-bg)] shadow-[var(--tsuki-shadow-popover),0_0_0_1px_color-mix(in_srgb,var(--tsuki-theme-accent)_5%,transparent)] opacity-0 invisible -translate-y-2 scale-[0.96] transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:scale-100 data-[open=true]:opacity-100 group-[.in-main]:pointer-events-none group-[.in-main]:opacity-0 group-[.in-main]:invisible group-[.in-main]:-translate-y-2 group-[.in-main]:scale-[0.96] max-md:left-auto max-md:right-0 max-md:w-[min(16.5rem,calc((100vw-10px)*0.66))] max-md:max-w-[calc(100vw-10px)]" role="menu" data-open="false">
+          <div class="border-b border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_50%,transparent)] px-4 pb-[0.625rem] pt-[0.875rem] text-[var(--tsuki-text-xxs)] font-semibold uppercase tracking-[0.08em] text-[var(--tsuki-fg)]">选择主题</div>
           {THEME_METAS.map(theme => (
             <button
-              class="theme-option"
+              class="theme-option group relative flex w-full items-center gap-3 border-none bg-transparent px-4 py-3 text-left text-[var(--tsuki-text-base)] text-[var(--tsuki-fg)] transition-[color,transform] duration-180 ease-out before:absolute before:inset-[6px] before:rounded-[var(--tsuki-radius-md)] before:bg-[linear-gradient(90deg,color-mix(in_srgb,var(--theme-tint)_14%,transparent),color-mix(in_srgb,var(--theme-tint)_4%,transparent))] before:opacity-0 before:transition-opacity before:duration-180 hover:before:opacity-100 data-[active=true]:before:opacity-100 data-[active=true]:before:bg-[linear-gradient(90deg,color-mix(in_srgb,var(--theme-tint)_22%,transparent),color-mix(in_srgb,var(--theme-tint)_8%,transparent))] cursor-pointer"
               data-theme-name={theme.id}
               style={`--theme-color: ${theme.gradientColor}; --theme-tint: ${theme.accentColor}; --theme-border: color-mix(in srgb, ${theme.accentColor} 45%, transparent);`}
               role="menuitem"
+              data-active="false"
             >
-              <span class="theme-preview"></span>
-              <span class="theme-name">{theme.name}</span>
-              <span class="theme-check">✓</span>
+              <span class="theme-preview relative z-[1] h-[22px] w-[22px] shrink-0 rounded-full border-2 border-[var(--theme-border)] bg-[var(--theme-color)] shadow-[var(--tsuki-shadow-theme-preview)] transition-[transform,box-shadow] duration-200 ease-out group-hover:scale-110 group-hover:shadow-[var(--tsuki-shadow-theme-preview-hover)]"></span>
+              <span class="theme-name z-[1] flex-1 font-medium transition-colors duration-180 group-hover:text-[var(--tsuki-theme-accent)]">{theme.name}</span>
+              <span class="theme-check z-[1] text-[var(--tsuki-text-base)] text-[var(--tsuki-theme-accent)] opacity-0 scale-50 transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-data-[active=true]:opacity-100 group-data-[active=true]:scale-100">✓</span>
             </button>
           ))}
         </div>
       </div>
 
-      <a href="/login" class="login-btn">
+      <a href="/login" class="login-btn inline-flex h-[38px] items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--tsuki-theme-accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_10%,transparent)] px-[0.95rem] text-[var(--tsuki-text-md)] font-medium text-[var(--tsuki-fg)] transition-opacity duration-150 hover:opacity-90 max-md:h-[36px] max-md:w-[36px] max-md:justify-center max-md:px-0 max-md:bg-transparent max-md:text-[var(--tsuki-fg)] max-md:border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_60%,transparent)] max-md:hover:bg-[color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)] max-md:hover:border-[var(--tsuki-theme-accent)]">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
-        <span>登录</span>
+        <span class="max-md:hidden">登录</span>
       </a>
 
       <div class="mobile-menu-switcher">
-        <button id="mobile-menu-btn" class="action-btn mobile-menu-btn" aria-label="菜单" aria-haspopup="true">
+        <button id="mobile-menu-btn" class="action-btn mobile-menu-btn hidden h-[38px] w-[38px] items-center justify-center rounded-full border border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_60%,transparent)] bg-transparent text-[var(--tsuki-fg)] transition-[background-color,color,border-color] duration-150 hover:border-[var(--tsuki-theme-accent)] hover:bg-[color-mix(in_srgb,var(--tsuki-color-on-primary)_72%,var(--tsuki-theme-secondary)_28%)] hover:text-[var(--tsuki-fg)] max-md:flex max-md:h-[36px] max-md:w-[36px]" aria-label="菜单" aria-haspopup="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 12h18M3 6h18M3 18h18"></path>
           </svg>
         </button>
-        <nav id="mobile-nav" class="mobile-nav-dropdown" role="menu">
+        <nav id="mobile-nav" class="mobile-nav-dropdown absolute left-0 right-0 top-[calc(100%+0.85rem)] w-auto overflow-hidden rounded-[var(--tsuki-radius-xl)] border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[var(--tsuki-header-dropdown-bg)] shadow-[var(--tsuki-shadow-popover),0_0_0_1px_color-mix(in_srgb,var(--tsuki-theme-accent)_5%,transparent)] opacity-0 invisible -translate-y-2 scale-[0.96] transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:scale-100 data-[open=true]:opacity-100 group-[.in-main]:pointer-events-none group-[.in-main]:opacity-0 group-[.in-main]:invisible group-[.in-main]:-translate-y-2 group-[.in-main]:scale-[0.96] max-md:left-auto max-md:right-0 max-md:w-[min(16.5rem,calc((100vw-10px)*0.66))] max-md:max-w-[calc(100vw-10px)]" role="menu" data-open="false">
           {navLinks.map(link => (
-            <a href={link.href} class="mobile-nav-link">{link.label}</a>
+            <a href={link.href} class="block border-b border-[color-mix(in_srgb,color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))_50%,transparent)] px-4 py-[0.8rem] text-[var(--tsuki-text-md)] text-[var(--tsuki-fg)] transition-[color,background-color] duration-150 last:border-b-0 hover:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_8%,transparent)] hover:text-[var(--tsuki-theme-accent)]">{link.label}</a>
           ))}
         </nav>
       </div>
@@ -94,15 +100,20 @@ const siteTitle = tsukiConfig.site.title
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
   import { createStorageAdapter } from '@adapters/storage'
 
-  const header = document.querySelector('.header')
-  const headerTrack = document.querySelector('.header-track')
-  const main = document.querySelector('main.main')
+  const header = document.querySelector<HTMLElement>('.header')
+  const headerTrack = document.querySelector<HTMLElement>('.header-track')
+  const main = document.querySelector<HTMLElement>('main.main')
   const toggle = document.getElementById('theme-toggle')
   const dropdown = document.getElementById('theme-dropdown')
   const themeOptions = document.querySelectorAll('.theme-option')
   const mobileMenuBtn = document.getElementById('mobile-menu-btn')
   const mobileNav = document.getElementById('mobile-nav')
   const storage = createStorageAdapter()
+
+  const setOpenState = (element: HTMLElement | null, isOpen: boolean) => {
+    if (!element) return
+    element.setAttribute('data-open', isOpen ? 'true' : 'false')
+  }
 
   function getCurrentTheme(): Theme {
     const theme = document.documentElement.getAttribute('data-theme')
@@ -119,20 +130,22 @@ const siteTitle = tsukiConfig.site.title
     const current = getCurrentTheme()
     themeOptions.forEach(option => {
       const isActive = option.getAttribute('data-theme-name') === current
-      option.classList.toggle('active', isActive)
+      option.setAttribute('data-active', isActive ? 'true' : 'false')
     })
   }
 
   function toggleDropdown() {
-    dropdown?.classList.toggle('open')
+    if (!dropdown) return
+    const isOpen = dropdown.getAttribute('data-open') === 'true'
+    setOpenState(dropdown, !isOpen)
   }
 
   function closeDropdown() {
-    dropdown?.classList.remove('open')
+    setOpenState(dropdown as HTMLElement | null, false)
   }
 
   function closeMobileNav() {
-    mobileNav?.classList.remove('open')
+    setOpenState(mobileNav as HTMLElement | null, false)
   }
 
   function closeAllMenus() {
@@ -183,7 +196,9 @@ const siteTitle = tsukiConfig.site.title
   mobileMenuBtn?.addEventListener('click', (e) => {
     e.stopPropagation()
     closeDropdown()
-    mobileNav?.classList.toggle('open')
+    if (!mobileNav) return
+    const isOpen = mobileNav.getAttribute('data-open') === 'true'
+    setOpenState(mobileNav, !isOpen)
   })
 
   // 鐐瑰嚮澶栭儴鍏抽棴鎵€鏈夎彍鍗?
@@ -210,532 +225,3 @@ const siteTitle = tsukiConfig.site.title
   // 鍒濆鍖?
   updateActiveTheme()
 </script>
-
-<style>
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: transparent;
-    border-bottom: none;
-    --tsuki-header-collapse-offset: -78px;
-    --tsuki-header-track-duration: 220ms;
-    transition: background-color 150ms;
-  }
-
-  .header-inner {
-    width: 100%;
-    max-width: var(--tsuki-page-width);
-    margin: 0 auto;
-    padding: var(--tsuki-header-inner-padding-block) var(--tsuki-page-inline-padding);
-    position: relative;
-  }
-
-  .header-track {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
-    gap: clamp(1.1rem, 3vw, 2.4rem);
-    position: relative;
-    margin-top: calc(
-      -1 * (
-        var(--tsuki-header-frame-top-gap) +
-        var(--tsuki-header-frame-top-overflow)
-      )
-    );
-    margin-inline: calc(
-      var(--tsuki-main-inline-padding) +
-      var(--tsuki-header-card-align-offset)
-    );
-    padding: calc(
-      var(--tsuki-header-frame-top-gap) +
-      var(--tsuki-header-frame-top-overflow)
-    ) var(--tsuki-header-frame-side-gap) var(--tsuki-header-frame-bottom-gap);
-    border-radius: var(--tsuki-header-frame-radius);
-    background: transparent;
-    border: 1px solid transparent;
-    box-shadow: none;
-    --tsuki-header-track-shift-y: 0px;
-    transform: translateY(var(--tsuki-header-track-shift-y));
-    transition:
-      transform var(--tsuki-header-track-duration) linear,
-      background-color 160ms ease-out,
-      border-color 160ms ease-out,
-      box-shadow 160ms ease-out;
-  }
-
-  .header.scrolled .header-track {
-    background: var(--tsuki-header-frame-bg);
-    border-color: var(--tsuki-header-frame-border);
-    box-shadow: var(--tsuki-header-frame-shadow);
-  }
-
-  .header-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    height: var(--tsuki-header-pill-height);
-    padding: 0 1.35rem;
-    border-radius: 999px;
-    background: transparent;
-    border: 1px solid transparent;
-    box-shadow: none;
-    transition:
-      background-color 150ms,
-      border-color 150ms,
-      box-shadow 150ms;
-    position: relative;
-    z-index: 1;
-  }
-
-  .header-pill {
-    background: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 92%, transparent);
-    border-color: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    box-shadow: var(--tsuki-shadow-header);
-  }
-
-  .mobile-menu-btn {
-    position: relative;
-    z-index: 1;
-  }
-
-  .header-brand {
-    padding: 0 1.45rem;
-    justify-self: start;
-    transform: translateY(0);
-    transition: transform 220ms ease-out;
-  }
-
-  .nav {
-    flex: 0 0 auto;
-    justify-content: center;
-    gap: 1.4rem;
-    padding: 0 1.9rem;
-    margin-inline: var(--tsuki-header-center-safe-inline);
-    justify-self: center;
-    transform: translateY(var(--tsuki-header-center-pill-shift-y));
-    transition: transform 220ms ease-out;
-  }
-
-  .header.in-main .header-track {
-    --tsuki-header-track-shift-y: var(--tsuki-header-collapse-offset);
-    pointer-events: none;
-  }
-
-  .header.in-main-approach .header-track {
-    pointer-events: none;
-  }
-
-  .header.in-main .theme-dropdown,
-  .header.in-main .mobile-nav-dropdown {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transform: translateY(-10px) scale(0.96) !important;
-    pointer-events: none !important;
-  }
-
-  .actions {
-    gap: 0.45rem;
-    padding: 0 1.15rem;
-    justify-self: end;
-    position: relative;
-    --tsuki-actions-base-shift-y: 0px;
-    transform: translateY(var(--tsuki-actions-base-shift-y));
-    transition: transform 220ms ease-out;
-  }
-
-  .logo {
-    gap: 0.6rem;
-    text-decoration: none;
-  }
-
-  .logo-favicon {
-    display: inline-block;
-    width: 1.25rem;
-    height: 1.25rem;
-    border-radius: 0.35rem;
-    flex-shrink: 0;
-  }
-
-  .mobile-left {
-    display: none;
-  }
-
-  .logo-text {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: var(--tsuki-theme-accent);
-    transition: color 150ms;
-  }
-
-  .nav {
-    display: flex;
-  }
-
-  .nav a {
-    color: #0b0b0b;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: color 150ms;
-    position: relative;
-    padding: 0 0.35rem;
-  }
-
-  .nav a:hover {
-    color: var(--tsuki-fg);
-  }
-
-  .nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--tsuki-theme-accent);
-    transform: scaleX(0);
-    transition: transform 150ms;
-  }
-
-  .nav a:hover::after {
-    transform: scaleX(1);
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    background: none;
-    border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
-    border-radius: 999px;
-    cursor: pointer;
-    color: #0b0b0b;
-    transition: all 150ms;
-    text-decoration: none;
-  }
-
-  .logo,
-  .nav a,
-  .action-btn,
-  .login-btn {
-    height: 38px;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .action-btn:hover {
-    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-    color: var(--tsuki-fg);
-    border-color: var(--tsuki-theme-accent);
-  }
-
-  /* Theme Switcher */
-  .theme-switcher {
-    position: static;
-  }
-
-  .theme-dropdown {
-    position: absolute;
-    top: calc(100% + 0.85rem);
-    left: 0;
-    right: 0;
-    width: auto;
-    background: var(--tsuki-header-dropdown-bg);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    border-radius: 0.875rem;
-    box-shadow:
-      var(--tsuki-shadow-popover),
-      0 0 0 1px color-mix(in srgb, var(--tsuki-theme-accent) 5%, transparent);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px) scale(0.96);
-    transform-origin: top center;
-    transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
-    backdrop-filter: none;
-  }
-
-  .theme-dropdown.open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-  }
-
-  .theme-dropdown-header {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: #0b0b0b;
-    padding: 0.875rem 1rem 0.625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    border-bottom: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
-  }
-
-  .theme-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--tsuki-fg);
-    transition: all 180ms ease;
-    text-align: left;
-    position: relative;
-    --theme-color: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-    --theme-border: color-mix(in srgb, var(--tsuki-theme-accent) 40%, transparent);
-    --theme-tint: var(--tsuki-theme-accent);
-  }
-
-  .theme-option::before {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--theme-tint) 14%, transparent),
-      color-mix(in srgb, var(--theme-tint) 4%, transparent)
-    );
-    border-radius: 0.5rem;
-    opacity: 0;
-    transition: opacity 180ms ease;
-  }
-
-  .theme-option:hover::before {
-    opacity: 1;
-  }
-
-  .theme-option.active::before {
-    opacity: 1;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--theme-tint) 22%, transparent),
-      color-mix(in srgb, var(--theme-tint) 8%, transparent)
-    );
-  }
-
-  .theme-preview {
-    position: relative;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    border: 2px solid var(--theme-border);
-    box-shadow: var(--tsuki-shadow-theme-preview);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-    z-index: 1;
-    background: var(--theme-color);
-  }
-
-  .theme-option:hover .theme-preview {
-    transform: scale(1.1);
-    box-shadow: var(--tsuki-shadow-theme-preview-hover);
-  }
-
-  .theme-name {
-    flex: 1;
-    font-weight: 500;
-    z-index: 1;
-    transition: color 180ms ease;
-  }
-
-  .theme-option:hover .theme-name {
-    color: var(--tsuki-theme-accent);
-  }
-
-  .theme-check {
-    color: var(--tsuki-theme-accent);
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 1;
-    font-size: 0.875rem;
-  }
-
-  .theme-option.active .theme-check {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  /* Login Button */
-  .login-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0 0.95rem;
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
-    color: var(--tsuki-fg);
-    border-radius: 999px;
-    text-decoration: none;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    transition: opacity 150ms;
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
-  }
-
-  .login-btn:hover {
-    opacity: 0.9;
-    text-decoration: none;
-  }
-
-  /* Mobile */
-  .mobile-menu-switcher {
-    position: static;
-  }
-
-  .mobile-menu-btn {
-    display: none;
-  }
-
-  .mobile-nav-dropdown {
-    position: absolute;
-    top: calc(100% + 0.85rem);
-    left: 0;
-    right: 0;
-    width: auto;
-    background: var(--tsuki-header-dropdown-bg);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    border-radius: 0.875rem;
-    box-shadow:
-      var(--tsuki-shadow-popover),
-      0 0 0 1px color-mix(in srgb, var(--tsuki-theme-accent) 5%, transparent);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px) scale(0.96);
-    transform-origin: top center;
-    transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;
-    backdrop-filter: none;
-  }
-
-  .mobile-nav-dropdown.open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-  }
-
-  .mobile-nav-link {
-    position: relative;
-    display: block;
-    padding: 0.8rem 1rem;
-    color: var(--tsuki-fg);
-    text-decoration: none;
-    font-size: 0.9375rem;
-    border-bottom: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
-    transition: color 150ms, background-color 150ms;
-  }
-
-  .mobile-nav-link:last-child {
-    border-bottom: none;
-  }
-
-  .mobile-nav-link:hover {
-    color: var(--tsuki-theme-accent);
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
-  }
-
-  @media (max-width: 768px) {
-    .header {
-      --tsuki-header-frame-bottom-gap: 0px;
-      --tsuki-header-pill-height: 50px;
-    }
-
-    .header-brand,
-    .nav {
-      display: none;
-    }
-
-    .header-inner {
-      padding: var(--tsuki-header-inner-padding-block) 0;
-      width: 100%;
-      max-width: none;
-      margin: 0;
-    }
-
-    .header-track {
-      grid-template-columns: 1fr;
-      margin-inline: 0;
-      padding-inline: 0;
-    }
-
-    .actions {
-      justify-self: stretch;
-      width: auto;
-      min-width: calc(100% - 10px);
-      margin-inline: 5px;
-      height: 50px;
-      padding: 0 1.05rem;
-      gap: 0.45rem;
-      justify-content: flex-start;
-      --tsuki-actions-base-shift-y: -10px;
-    }
-
-    .mobile-left {
-      display: flex;
-      align-items: center;
-      margin-inline-end: auto;
-      min-width: 0;
-    }
-
-    .mobile-logo .logo-text {
-      font-size: 1.3rem;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .mobile-logo .logo-favicon {
-      width: 1.15rem;
-      height: 1.15rem;
-      border-radius: 0.3rem;
-    }
-
-    .actions .search-btn,
-    .mobile-menu-btn {
-      display: flex;
-    }
-
-    .action-btn,
-    .login-btn {
-      width: 36px;
-      height: 36px;
-    }
-
-    .login-btn {
-      padding: 0;
-      justify-content: center;
-      background: none;
-      border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
-      color: #0b0b0b;
-    }
-
-    .login-btn span {
-      display: none;
-    }
-
-    .login-btn:hover {
-      background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-      color: var(--tsuki-fg);
-      border-color: var(--tsuki-theme-accent);
-    }
-
-    .theme-dropdown,
-    .mobile-nav-dropdown {
-      left: auto;
-      right: 0;
-      width: min(16.5rem, calc((100vw - 10px) * 0.66));
-      max-width: calc(100vw - 10px);
-    }
-  }
-</style>

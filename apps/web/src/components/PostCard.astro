@@ -14,430 +14,87 @@ const hasCover = !!post.cover
 
 <div
   class:list={[
-    'post-card-wrapper',
-    { 'has-cover': hasCover, 'no-cover': !hasCover, 'pinned': !!post.pinned },
+    'post-card-wrapper group relative flex w-full flex-col-reverse overflow-hidden rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] shadow-[var(--tsuki-sidebar-card-shadow)] transition-[transform,box-shadow,border-color] duration-[140ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] md:min-h-[12.8rem] md:flex-col',
+    '[--tsuki-post-cover-width:30%]',
+    {
+      'has-cover': hasCover,
+      'no-cover': !hasCover,
+      'pinned border-[var(--tsuki-theme-accent)] hover:border-[var(--tsuki-theme-accent)]': !!post.pinned,
+    },
     className,
   ]}
 >
-  <div class="post-card-content">
-    <a href={postHref} class="post-card-title">
-      <span class="title-text">{post.title}</span>
-      <span class="title-arrow-mobile" aria-hidden="true">
+  <div
+    class:list={[
+      'post-card-content relative flex min-h-full flex-col p-6 md:py-7 md:pl-9 md:pr-2',
+      {
+        'md:w-[calc(100%-var(--tsuki-post-cover-width)-1.5rem)] md:min-h-[12.8rem]': hasCover,
+        'md:w-full md:pr-9': !hasCover,
+      },
+    ]}
+  >
+    <a href={postHref} class="post-card-title group/title relative mb-3 inline-flex w-fit max-w-full items-center text-[var(--tsuki-text-4xl)] font-bold leading-[1.3] text-[color-mix(in_srgb,var(--tsuki-fg)_90%,transparent)] no-underline transition-colors duration-150 hover:text-[var(--tsuki-theme-accent)] focus-visible:text-[var(--tsuki-theme-accent)] md:max-w-[calc(100%-0.5rem)] md:before:absolute md:before:left-[-1.5rem] md:before:top-[0.35rem] md:before:h-[1.25rem] md:before:w-1 md:before:rounded-[var(--tsuki-radius-xs)] md:before:bg-[var(--tsuki-theme-accent)] md:before:content-['']">
+      <span class="break-words">{post.title}</span>
+      <span class="ml-[0.2rem] inline-block h-8 w-8 text-[var(--tsuki-text-arrow)] leading-none text-[var(--tsuki-theme-accent)] md:hidden" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="m9 18 6-6-6-6"></path>
         </svg>
       </span>
-      <span class="title-arrow-desktop" aria-hidden="true">
+      <span class="ml-[0.2rem] hidden h-8 w-8 text-[var(--tsuki-text-arrow)] leading-none text-[var(--tsuki-theme-accent)] opacity-0 transition-[opacity,transform] duration-150 md:inline-block md:-translate-x-[0.2rem] md:group-hover/title:translate-x-0 md:group-hover/title:opacity-100 md:group-focus-visible/title:translate-x-0 md:group-focus-visible/title:opacity-100" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="m9 18 6-6-6-6"></path>
         </svg>
       </span>
     </a>
 
-    <div class="post-meta">
+    <div class="post-meta mb-[0.7rem] flex flex-wrap items-center gap-x-[0.85rem] gap-y-[0.6rem]">
       {post.pinned && (
-        <span class="meta-row pinned-row">
-          <span class="meta-icon-badge">
-            <Icon name="material-symbols:pinboard" class="meta-icon" />
+        <span class="meta-row pinned-row inline-flex min-w-0 items-center gap-[0.3rem] rounded-[var(--tsuki-radius-5sm)] bg-[color-mix(in_srgb,var(--tsuki-theme-secondary)_40%,var(--tsuki-sidebar-card-bg))] px-[0.45rem] py-[0.2rem] group-[.pinned]:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_20%,var(--tsuki-sidebar-card-bg))]">
+          <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+            <Icon name="material-symbols:pinboard" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)] group-[.pinned]:text-[var(--tsuki-theme-accent)]" />
           </span>
-          <span class="meta-text">置顶</span>
+          <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">置顶</span>
         </span>
       )}
 
-      <span class="meta-row date-row">
-        <span class="meta-icon-badge">
-          <Icon name="material-symbols:calendar-today-outline-rounded" class="meta-icon" />
+      <span class="meta-row date-row inline-flex min-w-0 items-center gap-[0.3rem]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+          <Icon name="material-symbols:calendar-today-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
-        <time datetime={post.publishedAt} class="meta-text">{post.publishedAt}</time>
+        <time datetime={post.publishedAt} class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_60%,transparent)]">
+          {post.publishedAt}
+        </time>
       </span>
 
-      <span class="meta-row">
-        <span class="meta-icon-badge">
-          <Icon name="material-symbols:book-2-outline-rounded" class="meta-icon" />
+      <span class="meta-row inline-flex min-w-0 items-center gap-[0.3rem]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+          <Icon name="material-symbols:book-2-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
-        <span class="meta-text">{post.category}</span>
+        <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">{post.category}</span>
       </span>
 
-      <span class="meta-row">
-        <span class="meta-icon-badge">
-          <Icon name="material-symbols:article-outline-rounded" class="meta-icon" />
+      <span class="meta-row inline-flex min-w-0 items-center gap-[0.3rem]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+          <Icon name="material-symbols:article-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
-        <span class="meta-text">{post.words} 字</span>
+        <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">{post.words} 字</span>
       </span>
     </div>
 
-    <p class="description">{post.summary}</p>
+    <p class="description mb-[0.85rem] pr-4 text-[var(--tsuki-text-md-tight)] leading-[1.7] text-[color-mix(in_srgb,var(--tsuki-fg)_74%,transparent)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden">
+      {post.summary}
+    </p>
 
-    <div class="stats">
+    <div class="stats mt-auto flex flex-wrap gap-2">
       {post.tags.map(tag => (
-        <a href={`/tags/${tag.toLowerCase()}`} class="tag-item">{tag}</a>
+        <a href={`/tags/${tag.toLowerCase()}`} class="tag-item inline-flex items-center rounded-[var(--tsuki-radius-md)] bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_10%,transparent)] px-3 py-1.5 text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-theme-accent)] transition-[background-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_20%,transparent)] max-sm:px-2.5 max-sm:py-[0.3125rem]">{tag}</a>
       ))}
     </div>
   </div>
 
   {hasCover && (
-    <a href={postHref} class="post-card-image" aria-label={`阅读 ${post.title}`}>
-      <img src={post.cover} alt="" class="cover-image" loading="lazy" decoding="async" />
+    <a href={postHref} class="post-card-image group/image relative block w-full overflow-hidden rounded-t-[var(--tsuki-sidebar-card-radius)] rounded-b-[0px] aspect-[2/1] transition-transform duration-150 ease-out active:scale-[0.95] md:absolute md:right-4 md:top-4 md:bottom-4 md:h-[calc(100%-2rem)] md:w-[var(--tsuki-post-cover-width)] md:rounded-[var(--tsuki-radius-lg)] md:aspect-auto" aria-label={`阅读 ${post.title}`}>
+      <img src={post.cover} alt="" class="cover-image block h-full w-full object-cover transition-transform duration-200 ease-out group-hover/image:scale-[1.03]" loading="lazy" decoding="async" />
     </a>
   )}
 </div>
-
-<style>
-  .post-card-wrapper {
-    --tsuki-post-cover-width: 30%;
-    --tsuki-post-enter-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 24%, var(--tsuki-sidebar-card-bg));
-    --tsuki-post-enter-bg-hover: color-mix(in srgb, var(--tsuki-theme-secondary) 36%, var(--tsuki-sidebar-card-bg));
-    --tsuki-post-enter-bg-active: color-mix(in srgb, var(--tsuki-theme-secondary) 45%, var(--tsuki-sidebar-card-bg));
-    --tsuki-post-meta-fg: color-mix(in srgb, var(--tsuki-fg) 68%, transparent);
-    --tsuki-post-muted-fg: color-mix(in srgb, var(--tsuki-fg) 74%, transparent);
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column-reverse;
-    border-radius: var(--tsuki-sidebar-card-radius);
-    border: 1px solid var(--tsuki-sidebar-card-border);
-    background: var(--tsuki-sidebar-card-bg);
-    box-shadow: var(--tsuki-sidebar-card-shadow);
-    transition:
-      transform 130ms cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 140ms ease-out,
-      border-color 130ms ease-out;
-  }
-
-  .post-card-wrapper:hover {
-    transform: translateY(var(--tsuki-sidebar-card-hover-translate));
-    border-color: var(--tsuki-sidebar-card-border-hover);
-    box-shadow: var(--tsuki-sidebar-card-shadow-hover);
-  }
-
-  .post-card-content {
-    position: relative;
-    padding: 1.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-  }
-
-  .post-card-title {
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    max-width: 100%;
-    margin: 0 0 0.75rem;
-    line-height: 1.3;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: color-mix(in srgb, var(--tsuki-fg) 90%, transparent);
-    text-decoration: none;
-    transition: color 140ms ease;
-  }
-
-  .title-text {
-    overflow-wrap: anywhere;
-  }
-
-  .title-arrow-mobile {
-    display: inline-block;
-    margin-left: 0.2rem;
-    font-size: 0.9em;
-    line-height: 1;
-    color: var(--tsuki-theme-accent);
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .title-arrow-desktop {
-    display: none;
-    margin-left: 0.2rem;
-    font-size: 0.9em;
-    line-height: 1;
-    color: var(--tsuki-theme-accent);
-    opacity: 0;
-    transform: translateX(-0.2rem);
-    transition: opacity 140ms ease, transform 140ms ease;
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .post-card-title:hover,
-  .post-card-title:focus-visible {
-    color: var(--tsuki-theme-accent);
-    text-decoration: none;
-  }
-
-  .post-card-title:hover .title-arrow-desktop,
-  .post-card-title:focus-visible .title-arrow-desktop {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .post-meta {
-    --tsuki-meta-icon-badge-size: 1.56rem;
-    --tsuki-meta-icon-size: 0.9rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem 0.85rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .meta-row {
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-    min-width: 0;
-    gap: 0.3rem;
-  }
-
-  .pinned-row {
-    padding: 0.2rem 0.45rem;
-    border-radius: 0.45rem;
-    background: color-mix(in srgb, var(--tsuki-theme-secondary) 40%, var(--tsuki-sidebar-card-bg));
-  }
-
-  .meta-icon {
-    display: inline-flex;
-    width: 1.28rem;
-    height: 1.28rem;
-    align-items: center;
-    justify-content: center;
-    color: var(--tsuki-fg);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .meta-icon-badge {
-    display: grid;
-    place-items: center;
-    width: var(--tsuki-meta-icon-badge-size);
-    min-width: var(--tsuki-meta-icon-badge-size);
-    max-width: var(--tsuki-meta-icon-badge-size);
-    height: var(--tsuki-meta-icon-badge-size);
-    min-height: var(--tsuki-meta-icon-badge-size);
-    max-height: var(--tsuki-meta-icon-badge-size);
-    flex: 0 0 var(--tsuki-meta-icon-badge-size);
-    border-radius: 0.4rem;
-    background: var(--tsuki-theme-secondary);
-  }
-
-  .meta-icon-badge .meta-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--tsuki-theme-accent);
-  }
-
-  .date-row .meta-text {
-    color: color-mix(in srgb, var(--tsuki-fg) 60%, transparent);
-  }
-
-  .meta-text {
-    font-size: 0.84rem;
-    line-height: 1.25rem;
-    font-weight: 500;
-    color: var(--tsuki-post-meta-fg);
-    white-space: nowrap;
-  }
-
-  .description {
-    margin: 0;
-    margin-bottom: 0.85rem;
-    padding-right: 1rem;
-    color: var(--tsuki-post-muted-fg);
-    line-height: 1.7;
-    font-size: 0.96rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .stats {
-    margin-top: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .tag-item {
-    display: inline-block;
-    padding: 0.375rem 0.75rem;
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
-    color: var(--tsuki-theme-accent);
-    font-size: 0.8125rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.15s, transform 0.15s;
-  }
-
-  .tag-item:hover {
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 20%, transparent);
-    transform: translateY(-2px);
-    text-decoration: none;
-  }
-
-  .post-card-image {
-    position: relative;
-    display: block;
-    width: 100%;
-    aspect-ratio: 2 / 1;
-    border-radius: var(--tsuki-sidebar-card-radius) var(--tsuki-sidebar-card-radius) 0 0;
-    text-decoration: none;
-    overflow: hidden;
-  }
-
-  .cover-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 220ms ease-out;
-  }
-
-  .post-card-image:hover .cover-image {
-    transform: scale(1.03);
-  }
-
-  .post-card-image:active {
-    transform: scale(0.95);
-  }
-
-  @media (min-width: 769px) {
-    .post-card-wrapper {
-      min-height: 12.8rem;
-      flex-direction: column;
-    }
-
-    .post-card-content {
-      padding: 1.75rem 0.5rem 1.75rem 2.25rem;
-    }
-
-    .post-card-title {
-      margin-bottom: 0.75rem;
-      font-size: 1.5rem;
-      max-width: calc(100% - 0.5rem);
-      position: relative;
-    }
-
-    .post-card-title::before {
-      content: '';
-      position: absolute;
-      left: -1.5rem;
-      top: 0.35rem;
-      width: 0.25rem;
-      height: 1.25rem;
-      border-radius: 0.25rem;
-      background: var(--tsuki-theme-accent);
-    }
-
-    .title-arrow-mobile {
-      display: none;
-    }
-
-    .title-arrow-desktop {
-      display: inline-block;
-    }
-
-    .has-cover .post-card-content {
-      width: calc(100% - var(--tsuki-post-cover-width) - 1.5rem);
-      min-height: 12.8rem;
-    }
-
-    .post-card-image {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      width: var(--tsuki-post-cover-width);
-      height: calc(100% - 2rem);
-      aspect-ratio: auto;
-      border-radius: 0.75rem;
-    }
-
-    .no-cover .post-card-content {
-      width: 100%;
-      padding-right: 2.25rem;
-    }
-
-    .has-cover .description {
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-    }
-  }
-
-  .post-card-wrapper.pinned {
-    border-color: var(--tsuki-theme-accent);
-  }
-
-  .post-card-wrapper.pinned:hover {
-    border-color: var(--tsuki-theme-accent);
-  }
-
-  .post-card-wrapper.pinned .post-card-title::before {
-    background: var(--tsuki-theme-accent);
-  }
-
-  .post-card-wrapper.pinned .pinned-row {
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 20%, var(--tsuki-sidebar-card-bg));
-  }
-
-  .post-card-wrapper.pinned .pinned-row .meta-icon {
-    color: var(--tsuki-theme-accent);
-  }
-
-  @media (max-width: 640px) {
-    .tag-item {
-      padding: 0.3125rem 0.625rem;
-    }
-  }
-
-  /* Grid Mode Styles */
-  :global(.grid-mode) .post-card-wrapper {
-    flex-direction: column-reverse !important;
-    height: 100% !important;
-    justify-content: flex-end !important;
-  }
-
-  :global(.grid-mode) .post-card-content {
-    width: 100% !important;
-    padding-right: 1rem !important;
-    height: auto !important;
-    flex-grow: 1 !important;
-  }
-
-  :global(.grid-mode) .no-cover .post-card-content {
-    padding-right: 1rem !important;
-  }
-
-  :global(.grid-mode) .post-card-image {
-    position: relative !important;
-    top: auto !important;
-    bottom: auto !important;
-    right: auto !important;
-    width: 100% !important;
-    margin: 0 !important;
-    border-radius: var(--tsuki-sidebar-card-radius) var(--tsuki-sidebar-card-radius) 0 0 !important;
-    max-height: none !important;
-    aspect-ratio: 2/1 !important;
-  }
-
-  :global(.grid-mode) .description {
-    flex-grow: 0 !important;
-  }
-
-  :global(.grid-mode) .stats {
-    margin-top: auto !important;
-  }
-
-  :global(.grid-mode) .has-cover .post-card-content {
-    padding-top: 0.8rem !important;
-  }
-
-  :global(.grid-mode) .has-cover .post-card-title::before {
-    top: 1.3rem !important;
-  }
-
-</style>

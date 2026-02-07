@@ -15,84 +15,27 @@ function formatNumber(num: number): string {
 ---
 
 {stats?.enable && (
-  <div class="stats-widget sidebar-card">
-    <h3 class="stats-title">站点统计</h3>
-    <div class="stats-list">
-      <div class="stat-item">
-        <span class="stat-label">文章</span>
-        <span class="stat-value">{formatNumber(mockStats.posts)}</span>
+  <div class="rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] transition-[transform,box-shadow,border-color] duration-[140ms] ease-out hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] max-sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+    <h3 class="mb-3 flex items-center gap-2 text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)] before:h-4 before:w-1 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] before:content-[''] max-sm:text-[var(--tsuki-text-md)]">站点统计</h3>
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center justify-between border-b border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] py-2">
+        <span class="text-[var(--tsuki-text-base)] text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">文章</span>
+        <span class="text-[var(--tsuki-text-base)] font-semibold text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.posts)}
+        </span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">标签</span>
-        <span class="stat-value">{formatNumber(mockStats.tags)}</span>
+      <div class="flex items-center justify-between border-b border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] py-2">
+        <span class="text-[var(--tsuki-text-base)] text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">标签</span>
+        <span class="text-[var(--tsuki-text-base)] font-semibold text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.tags)}
+        </span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">分组</span>
-        <span class="stat-value">{formatNumber(mockStats.groups)}</span>
+      <div class="flex items-center justify-between py-2">
+        <span class="text-[var(--tsuki-text-base)] text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">分组</span>
+        <span class="text-[var(--tsuki-text-base)] font-semibold text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.groups)}
+        </span>
       </div>
     </div>
   </div>
 )}
-
-<style>
-  .stats-widget {
-  }
-
-  .stats-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .stats-title::before {
-    content: '';
-    width: 4px;
-    height: 1rem;
-    background: var(--tsuki-theme-accent);
-    border-radius: 2px;
-  }
-
-  .stats-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  }
-
-  .stat-item:last-child {
-    border-bottom: none;
-  }
-
-  .stat-label {
-    font-size: 0.875rem;
-    color: #0b0b0b;
-  }
-
-  .stat-value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--tsuki-fg);
-  }
-
-  @media (max-width: 640px) {
-    .stats-title {
-      font-size: 0.9375rem;
-    }
-
-    .stat-label,
-    .stat-value {
-      font-size: 0.8125rem;
-    }
-  }
-</style>

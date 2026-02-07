@@ -79,8 +79,11 @@ const VALID_THEMES = ['mauve']
     </script>
   </head>
   <body style={bodyStyle}>
-    <div class="tsuki-top-backdrop" aria-hidden="true"></div>
-    <div class="tsuki-root">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 z-0 h-[var(--tsuki-banner-height)] bg-[var(--tsuki-top-backdrop-bg,var(--tsuki-theme-gradient))] bg-[position:0_0] bg-[length:100%_100%] bg-no-repeat contain-paint"
+      aria-hidden="true"
+    ></div>
+    <div class="relative z-[1]">
       <slot />
     </div>
   </body>
