@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 import cloudflare from '@astrojs/cloudflare'
+import icon from 'astro-icon'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -15,7 +16,7 @@ export default defineConfig({
   session: {
     driver: 'memory',
   },
-  integrations: [react()],
+  integrations: [react(), icon()],
   outDir: path.resolve(workspaceRoot, 'dist'),
   vite: {
     server: {

@@ -7,4 +7,14 @@
   --tsuki-theme-gradient: radial-gradient(circle, #ece4ff 12%, #e0c3fc 100%);
   --tsuki-theme-accent: #a78bfa;
   --tsuki-theme-secondary: #ece4ff;
+  --tsuki-fg: #1f2937;
+  --tsuki-color-on-primary: #ffffff;
+  --tsuki-sidebar-card-bg: #ffffff;
+  --tsuki-sidebar-card-border: rgba(0, 0, 0, 0.08);
+  --tsuki-sidebar-card-border-hover: rgba(167, 139, 250, 0.3);
+  --tsuki-sidebar-card-radius: 1rem;
+  --tsuki-sidebar-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --tsuki-sidebar-card-shadow-hover: 0 4px 12px rgba(167, 139, 250, 0.15);
+  --tsuki-sidebar-card-hover-translate: -2px;
+  --tsuki-link-icon-bg: rgba(167, 139, 250, 0.1);
 }

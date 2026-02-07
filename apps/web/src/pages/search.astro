@@ -4,27 +4,27 @@ import Default from '@/layouts/Default.astro'
 const query = Astro.url.searchParams.get('q') || ''
 ---
 
-<Default title="鎼滅储" description="鎼滅储鏂囩珷" noindex={true}>
-  <h1>鎼滅储</h1>
+<Default title="搜索" description="搜索文章" noindex={true}>
+  <h1>搜索</h1>
 
   <form class="search-form" method="get">
     <input
       type="search"
       name="q"
       value={query}
-      placeholder="杈撳叆鍏抽敭璇嶆悳绱?.."
+      placeholder="输入关键词搜索..."
       class="search-input"
     />
-    <button type="submit" class="search-button">鎼滅储</button>
+    <button type="submit" class="search-button">搜索</button>
   </form>
 
   {query ? (
     <section class="results">
-      <h2>鎼滅储缁撴灉锛?{query}"</h2>
-      <p class="placeholder">鏈壘鍒扮浉鍏冲唴瀹?/p>
+      <h2>搜索结果: "{query}"</h2>
+      <p class="placeholder">未找到相关内容</p>
     </section>
   ) : (
-    <p class="hint">璇疯緭鍏ュ叧閿瘝杩涜鎼滅储</p>
+    <p class="hint">请输入关键词进行搜索</p>
   )}
 </Default>
 
