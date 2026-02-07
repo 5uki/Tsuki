@@ -289,8 +289,8 @@ const siteTitle = tsukiConfig.site.title
   }
 
   .header-pill {
-    background: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 92%, transparent);
-    border-color: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
+    background: var(--tsuki-header-pill-bg);
+    border-color: var(--tsuki-header-track-border);
     box-shadow: var(--tsuki-shadow-header);
   }
 
@@ -328,10 +328,10 @@ const siteTitle = tsukiConfig.site.title
 
   .header.in-main .theme-dropdown,
   .header.in-main .mobile-nav-dropdown {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transform: translateY(-10px) scale(0.96) !important;
-    pointer-events: none !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.96);
+    pointer-events: none;
   }
 
   .actions {
@@ -373,7 +373,7 @@ const siteTitle = tsukiConfig.site.title
   }
 
   .nav a {
-    color: #0b0b0b;
+    color: var(--tsuki-fg);
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
@@ -415,10 +415,10 @@ const siteTitle = tsukiConfig.site.title
     width: 38px;
     height: 38px;
     background: none;
-    border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
+    border: 1px solid var(--tsuki-header-action-border);
     border-radius: 999px;
     cursor: pointer;
-    color: #0b0b0b;
+    color: var(--tsuki-fg);
     transition: all 150ms;
     text-decoration: none;
   }
@@ -433,9 +433,9 @@ const siteTitle = tsukiConfig.site.title
   }
 
   .action-btn:hover {
-    background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+    background: var(--tsuki-header-action-hover-bg);
     color: var(--tsuki-fg);
-    border-color: var(--tsuki-theme-accent);
+    border-color: var(--tsuki-header-action-hover-border);
   }
 
   /* Theme Switcher */
@@ -450,11 +450,11 @@ const siteTitle = tsukiConfig.site.title
     right: 0;
     width: auto;
     background: var(--tsuki-header-dropdown-bg);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
+    border: 1px solid var(--tsuki-header-dropdown-border);
     border-radius: 0.875rem;
     box-shadow:
       var(--tsuki-shadow-popover),
-      0 0 0 1px color-mix(in srgb, var(--tsuki-theme-accent) 5%, transparent);
+      var(--tsuki-header-dropdown-outline);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px) scale(0.96);
@@ -473,11 +473,11 @@ const siteTitle = tsukiConfig.site.title
   .theme-dropdown-header {
     font-size: 0.6875rem;
     font-weight: 600;
-    color: #0b0b0b;
+    color: var(--tsuki-fg);
     padding: 0.875rem 1rem 0.625rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-bottom: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
+    border-bottom: 1px solid var(--tsuki-header-dropdown-border-soft);
   }
 
   .theme-option {
@@ -494,7 +494,7 @@ const siteTitle = tsukiConfig.site.title
     transition: all 180ms ease;
     text-align: left;
     position: relative;
-    --theme-color: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+    --theme-color: var(--tsuki-surface-muted);
     --theme-border: color-mix(in srgb, var(--tsuki-theme-accent) 40%, transparent);
     --theme-tint: var(--tsuki-theme-accent);
   }
@@ -575,14 +575,14 @@ const siteTitle = tsukiConfig.site.title
     align-items: center;
     gap: 0.5rem;
     padding: 0 0.95rem;
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
+    background: var(--tsuki-login-bg);
     color: var(--tsuki-fg);
     border-radius: 999px;
     text-decoration: none;
     font-size: 0.9375rem;
     font-weight: 500;
     transition: opacity 150ms;
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
+    border: 1px solid var(--tsuki-login-border);
   }
 
   .login-btn:hover {
@@ -606,11 +606,11 @@ const siteTitle = tsukiConfig.site.title
     right: 0;
     width: auto;
     background: var(--tsuki-header-dropdown-bg);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
+    border: 1px solid var(--tsuki-header-dropdown-border);
     border-radius: 0.875rem;
     box-shadow:
       var(--tsuki-shadow-popover),
-      0 0 0 1px color-mix(in srgb, var(--tsuki-theme-accent) 5%, transparent);
+      var(--tsuki-header-dropdown-outline);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px) scale(0.96);
@@ -633,7 +633,7 @@ const siteTitle = tsukiConfig.site.title
     color: var(--tsuki-fg);
     text-decoration: none;
     font-size: 0.9375rem;
-    border-bottom: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
+    border-bottom: 1px solid var(--tsuki-header-dropdown-border-soft);
     transition: color 150ms, background-color 150ms;
   }
 
@@ -643,7 +643,7 @@ const siteTitle = tsukiConfig.site.title
 
   .mobile-nav-link:hover {
     color: var(--tsuki-theme-accent);
-    background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
+    background: var(--tsuki-surface-accent-soft);
   }
 
   @media (max-width: 768px) {
@@ -716,8 +716,8 @@ const siteTitle = tsukiConfig.site.title
       padding: 0;
       justify-content: center;
       background: none;
-      border: 1px solid color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
-      color: #0b0b0b;
+      border: 1px solid var(--tsuki-header-action-border);
+      color: var(--tsuki-fg);
     }
 
     .login-btn span {
@@ -725,9 +725,9 @@ const siteTitle = tsukiConfig.site.title
     }
 
     .login-btn:hover {
-      background: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+      background: var(--tsuki-header-action-hover-bg);
       color: var(--tsuki-fg);
-      border-color: var(--tsuki-theme-accent);
+      border-color: var(--tsuki-header-action-hover-border);
     }
 
     .theme-dropdown,

@@ -6,50 +6,22 @@ const siteTitle = tsukiConfig.site.title
 const year = new Date().getFullYear()
 ---
 
-<footer class="footer">
-  <div class="footer-inner">
-    <p class="copyright">&copy; {year} {siteTitle}. All rights reserved.</p>
-    <nav class="footer-nav">
-      <a href="/rss.xml">RSS</a>
-      <a href="/sitemap.xml">Sitemap</a>
+<footer class="border-t border-[var(--tsuki-surface-border)] bg-transparent transition-colors duration-[var(--tsuki-motion-fast)]">
+  <div class="mx-auto flex max-w-[var(--tsuki-content-width)] items-center justify-between px-[var(--tsuki-space-1)] py-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">
+    <p class="m-0">&copy; {year} {siteTitle}. All rights reserved.</p>
+    <nav class="flex gap-[var(--tsuki-space-1)]">
+      <a
+        href="/rss.xml"
+        class="text-[color:var(--tsuki-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] hover:text-[color:var(--tsuki-theme-accent)]"
+      >
+        RSS
+      </a>
+      <a
+        href="/sitemap.xml"
+        class="text-[color:var(--tsuki-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] hover:text-[color:var(--tsuki-theme-accent)]"
+      >
+        Sitemap
+      </a>
     </nav>
   </div>
 </footer>
-
-<style>
-  .footer {
-    border-top: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    background: transparent;
-    transition: border-color 150ms;
-  }
-
-  .footer-inner {
-    max-width: var(--tsuki-content-width, 48rem);
-    margin: 0 auto;
-    padding: 1.5rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.875rem;
-    color: #0b0b0b;
-  }
-
-  .copyright {
-    margin: 0;
-  }
-
-  .footer-nav {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .footer-nav a {
-    color: #0b0b0b;
-    text-decoration: none;
-    transition: color 150ms;
-  }
-
-  .footer-nav a:hover {
-    color: var(--tsuki-theme-accent);
-  }
-</style>
