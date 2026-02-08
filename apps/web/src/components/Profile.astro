@@ -76,16 +76,16 @@ function formatNumber(num: number): string {
   )}
 
   {stats?.enable && (
-    <div class="mb-[0.9rem] grid w-full grid-cols-3 items-center text-center" aria-label="站点统计">
+    <div class="mb-[0.9rem] grid w-full grid-cols-3 items-center rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-profile-stats-bg)] py-2 text-center" aria-label="站点统计">
       <div class="grid gap-[0.35rem] px-3">
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">文章</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.posts)}</span>
       </div>
-      <div class="grid gap-[0.35rem] border-l border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] px-3">
+      <div class="grid gap-[0.35rem] border-l border-[var(--tsuki-chip-border)] px-3">
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">标签</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.tags)}</span>
       </div>
-      <div class="grid gap-[0.35rem] border-l border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] px-3">
+      <div class="grid gap-[0.35rem] border-l border-[var(--tsuki-chip-border)] px-3">
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">分组</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.groups)}</span>
       </div>

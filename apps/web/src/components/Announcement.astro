@@ -23,7 +23,7 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
         href={announcement.link.url}
         target={isExternalLink(announcement.link.url) ? '_blank' : undefined}
         rel={isExternalLink(announcement.link.url) ? 'noopener noreferrer' : undefined}
-        class="mt-auto inline-flex items-center self-end rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-theme-secondary)] px-[0.9rem] py-[0.35rem] text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-fg)] transition-[opacity,transform] duration-150 ease-out hover:-translate-y-[1px] hover:opacity-90"
+        class="mt-auto inline-flex items-center self-end rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-theme-accent)] px-[0.9rem] py-[0.35rem] text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-color-on-primary)] transition-[opacity,transform] duration-150 ease-out hover:-translate-y-[1px] hover:opacity-90"
       >
         {announcement.link.text || '查看详情'}
       </a>

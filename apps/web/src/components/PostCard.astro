@@ -49,16 +49,16 @@ const hasCover = !!post.cover
 
     <div class="post-meta mb-[0.7rem] flex flex-wrap items-center gap-x-[0.85rem] gap-y-[0.6rem]">
       {post.pinned && (
-        <span class="meta-row pinned-row inline-flex min-w-0 items-center gap-[0.3rem] rounded-[var(--tsuki-radius-5sm)] bg-[color-mix(in_srgb,var(--tsuki-theme-secondary)_40%,var(--tsuki-sidebar-card-bg))] px-[0.45rem] py-[0.2rem] group-[.pinned]:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_20%,var(--tsuki-sidebar-card-bg))]">
-          <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
-            <Icon name="material-symbols:pinboard" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)] group-[.pinned]:text-[var(--tsuki-theme-accent)]" />
+        <span class="meta-row pinned-row inline-flex min-w-0 items-center gap-[0.3rem] rounded-[var(--tsuki-radius-5sm)] bg-[var(--tsuki-pinned-bg)] px-[0.45rem] py-[0.2rem]">
+          <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-pinned-bg)]">
+            <Icon name="material-symbols:pinboard" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-color-on-primary)]" />
           </span>
-          <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">置顶</span>
+          <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[var(--tsuki-color-on-primary)]">置顶</span>
         </span>
       )}
 
       <span class="meta-row date-row inline-flex min-w-0 items-center gap-[0.3rem]">
-        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] border border-[var(--tsuki-chip-border)] bg-[var(--tsuki-chip-bg)]">
           <Icon name="material-symbols:calendar-today-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
         <time datetime={post.publishedAt} class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_60%,transparent)]">
@@ -67,14 +67,14 @@ const hasCover = !!post.cover
       </span>
 
       <span class="meta-row inline-flex min-w-0 items-center gap-[0.3rem]">
-        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] border border-[var(--tsuki-chip-border)] bg-[var(--tsuki-chip-bg)]">
           <Icon name="material-symbols:book-2-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
         <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">{post.category}</span>
       </span>
 
       <span class="meta-row inline-flex min-w-0 items-center gap-[0.3rem]">
-        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] bg-[var(--tsuki-theme-secondary)]">
+        <span class="meta-icon-badge grid h-[1.56rem] w-[1.56rem] place-items-center rounded-[var(--tsuki-radius-4sm)] border border-[var(--tsuki-chip-border)] bg-[var(--tsuki-chip-bg)]">
           <Icon name="material-symbols:article-outline-rounded" class="meta-icon inline-flex h-4 w-4 items-center justify-center text-[var(--tsuki-theme-accent)]" />
         </span>
         <span class="meta-text whitespace-nowrap text-[var(--tsuki-text-base-tight)] font-medium leading-5 text-[color-mix(in_srgb,var(--tsuki-fg)_68%,transparent)]">{post.words} 字</span>
@@ -87,7 +87,7 @@ const hasCover = !!post.cover
 
     <div class="stats mt-auto flex flex-wrap gap-2">
       {post.tags.map(tag => (
-        <a href={`/tags/${tag.toLowerCase()}`} class="tag-item inline-flex items-center rounded-[var(--tsuki-radius-md)] bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_10%,transparent)] px-3 py-1.5 text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-theme-accent)] transition-[background-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:bg-[color-mix(in_srgb,var(--tsuki-theme-accent)_20%,transparent)] max-sm:px-2.5 max-sm:py-[0.3125rem]">{tag}</a>
+        <a href={`/tags/${tag.toLowerCase()}`} class="tag-item inline-flex items-center rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-tag-bg)] px-3 py-1.5 text-[var(--tsuki-text-sm)] font-medium text-[var(--tsuki-tag-fg)] transition-[background-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:bg-[var(--tsuki-tag-bg-hover)] max-sm:px-2.5 max-sm:py-[0.3125rem]">{tag}</a>
       ))}
     </div>
   </div>

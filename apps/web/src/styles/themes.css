@@ -13,8 +13,9 @@
   --tsuki-sidebar-card-border: rgba(0, 0, 0, 0.08);
   --tsuki-sidebar-card-border-hover: rgba(167, 139, 250, 0.3);
   --tsuki-sidebar-card-radius: 1rem;
-  --tsuki-sidebar-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --tsuki-sidebar-card-shadow-hover: 0 4px 12px rgba(167, 139, 250, 0.15);
+  --tsuki-sidebar-card-shadow: 0 8px 24px rgba(167, 139, 250, 0.12);
+  --tsuki-sidebar-card-shadow-hover: 0 12px 28px rgba(167, 139, 250, 0.18);
   --tsuki-sidebar-card-hover-translate: -2px;
-  --tsuki-link-icon-bg: rgba(167, 139, 250, 0.1);
+  --tsuki-link-icon-bg: rgba(167, 139, 250, 0.16);
+  --tsuki-link-icon-bg-hover: rgba(167, 139, 250, 0.24);
 }

@@ -12,10 +12,10 @@ const categories = [
     {categories.map((category) => (
       <a
         href={`/groups/${category.slug}`}
-        class="flex items-center justify-between rounded-[var(--tsuki-radius-md)] border border-[color-mix(in_srgb,var(--tsuki-theme-secondary)_64%,var(--tsuki-color-on-primary))] bg-[color-mix(in_srgb,var(--tsuki-theme-secondary)_42%,var(--tsuki-color-on-primary))] px-3 py-2 text-[var(--tsuki-fg)] transition-[background-color,border-color,transform] duration-150 ease-out hover:translate-x-1 hover:border-[var(--tsuki-theme-accent)] hover:bg-[color-mix(in_srgb,var(--tsuki-theme-secondary)_60%,var(--tsuki-color-on-primary))]"
+        class="flex items-center justify-between rounded-[var(--tsuki-radius-md)] border border-[var(--tsuki-chip-border)] bg-[var(--tsuki-chip-bg)] px-3 py-2 text-[var(--tsuki-fg)] transition-[background-color,border-color,transform] duration-150 ease-out hover:translate-x-1 hover:border-[var(--tsuki-theme-accent)] hover:bg-[var(--tsuki-tag-bg-hover)]"
       >
         <span class="text-[var(--tsuki-text-base)] font-medium max-sm:text-[var(--tsuki-text-sm)]">{category.name}</span>
-        <span class="rounded-[var(--tsuki-radius-sm)] bg-[var(--tsuki-theme-secondary)] px-2 py-0.5 text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)] max-sm:text-[var(--tsuki-text-xxs)]">
+        <span class="rounded-[var(--tsuki-radius-sm)] bg-[var(--tsuki-tag-bg)] px-2 py-0.5 text-[var(--tsuki-text-xs)] text-[var(--tsuki-tag-fg)] max-sm:text-[var(--tsuki-text-xxs)]">
           {category.count}
         </span>
       </a>

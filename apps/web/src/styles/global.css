@@ -158,6 +158,17 @@
   --tsuki-shadow-theme-preview-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
   --tsuki-shadow-avatar-overlay: 0 6px 12px rgba(0, 0, 0, 0.3);
   --tsuki-shadow-link-icon: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
+  --tsuki-chip-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, var(--tsuki-color-on-primary));
+  --tsuki-chip-border: color-mix(in srgb, var(--tsuki-theme-secondary) 80%, var(--tsuki-color-on-primary));
+  --tsuki-tag-bg: color-mix(in srgb, var(--tsuki-theme-accent) 24%, var(--tsuki-color-on-primary));
+  --tsuki-tag-bg-hover: color-mix(in srgb, var(--tsuki-theme-accent) 34%, var(--tsuki-color-on-primary));
+  --tsuki-tag-fg: var(--tsuki-theme-accent);
+  --tsuki-pinned-bg: color-mix(in srgb, var(--tsuki-theme-accent) 28%, var(--tsuki-color-on-primary));
+  --tsuki-pinned-fg: var(--tsuki-theme-accent);
+  --tsuki-header-pill-bg: color-mix(in srgb, var(--tsuki-color-on-primary) 82%, var(--tsuki-theme-secondary) 18%);
+  --tsuki-header-pill-border: color-mix(in srgb, var(--tsuki-theme-secondary) 70%, var(--tsuki-color-on-primary));
+  --tsuki-profile-stats-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 35%, var(--tsuki-color-on-primary));
+  --tsuki-footer-bg: var(--tsuki-theme-gradient);
   --tsuki-header-dropdown-bg: var(--tsuki-color-on-primary);
   --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 88%, transparent);
   --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary)) 80%, transparent);
