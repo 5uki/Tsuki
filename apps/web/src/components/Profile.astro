@@ -73,20 +73,20 @@ function formatNumber(num: number): string {
   )}
 
   {stats?.enable && (
-    <div class="mb-[var(--tsuki-space-0-9)] grid w-full grid-cols-3 items-center justify-center divide-x divide-[var(--tsuki-surface-divider)] text-center" aria-label="站点统计">
+    <div class="mb-[var(--tsuki-space-0-9)] grid w-full grid-cols-3 items-center justify-center text-center" aria-label="站点统计">
       <div class="grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)]">
         <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">文章</span>
         <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
           {formatNumber(mockStats.posts)}
         </span>
       </div>
-      <div class="grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)]">
+      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
         <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">标签</span>
         <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
           {formatNumber(mockStats.tags)}
         </span>
       </div>
-      <div class="grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)]">
+      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
         <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">分组</span>
         <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
           {formatNumber(mockStats.groups)}

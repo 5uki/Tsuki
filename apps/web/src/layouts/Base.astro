@@ -36,9 +36,6 @@ const bodyVars: string[] = []
 if (isHome && topBgImageHref) {
   bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
 }
-if (isHome) {
-  bodyVars.push('--tsuki-top-backdrop-bg: transparent;')
-}
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
 
 // 涓婚鍒楄〃鐢ㄤ簬楠岃瘉

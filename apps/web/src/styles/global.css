@@ -33,6 +33,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--tsuki-fg);
+  background: var(--tsuki-theme-gradient);
   position: relative;
   isolation: isolate;
   transition:
@@ -118,6 +119,7 @@ button {
 
   --tsuki-radius-xs: 0.25rem;
   --tsuki-radius-2xs: 2px;
+  --tsuki-border-hairline: 1px;
   --tsuki-radius-sm: 0.35rem;
   --tsuki-radius-sm-2: 0.375rem;
   --tsuki-radius-0-4: 0.4rem;
@@ -299,7 +301,7 @@ button {
   --tsuki-scale-cover-active: 0.95;
   --tsuki-banner-mask-ink: #000;
   --tsuki-banner-mask-soft: rgba(0, 0, 0, 0.6);
-  --tsuki-banner-wave-blur: 0.3px;
+  --tsuki-banner-wave-blur: 0px;
   --tsuki-surface-muted: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
   --tsuki-surface-muted-strong: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
   --tsuki-surface-muted-soft: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
@@ -424,5 +426,11 @@ button {
       transform var(--tsuki-motion-card-transform-duration) var(--tsuki-motion-card-transform-ease),
       box-shadow var(--tsuki-motion-card-shadow-duration) var(--tsuki-motion-ease-out),
       border-color var(--tsuki-motion-card-border-duration) var(--tsuki-motion-ease-out);
+  }
+
+  .tsuki-card-transition:active {
+    transform: translateY(var(--tsuki-sidebar-card-hover-translate));
+    box-shadow: var(--tsuki-sidebar-card-shadow-hover);
+    border-color: var(--tsuki-sidebar-card-border-hover);
   }
 }
