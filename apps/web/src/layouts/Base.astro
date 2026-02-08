@@ -38,7 +38,7 @@ if (isHome && topBgImageHref) {
 }
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
 
-// 涓婚鍒楄〃鐢ㄤ簬楠岃瘉
+// 主题列表用于验证
 const VALID_THEMES = ['mauve']
 ---
 
@@ -55,7 +55,7 @@ const VALID_THEMES = ['mauve']
     <link rel="apple-touch-icon" href={faviconHref} />
     <title>{title}</title>
     <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
-      // 涓婚鍒濆鍖?- 鍐呰仈鑴氭湰纭繚鍦ㄦ覆鏌撳墠鎵ц
+      // 主题初始化：内联脚本确保在渲染前执行
       (function() {
         const storageKey = 'tsuki.theme'
         let persisted = null

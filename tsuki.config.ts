@@ -1,4 +1,4 @@
-import { defineConfig } from '@tsuki/config'
+﻿import { defineConfig } from '@tsuki/config'
 
 export default defineConfig({
   site: {
@@ -37,7 +37,7 @@ export default defineConfig({
       },
       {
         name: 'Email',
-        icon: 'fa6-solid:envelope',
+        icon: 'fa6-solid:mail',
         url: 'mailto:example@email.com',
       },
     ],

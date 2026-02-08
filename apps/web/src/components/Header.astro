@@ -1,5 +1,5 @@
 ﻿---
-// 椤堕儴瀵艰埅鏍忕粍浠?
+// 顶部导航栏组件
 import { THEME_METAS } from '@tsuki/shared/theme'
 import tsukiConfig from '@/config/tsuki-config'
 import type { NavLink } from '@tsuki/config'
@@ -90,16 +90,16 @@ const siteTitle = tsukiConfig.site.title
 </header>
 
 <script>
-  // 涓婚鍒囨崲鍔熻兘
+  // 主题切换功能
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
   import { createStorageAdapter } from '@adapters/storage'
 
-  const header = document.querySelector('.header')
-  const headerTrack = document.querySelector('.header-track')
-  const main = document.querySelector('main.main')
+  const header = document.querySelector<HTMLElement>('.header')
+  const headerTrack = document.querySelector<HTMLElement>('.header-track')
+  const main = document.querySelector<HTMLElement>('main.main')
   const toggle = document.getElementById('theme-toggle')
   const dropdown = document.getElementById('theme-dropdown')
-  const themeOptions = document.querySelectorAll('.theme-option')
+  const themeOptions = document.querySelectorAll<HTMLButtonElement>('.theme-option')
   const mobileMenuBtn = document.getElementById('mobile-menu-btn')
   const mobileNav = document.getElementById('mobile-nav')
   const storage = createStorageAdapter()
@@ -144,7 +144,7 @@ const siteTitle = tsukiConfig.site.title
     const isScrolled = window.scrollY > 8
     header?.classList.toggle('scrolled', isScrolled)
 
-    // 杩涘叆涓诲唴瀹瑰尯鍩熷悗锛屾敹璧疯儗鏅潯涓庝腑蹇冭兌鍥娿€?
+    // 进入主内容区域后，收起背景条与中间胶囊
     if (!main || !header) return
     const mainTop = main.getBoundingClientRect().top
     const headerHeight = header.getBoundingClientRect().height
@@ -162,7 +162,7 @@ const siteTitle = tsukiConfig.site.title
     }
   }
 
-  // 涓婚鍒囨崲浜嬩欢
+  // 主题切换事件
   toggle?.addEventListener('click', (e) => {
     e.stopPropagation()
     closeMobileNav()
@@ -179,14 +179,14 @@ const siteTitle = tsukiConfig.site.title
     })
   })
 
-  // 绉诲姩绔彍鍗?
+  // 移动端菜单
   mobileMenuBtn?.addEventListener('click', (e) => {
     e.stopPropagation()
     closeDropdown()
     mobileNav?.classList.toggle('open')
   })
 
-  // 鐐瑰嚮澶栭儴鍏抽棴鎵€鏈夎彍鍗?
+  // 点击外部关闭所有菜单
   document.addEventListener('click', (e) => {
     const target = e.target as Node
     if (!dropdown?.contains(target) && target !== toggle &&
@@ -195,19 +195,19 @@ const siteTitle = tsukiConfig.site.title
     }
   })
 
-  // 閿洏鍏抽棴
+  // 键盘关闭
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeAllMenus()
     }
   })
 
-  // 婊氬姩鏍峰紡
+  // 滚动样式
   updateHeaderState()
   window.addEventListener('scroll', updateHeaderState, { passive: true })
   window.addEventListener('resize', updateHeaderState, { passive: true })
 
-  // 鍒濆鍖?
+  // 初始化
   updateActiveTheme()
 </script>
 

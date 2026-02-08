@@ -8,7 +8,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 ---
 
-<Default title={`鏍囩: ${slug}`} description={`鏍囩 ${slug} 涓嬬殑鍐呭`}>
+<Default title={`标签: ${slug}`} description={`标签 ${slug} 下的内容`}>
   <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">#{slug}</h1>
-  <p class="italic text-[color:var(--tsuki-fg)]">璇ユ爣绛句笅鏆傛棤鍐呭</p>
+  <p class="italic text-[color:var(--tsuki-fg)]">该标签下暂无内容</p>
 </Default>

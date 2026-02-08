@@ -8,14 +8,14 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 ---
 
-<Default title={`鏂囩珷: ${slug}`} description="鏂囩珷璇︽儏">
+<Default title={`文章: ${slug}`} description="文章详情">
   <article class="post">
     <header class="mb-[var(--tsuki-space-2)] border-b border-[var(--tsuki-surface-border)] pb-[var(--tsuki-space-1)]">
       <h1 class="mb-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-3xl)]">{slug}</h1>
-      <p class="text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">鏂囩珷璇︽儏椤靛崰浣?</p>
+      <p class="text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">文章详情页占位</p>
     </header>
     <div class="prose">
-      <p>杩欐槸鏂囩珷 "{slug}" 鐨勮鎯呴〉銆侻1 灏嗗疄鐜板畬鏁村姛鑳姐€?</p>
+      <p>这是文章 "{slug}" 的详情页。M1 将实现完整功能。</p>
     </div>
   </article>
 </Default>

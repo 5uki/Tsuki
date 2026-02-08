@@ -32,7 +32,7 @@ const hasCover = !!post.cover
       },
     ]}
   >
-    <a href={postHref} class="post-card-title group mb-[var(--tsuki-space-0-75)] inline-flex w-fit max-w-full items-center text-[length:var(--tsuki-text-post-title)] font-bold leading-[var(--tsuki-line-height-heading)] text-[color:var(--tsuki-post-title-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:text-[color:var(--tsuki-theme-accent)] focus-visible:text-[color:var(--tsuki-theme-accent)] md:relative md:max-w-[calc(100%-var(--tsuki-space-0-5))] md:before:absolute md:before:left-[-var(--tsuki-space-1-5)] md:before:top-[var(--tsuki-space-0-35)] md:before:h-[var(--tsuki-space-1-25)] md:before:w-[var(--tsuki-space-0-25)] md:before:rounded-[var(--tsuki-radius-xs)] md:before:bg-[var(--tsuki-theme-accent)] md:before:content-['']">
+    <a href={postHref} class="post-card-title group mb-[var(--tsuki-space-0-75)] inline-flex w-fit max-w-full items-center text-[length:var(--tsuki-text-post-title)] font-bold leading-[var(--tsuki-line-height-heading)] text-[color:var(--tsuki-post-title-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:text-[color:var(--tsuki-theme-accent)] focus-visible:text-[color:var(--tsuki-theme-accent)] md:relative md:max-w-[calc(100%-var(--tsuki-space-0-5))] md:before:absolute md:before:top-[var(--tsuki-space-0-35)] md:before:h-[var(--tsuki-space-1-25)] md:before:w-[var(--tsuki-space-0-25)] md:before:rounded-[var(--tsuki-radius-xs)] md:before:bg-[var(--tsuki-theme-accent)] md:before:content-['']">
       <span class="break-words">{post.title}</span>
       <span class="ml-[var(--tsuki-space-0-2)] inline-flex h-[var(--tsuki-post-title-arrow-size)] w-[var(--tsuki-post-title-arrow-size)] items-center justify-center text-[color:var(--tsuki-theme-accent)] md:hidden" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,13 +46,13 @@ const hasCover = !!post.cover
       </span>
     </a>
 
-    <div class="post-meta mb-[var(--tsuki-space-0-7)] flex flex-wrap items-center gap-x-[var(--tsuki-space-0-85)] gap-y-[var(--tsuki-space-0-6)]">
+    <div class="post-meta mb-[var(--tsuki-space-0-5)] flex flex-wrap items-center gap-x-[var(--tsuki-space-0-85)] gap-y-[var(--tsuki-space-0-6)]">
       {post.pinned && (
-        <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] rounded-[var(--tsuki-radius-0-45)] bg-[var(--tsuki-post-pinned-bg)] px-[var(--tsuki-space-0-45)] py-[var(--tsuki-space-0-2)]">
+        <span class="meta-row inline-flex h-[var(--tsuki-meta-icon-badge-size)] min-w-0 items-center gap-[var(--tsuki-space-0-3)] rounded-[var(--tsuki-radius-0-45)] bg-[var(--tsuki-post-pinned-bg)] px-[var(--tsuki-space-0-45)] leading-none">
           <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
             <Icon name="material-symbols:pinboard" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
           </span>
-          <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-medium leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)]">置顶</span>
+          <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">置顶</span>
         </span>
       )}
 
@@ -60,25 +60,25 @@ const hasCover = !!post.cover
         <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
           <Icon name="material-symbols:calendar-today-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
         </span>
-        <time datetime={post.publishedAt} class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-medium leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-date-fg)]">{post.publishedAt}</time>
+        <time datetime={post.publishedAt} class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.publishedAt}</time>
       </span>
 
       <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
         <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
           <Icon name="material-symbols:book-2-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
         </span>
-        <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-medium leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)]">{post.category}</span>
+        <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.category}</span>
       </span>
 
       <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
         <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
           <Icon name="material-symbols:article-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
         </span>
-        <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-medium leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)]">{post.words} 字</span>
+        <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.words} 字</span>
       </span>
     </div>
 
-    <p class="description mb-[var(--tsuki-space-0-85)] pr-[var(--tsuki-space-1)] text-[length:var(--tsuki-text-post-summary)] leading-[var(--tsuki-line-height-base)] text-[color:var(--tsuki-post-muted-fg)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden">
+    <p class="description mt-0 mb-[var(--tsuki-space-0-6)] pr-[var(--tsuki-space-1)] text-[length:var(--tsuki-text-post-summary)] leading-[var(--tsuki-line-height-base)] text-[color:var(--tsuki-post-muted-fg)] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden">
       {post.summary}
     </p>
 
@@ -86,7 +86,7 @@ const hasCover = !!post.cover
       {post.tags.map(tag => (
         <a
           href={`/tags/${tag.toLowerCase()}`}
-          class="tag-item inline-block rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-surface-accent-strong)] px-[var(--tsuki-space-0-625)] py-[var(--tsuki-space-0-3125)] text-[length:var(--tsuki-text-sm-compact)] font-medium text-[color:var(--tsuki-theme-accent)] no-underline transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:-translate-y-[var(--tsuki-translate-2px)] hover:bg-[var(--tsuki-surface-accent-soft)] sm:px-[var(--tsuki-space-0-75)] sm:py-[var(--tsuki-space-0-375)]"
+          class="tag-item inline-block rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-surface-accent-strong)] px-[var(--tsuki-space-0-625)] py-[var(--tsuki-space-0-3125)] text-[length:var(--tsuki-text-sm-compact)] font-medium text-[color:var(--tsuki-theme-accent)] no-underline transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-y-[var(--tsuki-translate-1px)] hover:bg-[var(--tsuki-surface-accent-soft)] sm:px-[var(--tsuki-space-0-75)] sm:py-[var(--tsuki-space-0-375)]"
         >
           {tag}
         </a>
@@ -102,6 +102,12 @@ const hasCover = !!post.cover
 </div>
 
 <style>
+  @media (min-width: 768px) {
+    .post-card-title::before {
+      left: calc(var(--tsuki-space-1-25) * -1);
+    }
+  }
+
   :global(.grid-mode) .post-card-wrapper {
     flex-direction: column-reverse;
     height: 100%;

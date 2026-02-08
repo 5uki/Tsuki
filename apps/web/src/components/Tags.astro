@@ -1,4 +1,4 @@
-﻿---
+---
 const tags = [
   { name: 'TypeScript', count: 4, slug: 'typescript' },
   { name: 'Astro', count: 3, slug: 'astro' },
@@ -11,15 +11,15 @@ const tags = [
 ]
 ---
 
-<div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
-  <h3 class="mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-base-compact)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-accent-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-text-base)]">
+<div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-sidebar-card-padding-inline)] pb-[var(--tsuki-sidebar-card-padding)] pt-[var(--tsuki-sidebar-card-title-top-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:px-[var(--tsuki-sidebar-card-padding-inline-compact)] sm:pb-[var(--tsuki-sidebar-card-padding-compact)] sm:pt-[var(--tsuki-sidebar-card-title-top-padding-compact)]">
+  <h3 class="mt-0 mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-sidebar-section-title-size)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-sidebar-section-marker-height)] before:w-[var(--tsuki-sidebar-section-marker-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-sidebar-section-title-size-desktop)]">
     标签
   </h3>
   <div class="flex flex-wrap gap-[var(--tsuki-space-0-5)]">
     {tags.map((tag) => (
       <a
         href={`/tags/${tag.slug}`}
-        class="inline-block rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-surface-accent-strong)] px-[var(--tsuki-space-0-625)] py-[var(--tsuki-space-0-3125)] text-[length:var(--tsuki-text-sm-compact)] font-medium text-[color:var(--tsuki-theme-accent)] no-underline transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:-translate-y-[var(--tsuki-translate-2px)] hover:bg-[var(--tsuki-surface-accent-soft)] sm:px-[var(--tsuki-space-0-75)] sm:py-[var(--tsuki-space-0-375)]"
+        class="inline-block rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-surface-accent-strong)] px-[var(--tsuki-space-0-625)] py-[var(--tsuki-space-0-3125)] text-[length:var(--tsuki-sidebar-body-text-size)] font-medium text-[color:var(--tsuki-theme-accent)] no-underline transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-y-[var(--tsuki-translate-1px)] hover:bg-[var(--tsuki-surface-accent-soft)] sm:px-[var(--tsuki-space-0-75)] sm:py-[var(--tsuki-space-0-375)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]"
       >
         {tag.name}
       </a>

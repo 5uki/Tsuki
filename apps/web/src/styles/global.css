@@ -47,7 +47,7 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 img {
@@ -139,7 +139,7 @@ button {
   --tsuki-motion-card-border-duration: 130ms;
   --tsuki-motion-card-transform-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --tsuki-border-accent-width: 4px;
-  --tsuki-translate-1px: -1px;
+  --tsuki-translate-1px: -2px;
   --tsuki-translate-4px: 4px;
   --tsuki-translate-2px: -2px;
   --tsuki-translate-0-2: -0.2rem;
@@ -264,6 +264,16 @@ button {
   --tsuki-sidebar-card-radius: 1.25rem;
   --tsuki-sidebar-card-padding: 1rem;
   --tsuki-sidebar-card-padding-compact: 0.875rem;
+  --tsuki-sidebar-card-padding-inline: 1.125rem;
+  --tsuki-sidebar-card-padding-inline-compact: 1rem;
+  --tsuki-sidebar-card-title-top-padding: calc(var(--tsuki-sidebar-card-padding) + var(--tsuki-space-0-125));
+  --tsuki-sidebar-card-title-top-padding-compact: calc(var(--tsuki-sidebar-card-padding-compact) + var(--tsuki-space-0-125));
+  --tsuki-sidebar-section-title-size: 1.0625rem;
+  --tsuki-sidebar-section-title-size-desktop: 1.125rem;
+  --tsuki-sidebar-section-marker-height: var(--tsuki-space-1);
+  --tsuki-sidebar-section-marker-width: var(--tsuki-border-accent-width);
+  --tsuki-sidebar-body-text-size: 0.875rem;
+  --tsuki-sidebar-body-text-size-desktop: 0.9rem;
   --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
   --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
   --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
@@ -284,16 +294,16 @@ button {
   --tsuki-post-cover-width: 30%;
   --tsuki-post-cover-gap: 1.5rem;
   --tsuki-post-cover-padding: 1rem;
-  --tsuki-post-meta-fg: color-mix(in srgb, var(--tsuki-fg) 68%, transparent);
+  --tsuki-post-meta-fg: var(--tsuki-fg);
   --tsuki-post-muted-fg: color-mix(in srgb, var(--tsuki-fg) 74%, transparent);
   --tsuki-post-date-fg: color-mix(in srgb, var(--tsuki-fg) 60%, transparent);
   --tsuki-post-title-fg: color-mix(in srgb, var(--tsuki-fg) 90%, transparent);
   --tsuki-post-pinned-bg: color-mix(in srgb, var(--tsuki-theme-accent) 20%, var(--tsuki-sidebar-card-bg));
-  --tsuki-meta-icon-badge-size: 1.56rem;
-  --tsuki-meta-icon-size: 1rem;
+  --tsuki-meta-icon-badge-size: 1.68rem;
+  --tsuki-meta-icon-size: 1.08rem;
   --tsuki-meta-icon-container-size: 1.28rem;
   --tsuki-post-title-arrow-size: 2rem;
-  --tsuki-text-meta: 0.84rem;
+  --tsuki-text-meta: var(--tsuki-sidebar-body-text-size);
   --tsuki-text-post-summary: 0.96rem;
   --tsuki-text-post-title: 1.5rem;
   --tsuki-post-card-min-height: 12.8rem;
