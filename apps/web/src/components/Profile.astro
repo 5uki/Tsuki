@@ -43,7 +43,7 @@ function formatNumber(num: number): string {
 }
 ---
 
-<div class="flex flex-col items-center rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] transition-[transform,box-shadow,border-color] duration-[140ms] ease-out hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] max-sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+<div class="flex flex-col items-center rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] outline outline-1 outline-[var(--tsuki-sidebar-card-outline)] outline-offset-0 transition-[transform,box-shadow,border-color,outline-color] duration-[140ms] ease-out hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] hover:outline-[var(--tsuki-sidebar-card-outline-hover)] active:shadow-[var(--tsuki-sidebar-card-shadow-active)] max-sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
   {safeProfile.avatar && (
     <a
       href={safeProfile.avatarLink || '#'}
@@ -81,11 +81,11 @@ function formatNumber(num: number): string {
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">文章</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.posts)}</span>
       </div>
-      <div class="grid gap-[0.35rem] border-l border-[var(--tsuki-chip-border)] px-3">
+      <div class="relative grid gap-[0.35rem] px-3 before:absolute before:left-0 before:top-1/2 before:h-4 before:w-px before:-translate-y-1/2 before:bg-[var(--tsuki-profile-stats-divider)]">
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">标签</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.tags)}</span>
       </div>
-      <div class="grid gap-[0.35rem] border-l border-[var(--tsuki-chip-border)] px-3">
+      <div class="relative grid gap-[0.35rem] px-3 before:absolute before:left-0 before:top-1/2 before:h-4 before:w-px before:-translate-y-1/2 before:bg-[var(--tsuki-profile-stats-divider)]">
         <span class="text-[var(--tsuki-text-xs)] text-[var(--tsuki-fg)]">分组</span>
         <span class="text-[var(--tsuki-text-lg)] font-semibold text-[var(--tsuki-fg)]">{formatNumber(mockStats.groups)}</span>
       </div>

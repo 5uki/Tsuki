@@ -14,7 +14,7 @@ const hasCover = !!post.cover
 
 <div
   class:list={[
-    'post-card-wrapper group relative flex w-full flex-col-reverse overflow-hidden rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] shadow-[var(--tsuki-sidebar-card-shadow)] transition-[transform,box-shadow,border-color] duration-[140ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] md:min-h-[12.8rem] md:flex-col',
+    'post-card-wrapper group relative flex w-full flex-col-reverse overflow-hidden rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] shadow-[var(--tsuki-sidebar-card-shadow)] outline outline-1 outline-[var(--tsuki-sidebar-card-outline)] outline-offset-0 transition-[transform,box-shadow,border-color,outline-color] duration-[140ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] hover:outline-[var(--tsuki-sidebar-card-outline-hover)] active:shadow-[var(--tsuki-sidebar-card-shadow-active)] md:min-h-[12.8rem] md:flex-col',
     '[--tsuki-post-cover-width:30%]',
     {
       'has-cover': hasCover,

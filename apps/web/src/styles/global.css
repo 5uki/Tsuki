@@ -34,6 +34,7 @@
     margin: 0;
     padding: 0;
     color: var(--tsuki-fg);
+    background: var(--tsuki-theme-gradient);
     position: relative;
     isolation: isolate;
     transition: color 150ms;
@@ -106,6 +107,8 @@
   --tsuki-banner-wave-top: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, var(--tsuki-color-on-primary));
   --tsuki-banner-wave-bottom: color-mix(in srgb, var(--tsuki-theme-secondary) 58%, var(--tsuki-color-on-primary));
   --tsuki-banner-wave-fill: var(--tsuki-banner-wave-bottom);
+  --tsuki-banner-wave-opacity: 0.98;
+  --tsuki-banner-wave-blur: 0.15px;
 
   --tsuki-content-width: 48rem;
   --tsuki-header-width: 100%;
@@ -207,13 +210,17 @@
   --tsuki-sidebar-card-bg: color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%);
   --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, var(--tsuki-color-on-primary)) 80%, transparent);
   --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
+  --tsuki-sidebar-card-outline: color-mix(in srgb, var(--tsuki-theme-secondary) 72%, var(--tsuki-color-on-primary));
+  --tsuki-sidebar-card-outline-hover: var(--tsuki-theme-accent);
   --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
   --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
+  --tsuki-sidebar-card-shadow-active: 0 6px 16px color-mix(in srgb, var(--tsuki-theme-accent) 28%, transparent);
   --tsuki-sidebar-card-hover-translate: -0.125rem;
   --tsuki-profile-avatar-overlay: rgba(0, 0, 0, 0.55);
   --tsuki-profile-avatar-overlay-icon: var(--tsuki-color-on-primary);
   --tsuki-link-icon-bg: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 82%, var(--tsuki-theme-accent) 18%);
   --tsuki-link-icon-bg-hover: color-mix(in srgb, color-mix(in srgb, var(--tsuki-color-on-primary) 72%, var(--tsuki-theme-secondary) 28%) 72%, var(--tsuki-theme-accent) 28%);
+  --tsuki-profile-stats-divider: color-mix(in srgb, var(--tsuki-theme-accent) 36%, var(--tsuki-color-on-primary));
 }
 
 .prose {
