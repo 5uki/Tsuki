@@ -428,6 +428,11 @@ button {
       border-color var(--tsuki-motion-card-border-duration) var(--tsuki-motion-ease-out);
   }
 
+  .tsuki-card-transition:where(:hover, :focus-visible, :active) {
+    box-shadow: var(--tsuki-sidebar-card-shadow-hover);
+    border-color: var(--tsuki-sidebar-card-border-hover);
+  }
+
   .tsuki-card-transition:active {
     transform: translateY(var(--tsuki-sidebar-card-hover-translate));
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
