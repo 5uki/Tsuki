@@ -36,9 +36,6 @@ const bodyVars: string[] = []
 if (isHome && topBgImageHref) {
   bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
 }
-if (isHome) {
-  bodyVars.push('--tsuki-top-backdrop-bg: transparent;')
-}
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
 
 // 涓婚鍒楄〃鐢ㄤ簬楠岃瘉
@@ -79,8 +76,11 @@ const VALID_THEMES = ['mauve']
     </script>
   </head>
   <body style={bodyStyle}>
-    <div class="tsuki-top-backdrop" aria-hidden="true"></div>
-    <div class="tsuki-root">
+    <div
+      class="absolute inset-x-0 top-0 z-0 h-[var(--tsuki-banner-height)] pointer-events-none bg-[var(--tsuki-top-backdrop-bg,var(--tsuki-theme-gradient))] bg-no-repeat bg-[length:100%_100%] bg-[position:0_0] [contain:paint]"
+      aria-hidden="true"
+    ></div>
+    <div class="relative z-[1]">
       <slot />
     </div>
   </body>

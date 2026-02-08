@@ -47,56 +47,52 @@ const fallbackSubtitle = tsukiConfig.site.description
           <animateTransform
             attributeName="transform"
             type="translate"
-            from="-90 0"
-            to="85 0"
-            dur="7s"
+            values="-120 0; 120 0; -120 0"
+            dur="6s"
             repeatCount="indefinite"
-            begin="-2s"
+            begin="-1.5s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5"
-            keyTimes="0;1"
+            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keyTimes="0;0.5;1"
           />
         </use>
         <use xlink:href="#gentle-wave" x="48" y="3" opacity="0.6">
           <animateTransform
             attributeName="transform"
             type="translate"
-            from="-90 0"
-            to="85 0"
-            dur="10s"
+            values="-120 0; 120 0; -120 0"
+            dur="9s"
             repeatCount="indefinite"
-            begin="-3s"
+            begin="-2.5s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5"
-            keyTimes="0;1"
+            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keyTimes="0;0.5;1"
           />
         </use>
         <use xlink:href="#gentle-wave" x="48" y="5" opacity="0.78">
           <animateTransform
             attributeName="transform"
             type="translate"
-            from="-90 0"
-            to="85 0"
-            dur="13s"
+            values="-120 0; 120 0; -120 0"
+            dur="12s"
             repeatCount="indefinite"
-            begin="-4s"
+            begin="-3.5s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5"
-            keyTimes="0;1"
+            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keyTimes="0;0.5;1"
           />
         </use>
         <use xlink:href="#gentle-wave" x="48" y="7" opacity="0.92">
           <animateTransform
             attributeName="transform"
             type="translate"
-            from="-90 0"
-            to="85 0"
-            dur="20s"
+            values="-120 0; 120 0; -120 0"
+            dur="18s"
             repeatCount="indefinite"
-            begin="-5s"
+            begin="-4.5s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5"
-            keyTimes="0;1"
+            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keyTimes="0;0.5;1"
           />
         </use>
       </g>
@@ -183,27 +179,27 @@ const fallbackSubtitle = tsukiConfig.site.description
     pointer-events: none;
     contain: none;
     margin-bottom: -1px;
-    mix-blend-mode: soft-light;
-    opacity: 0.9;
+    mix-blend-mode: normal;
+    opacity: 1;
     mask-image: linear-gradient(
       to top,
       transparent 0%,
-      rgba(0, 0, 0, 0.6) 22%,
-      #000 55%,
-      #000 100%
+      var(--tsuki-banner-mask-soft) 22%,
+      var(--tsuki-banner-mask-ink) 55%,
+      var(--tsuki-banner-mask-ink) 100%
     );
     mask-size: 100% 100%;
     mask-repeat: no-repeat;
     -webkit-mask-image: linear-gradient(
       to top,
       transparent 0%,
-      rgba(0, 0, 0, 0.6) 22%,
-      #000 55%,
-      #000 100%
+      var(--tsuki-banner-mask-soft) 22%,
+      var(--tsuki-banner-mask-ink) 55%,
+      var(--tsuki-banner-mask-ink) 100%
     );
     -webkit-mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
-    filter: blur(0.3px);
+    filter: blur(var(--tsuki-banner-wave-blur));
   }
 
   .tsuki-banner-waves svg {

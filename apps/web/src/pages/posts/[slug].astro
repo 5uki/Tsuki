@@ -10,30 +10,12 @@ const { slug } = Astro.params
 
 <Default title={`鏂囩珷: ${slug}`} description="鏂囩珷璇︽儏">
   <article class="post">
-    <header>
-      <h1>{slug}</h1>
-      <p class="meta">鏂囩珷璇︽儏椤靛崰浣?/p>
+    <header class="mb-[var(--tsuki-space-2)] border-b border-[var(--tsuki-surface-border)] pb-[var(--tsuki-space-1)]">
+      <h1 class="mb-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-3xl)]">{slug}</h1>
+      <p class="text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">鏂囩珷璇︽儏椤靛崰浣?</p>
     </header>
     <div class="prose">
-      <p>杩欐槸鏂囩珷 "{slug}" 鐨勮鎯呴〉銆侻1 灏嗗疄鐜板畬鏁村姛鑳姐€?/p>
+      <p>杩欐槸鏂囩珷 "{slug}" 鐨勮鎯呴〉銆侻1 灏嗗疄鐜板畬鏁村姛鑳姐€?</p>
     </div>
   </article>
 </Default>
-
-<style>
-  .post header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  }
-
-  .post h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .meta {
-    color: #0b0b0b;
-    font-size: 0.875rem;
-  }
-</style>

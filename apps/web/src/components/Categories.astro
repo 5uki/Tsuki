@@ -6,94 +6,23 @@ const categories = [
 ]
 ---
 
-<div class="categories-widget sidebar-card">
-  <h3 class="categories-title">分类</h3>
-  <div class="categories-list">
+<div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+  <h3 class="mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-base-compact)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-accent-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-text-base)]">
+    分类
+  </h3>
+  <div class="flex flex-col gap-[var(--tsuki-space-0-5)]">
     {categories.map((category) => (
       <a
         href={`/groups/${category.slug}`}
-        class="category-item"
+        class="flex items-center justify-between rounded-[var(--tsuki-radius-md)] border border-[var(--tsuki-surface-border)] bg-[var(--tsuki-surface-muted-soft)] px-[var(--tsuki-space-0-75)] py-[var(--tsuki-space-0-5)] text-[color:var(--tsuki-fg)] no-underline transition-[background-color,border-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-x-[var(--tsuki-translate-4px)] hover:border-[var(--tsuki-theme-accent)] hover:bg-[var(--tsuki-surface-muted-strong)]"
       >
-        <span class="category-name">{category.name}</span>
-        <span class="category-count">{category.count}</span>
+        <span class="text-[length:var(--tsuki-text-sm-compact)] font-medium sm:text-[length:var(--tsuki-text-sm)]">
+          {category.name}
+        </span>
+        <span class="rounded-[var(--tsuki-radius-sm-2)] bg-[var(--tsuki-theme-secondary)] px-[var(--tsuki-space-0-5)] py-[var(--tsuki-space-0-125)] text-[length:var(--tsuki-text-xs)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-2xs)]">
+          {category.count}
+        </span>
       </a>
     ))}
   </div>
 </div>
-
-<style>
-  .categories-widget {
-  }
-
-  .categories-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .categories-title::before {
-    content: '';
-    width: 4px;
-    height: 1rem;
-    background: var(--tsuki-theme-accent);
-    border-radius: 2px;
-  }
-
-  .categories-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .category-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0.75rem;
-    background: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    border-radius: 0.5rem;
-    color: var(--tsuki-fg);
-    text-decoration: none;
-    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
-  }
-
-  .category-item:hover {
-    background: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
-    border-color: var(--tsuki-theme-accent);
-    transform: translateX(4px);
-    text-decoration: none;
-  }
-
-  .category-name {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .category-count {
-    font-size: 0.75rem;
-    color: #0b0b0b;
-    background: var(--tsuki-theme-secondary);
-    color: var(--tsuki-fg);
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.375rem;
-  }
-
-  @media (max-width: 640px) {
-    .categories-title {
-      font-size: 0.9375rem;
-    }
-
-    .category-name {
-      font-size: 0.8125rem;
-    }
-
-    .category-count {
-      font-size: 0.6875rem;
-    }
-  }
-</style>

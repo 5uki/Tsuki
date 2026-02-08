@@ -6,91 +6,27 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
 ---
 
 {announcement?.enable && (
-  <div class="announcement-widget sidebar-card">
-    {announcement.title && <h3 class="announcement-title">{announcement.title}</h3>}
+  <div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+    {announcement.title && (
+      <h3 class="mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-base-compact)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-accent-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-text-base)]">
+        {announcement.title}
+      </h3>
+    )}
     {announcement.content && (
-      <div class="announcement-content" set:html={announcement.content} />
+      <div
+        class="mb-[var(--tsuki-space-0-75)] text-[length:var(--tsuki-text-sm-compact)] leading-[var(--tsuki-line-height-snug)] text-[color:var(--tsuki-fg)] [&>p]:mb-[var(--tsuki-space-0-5)] [&>p:last-child]:mb-0 sm:text-[length:var(--tsuki-text-sm)]"
+        set:html={announcement.content}
+      />
     )}
     {announcement.link?.enable && announcement.link.url && (
       <a
         href={announcement.link.url}
         target={isExternalLink(announcement.link.url) ? '_blank' : undefined}
         rel={isExternalLink(announcement.link.url) ? 'noopener noreferrer' : undefined}
-        class="announcement-link"
+        class="mt-auto inline-flex items-center self-end rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-theme-secondary)] px-[var(--tsuki-space-0-9)] py-[var(--tsuki-space-0-35)] text-[length:var(--tsuki-text-sm-compact)] font-medium text-[color:var(--tsuki-fg)] no-underline transition-[opacity,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:-translate-y-[var(--tsuki-translate-1px)] hover:opacity-90"
       >
         {announcement.link.text || '查看详情'}
       </a>
     )}
   </div>
 )}
-
-<style>
-  .announcement-widget {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .announcement-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .announcement-title::before {
-    content: '';
-    width: 4px;
-    height: 1rem;
-    background: var(--tsuki-theme-accent);
-    border-radius: 2px;
-  }
-
-  .announcement-content {
-    font-size: 0.875rem;
-    color: #0b0b0b;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-  }
-
-  .announcement-content :deep(p) {
-    margin: 0 0 0.5rem;
-  }
-
-  .announcement-content :deep(p:last-child) {
-    margin-bottom: 0;
-  }
-
-  .announcement-link {
-    display: inline-flex;
-    align-items: center;
-    align-self: flex-end;
-    margin-top: auto;
-    padding: 0.35rem 0.9rem;
-    background: var(--tsuki-theme-secondary);
-    color: var(--tsuki-fg);
-    border-radius: 0.5rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: opacity 0.15s, transform 0.15s;
-  }
-
-  .announcement-link:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    text-decoration: none;
-  }
-
-  @media (max-width: 640px) {
-    .announcement-title {
-      font-size: 0.9375rem;
-    }
-
-    .announcement-content {
-      font-size: 0.8125rem;
-    }
-  }
-</style>

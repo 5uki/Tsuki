@@ -43,45 +43,60 @@ function formatNumber(num: number): string {
 }
 ---
 
-<div class="profile-widget sidebar-card">
+<div class="flex flex-col items-center rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
   {safeProfile.avatar && (
     <a
       href={safeProfile.avatarLink || '#'}
-      class="avatar-link"
+      class="group relative mb-[var(--tsuki-space-1)] block w-full overflow-hidden rounded-[var(--tsuki-radius-lg)] no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tsuki-theme-accent)] focus-visible:ring-offset-[var(--tsuki-space-0-5)] focus-visible:ring-offset-[color:var(--tsuki-sidebar-card-bg)]"
       aria-label="查看个人资料"
     >
-      <span class="avatar-overlay" aria-hidden="true">
-        <span class="avatar-overlay-icon" set:html={overlayIcon}></span>
+      <span class="absolute inset-0 z-[1] grid place-items-center bg-transparent transition-[background-color] duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] group-hover:bg-[var(--tsuki-profile-avatar-overlay)] group-focus-visible:bg-[var(--tsuki-profile-avatar-overlay)]" aria-hidden="true">
+        <span
+          class="opacity-0 scale-[var(--tsuki-scale-overlay-initial)] text-[color:var(--tsuki-profile-avatar-overlay-icon)] transition-[opacity,transform] duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] [filter:drop-shadow(var(--tsuki-profile-avatar-shadow))] group-hover:opacity-100 group-hover:scale-[var(--tsuki-scale-overlay-active)] group-focus-visible:opacity-100 group-focus-visible:scale-[var(--tsuki-scale-overlay-active)]"
+          set:html={overlayIcon}
+        ></span>
       </span>
       <img
         src={safeProfile.avatar}
         alt={safeProfile.name}
-        class="avatar-image"
+        class="block aspect-square w-full object-cover transition-transform duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] group-hover:scale-[var(--tsuki-scale-avatar-hover)] group-focus-visible:scale-[var(--tsuki-scale-avatar-hover)]"
       />
     </a>
   )}
-  <h2 class="profile-name">{safeProfile.name}</h2>
-  {safeProfile.bio && <p class="profile-bio">{safeProfile.bio}</p>}
+  <h2 class="mb-[var(--tsuki-space-0-5)] text-center text-[length:var(--tsuki-text-lg)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-xl)]">
+    {safeProfile.name}
+  </h2>
+  {safeProfile.bio && (
+    <p class="mb-[var(--tsuki-space-0-75)] text-center text-[length:var(--tsuki-text-sm-compact)] leading-[var(--tsuki-line-height-snug)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+      {safeProfile.bio}
+    </p>
+  )}
 
   {stats?.enable && (
-    <div class="profile-stats" aria-label="站点统计">
-      <div class="profile-stat-col">
-        <span class="profile-stat-label">文章</span>
-        <span class="profile-stat-value">{formatNumber(mockStats.posts)}</span>
+    <div class="mb-[var(--tsuki-space-0-9)] grid w-full grid-cols-3 items-center justify-center text-center" aria-label="站点统计">
+      <div class="grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)]">
+        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">文章</span>
+        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
+          {formatNumber(mockStats.posts)}
+        </span>
       </div>
-      <div class="profile-stat-col">
-        <span class="profile-stat-label">标签</span>
-        <span class="profile-stat-value">{formatNumber(mockStats.tags)}</span>
+      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
+        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">标签</span>
+        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
+          {formatNumber(mockStats.tags)}
+        </span>
       </div>
-      <div class="profile-stat-col">
-        <span class="profile-stat-label">分组</span>
-        <span class="profile-stat-value">{formatNumber(mockStats.groups)}</span>
+      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
+        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">分组</span>
+        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
+          {formatNumber(mockStats.groups)}
+        </span>
       </div>
     </div>
   )}
 
   {safeProfile.links && safeProfile.links.length > 0 && (
-    <div class="social-links">
+    <div class="flex w-full flex-wrap justify-center gap-[var(--tsuki-space-0-5)]">
       {safeProfile.links.map((link) => {
         const icon = resolveIcon(link.icon)
         return (
@@ -89,15 +104,15 @@ function formatNumber(num: number): string {
             href={link.url}
             target={isExternalLink(link.url) ? '_blank' : undefined}
             rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
-            class="social-link icon-only"
+            class="flex h-[var(--tsuki-icon-button-size)] w-[var(--tsuki-icon-button-size)] items-center justify-center rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-link-icon-bg)] text-[color:var(--tsuki-fg)] shadow-[var(--tsuki-shadow-icon)] transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:-translate-y-[var(--tsuki-translate-1px)] hover:bg-[var(--tsuki-link-icon-bg-hover)]"
             aria-label={link.name}
           >
             {icon.type === 'image' ? (
-              <img src={icon.value} alt="" class="social-icon-image" />
+              <img src={icon.value} alt="" class="h-[var(--tsuki-icon-size-md)] w-[var(--tsuki-icon-size-md)] object-contain" />
             ) : icon.type === 'inline' ? (
-              <span class="social-icon" set:html={icon.value}></span>
+              <span class="inline-flex items-center justify-center text-[length:var(--tsuki-text-xl)] leading-none" set:html={icon.value}></span>
             ) : (
-              <span class="social-icon-fallback">{icon.value}</span>
+              <span class="text-[length:var(--tsuki-text-2xs)] font-semibold">{icon.value}</span>
             )}
           </a>
         )
@@ -105,191 +120,3 @@ function formatNumber(num: number): string {
     </div>
   )}
 </div>
-
-<style>
-  .profile-widget {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .avatar-link {
-    position: relative;
-    display: block;
-    width: 100%;
-    margin-bottom: 1rem;
-    text-decoration: none;
-    border-radius: 0.75rem;
-    overflow: hidden;
-  }
-
-  .avatar-image {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 0;
-    transition: transform 0.2s ease;
-  }
-
-  .avatar-overlay {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: transparent;
-    opacity: 1;
-    transition: background 0.2s ease;
-    z-index: 1;
-  }
-
-  .avatar-overlay-icon {
-    color: var(--tsuki-profile-avatar-overlay-icon);
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.3));
-    opacity: 0;
-    transform: scale(0.92);
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .avatar-link:hover .avatar-overlay,
-  .avatar-link:focus-visible .avatar-overlay {
-    background: var(--tsuki-profile-avatar-overlay);
-  }
-
-  .avatar-link:hover .avatar-overlay-icon,
-  .avatar-link:focus-visible .avatar-overlay-icon {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .avatar-link:hover .avatar-image,
-  .avatar-link:focus-visible .avatar-image {
-    transform: scale(1.02);
-  }
-
-  .profile-name {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem;
-    color: var(--tsuki-fg);
-    text-align: center;
-  }
-
-  .profile-bio {
-    font-size: 0.875rem;
-    color: #0b0b0b;
-    margin: 0 0 0.75rem;
-    text-align: center;
-    line-height: 1.6;
-  }
-
-  .profile-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.9rem;
-    text-align: center;
-    width: 100%;
-  }
-
-  .profile-stat-col {
-    display: grid;
-    gap: 0.35rem;
-    padding: 0 0.75rem;
-  }
-
-  .profile-stat-col + .profile-stat-col {
-    border-left: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  }
-
-  .profile-stat-value {
-    font-weight: 600;
-    color: var(--tsuki-fg);
-    font-size: 1rem;
-  }
-
-  .profile-stat-label {
-    font-size: 0.75rem;
-    color: #0b0b0b;
-  }
-
-  .social-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .social-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
-    border: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-    border-radius: 0.5rem;
-    color: var(--tsuki-fg);
-    text-decoration: none;
-    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
-  }
-
-  .social-link:hover {
-    background: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
-    border-color: var(--tsuki-theme-accent);
-    transform: translateY(-1px);
-  }
-
-  .social-link.icon-only {
-    width: 2.5rem;
-    height: 2.5rem;
-    justify-content: center;
-    padding: 0;
-    background: var(--tsuki-link-icon-bg);
-    border-color: transparent;
-    color: var(--tsuki-fg);
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
-    line-height: 1;
-  }
-
-  .social-link.icon-only:hover {
-    background: var(--tsuki-link-icon-bg-hover);
-  }
-
-  .social-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    line-height: 1;
-  }
-
-  .social-icon svg {
-    display: block;
-  }
-
-  .social-icon-image {
-    display: block;
-    width: 1.25rem;
-    height: 1.25rem;
-    object-fit: contain;
-  }
-
-  .social-icon-fallback {
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  @media (max-width: 640px) {
-    .profile-name {
-      font-size: 1.125rem;
-    }
-
-    .profile-bio {
-      font-size: 0.8125rem;
-    }
-  }
-</style>

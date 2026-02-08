@@ -15,84 +15,35 @@ function formatNumber(num: number): string {
 ---
 
 {stats?.enable && (
-  <div class="stats-widget sidebar-card">
-    <h3 class="stats-title">站点统计</h3>
-    <div class="stats-list">
-      <div class="stat-item">
-        <span class="stat-label">文章</span>
-        <span class="stat-value">{formatNumber(mockStats.posts)}</span>
+  <div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] p-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:p-[var(--tsuki-sidebar-card-padding-compact)]">
+    <h3 class="mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-base-compact)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-accent-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-text-base)]">
+      站点统计
+    </h3>
+    <div class="flex flex-col gap-[var(--tsuki-space-0-5)]">
+      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
+        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          文章
+        </span>
+        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.posts)}
+        </span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">标签</span>
-        <span class="stat-value">{formatNumber(mockStats.tags)}</span>
+      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
+        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          标签
+        </span>
+        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.tags)}
+        </span>
       </div>
-      <div class="stat-item">
-        <span class="stat-label">分组</span>
-        <span class="stat-value">{formatNumber(mockStats.groups)}</span>
+      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
+        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          分组
+        </span>
+        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+          {formatNumber(mockStats.groups)}
+        </span>
       </div>
     </div>
   </div>
 )}
-
-<style>
-  .stats-widget {
-  }
-
-  .stats-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem;
-    color: var(--tsuki-fg);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .stats-title::before {
-    content: '';
-    width: 4px;
-    height: 1rem;
-    background: var(--tsuki-theme-accent);
-    border-radius: 2px;
-  }
-
-  .stats-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  }
-
-  .stat-item:last-child {
-    border-bottom: none;
-  }
-
-  .stat-label {
-    font-size: 0.875rem;
-    color: #0b0b0b;
-  }
-
-  .stat-value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--tsuki-fg);
-  }
-
-  @media (max-width: 640px) {
-    .stats-title {
-      font-size: 0.9375rem;
-    }
-
-    .stat-label,
-    .stat-value {
-      font-size: 0.8125rem;
-    }
-  }
-</style>
