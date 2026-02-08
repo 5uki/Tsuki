@@ -135,7 +135,7 @@ button {
   --tsuki-motion-ease-in-out: cubic-bezier(0.16, 1, 0.3, 1);
   --tsuki-motion-ease-emphasized: cubic-bezier(0.22, 1, 0.36, 1);
   --tsuki-motion-card-transform-duration: 130ms;
-  --tsuki-motion-card-shadow-duration: 140ms;
+  --tsuki-motion-card-shadow-duration: 130ms;
   --tsuki-motion-card-border-duration: 130ms;
   --tsuki-motion-card-transform-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --tsuki-border-accent-width: 4px;
@@ -146,8 +146,8 @@ button {
 
   /* 仅保留三色主题 token；黑白中性色独立 */
   --tsuki-fg: #0b0b0b;
-  --tsuki-banner-wave-top: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
-  --tsuki-banner-wave-bottom: color-mix(in srgb, var(--tsuki-theme-secondary) 58%, #ffffff);
+  --tsuki-banner-wave-top: var(--tsuki-theme-secondary);
+  --tsuki-banner-wave-bottom: var(--tsuki-theme-secondary);
   --tsuki-banner-wave-fill: var(--tsuki-banner-wave-bottom);
 
   --tsuki-content-width: 48rem;
