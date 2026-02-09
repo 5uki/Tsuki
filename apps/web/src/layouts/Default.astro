@@ -3,12 +3,16 @@ import Base from './Base.astro'
 import Header from '@/components/Header.astro'
 import Banner from '@/components/Banner.astro'
 import Footer from '@/components/Footer.astro'
+import MainLayout from '@/components/MainLayout.astro'
 import tsukiConfig from '@/config/tsuki-config'
+import { createAppContext } from '@entry/index'
+import { getSidebarData } from '@usecases/content'
 
 interface Props {
   title?: string
   description?: string
   noindex?: boolean
+  withSidebar?: boolean
 }
 
 const siteTitle = tsukiConfig.site.title
@@ -17,15 +21,29 @@ const title = rawTitle ? `${rawTitle} - ${siteTitle}` : siteTitle
 const description = Astro.props.description ?? tsukiConfig.site.description
 const { noindex } = Astro.props
 
-const isHome = Astro.url.pathname === '/'
+const withSidebar = Astro.props.withSidebar ?? true
+const ctx = createAppContext()
+const sidebarData = withSidebar ? await getSidebarData(ctx) : null
+const hasRightSlot = Astro.slots.has('right')
 ---
 
 <Base title={title} description={description} noindex={noindex}>
   <div class="flex min-h-screen flex-col bg-[var(--tsuki-theme-gradient)] bg-no-repeat bg-[length:100%_100%] bg-[position:0_0]">
     <Header />
-    {isHome && <Banner />}
+    <Banner />
     <main class="mx-auto w-full flex-1 px-[var(--tsuki-space-5px)] py-[var(--tsuki-space-2)] md:px-[var(--tsuki-main-inline-padding)]">
-      <slot />
+      {withSidebar ? (
+        <MainLayout sidebarData={sidebarData || undefined}>
+          <slot />
+          {hasRightSlot && (
+            <div slot="right">
+              <slot name="right" />
+            </div>
+          )}
+        </MainLayout>
+      ) : (
+        <slot />
+      )}
     </main>
     <Footer />
   </div>

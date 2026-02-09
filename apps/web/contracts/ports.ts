@@ -18,6 +18,7 @@ import type {
   TagDTO,
   UserDTO,
 } from './dto'
+import type { MomentContent, PostContent } from './content'
 
 export interface ApiPort {
   // Auth
@@ -71,9 +72,15 @@ export interface StoragePort {
   getCsrfToken(): string | null
 }
 
+export interface ContentPort {
+  getPosts(): Promise<PostContent[]>
+  getPostBySlug(slug: string): Promise<PostContent | null>
+  getMoments(): Promise<MomentContent[]>
+  getMomentById(id: string): Promise<MomentContent | null>
+}
+
 /**
  * API 响应包络（用于实现方内部）
  * - ports 里不强制暴露，但保留类型在 contracts 里便于复用
  */
 export type { ApiResult }
-

@@ -1,0 +1,34 @@
+---
+import type { MarkdownHeading } from 'astro'
+
+interface Props {
+  headings: MarkdownHeading[]
+}
+
+const { headings } = Astro.props
+const displayHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3)
+---
+
+<div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-sidebar-card-padding-inline)] pb-[var(--tsuki-sidebar-card-padding)] pt-[var(--tsuki-sidebar-card-title-top-padding)] shadow-[var(--tsuki-sidebar-card-shadow)]">
+  <h3 class="mt-0 mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-sidebar-section-title-size)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-sidebar-section-marker-height)] before:w-[var(--tsuki-sidebar-section-marker-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-sidebar-section-title-size-desktop)]">
+    目录
+  </h3>
+  {displayHeadings.length > 0 ? (
+    <ul class="m-0 list-none space-y-[var(--tsuki-space-0-5)] p-0 text-[length:var(--tsuki-sidebar-body-text-size)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">
+      {displayHeadings.map((heading) => (
+        <li class={heading.depth === 3 ? 'pl-[var(--tsuki-space-0-75)]' : ''}>
+          <a
+            href={`#${heading.slug}`}
+            class="inline-flex w-full items-center gap-[var(--tsuki-space-0-5)] rounded-[var(--tsuki-radius-sm)] px-[var(--tsuki-space-0-25)] py-[var(--tsuki-space-0-25)] text-[color:var(--tsuki-fg)] no-underline transition-[color,background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-y-[var(--tsuki-translate-1px)] hover:text-[color:var(--tsuki-theme-accent)] hover:bg-[var(--tsuki-surface-accent-soft)]"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="m-0 text-[length:var(--tsuki-sidebar-body-text-size)] text-[color:var(--tsuki-post-muted-fg)]">
+      暂无目录
+    </p>
+  )}
+</div>

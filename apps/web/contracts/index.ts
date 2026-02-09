@@ -14,5 +14,6 @@
 
 export * from './dto'
 export * from './errors'
+export * from './content'
 export * from './context'
 export * from './ports'

@@ -1,1 +1,33 @@
-﻿
+---
+import Default from '@/layouts/Default.astro'
+import { createAppContext } from '@entry/index'
+import { getSidebarData } from '@usecases/content'
+
+const ctx = createAppContext()
+const sidebarData = await getSidebarData(ctx)
+---
+
+<Default title="分组" description="所有分组">
+  <section class="mb-[var(--tsuki-space-2)]" transition:name="page-card">
+    <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">分组</h1>
+    {sidebarData.categories.length > 0 ? (
+      <div class="flex flex-col gap-[var(--tsuki-space-0-5)]">
+        {sidebarData.categories.map((category) => (
+          <a
+            href={`/groups/${category.slug}`}
+            class="flex items-center justify-between rounded-[var(--tsuki-radius-md)] border border-[var(--tsuki-surface-border)] bg-[var(--tsuki-surface-muted-soft)] px-[var(--tsuki-space-0-75)] py-[var(--tsuki-space-0-5)] text-[color:var(--tsuki-fg)] no-underline transition-[background-color,border-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-y-[var(--tsuki-translate-1px)] hover:border-[var(--tsuki-theme-accent)] hover:bg-[var(--tsuki-surface-muted-strong)]"
+          >
+            <span class="text-[length:var(--tsuki-sidebar-body-text-size)] font-medium sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">
+              {category.name}
+            </span>
+            <span class="rounded-[var(--tsuki-radius-sm-2)] bg-[var(--tsuki-theme-secondary)] px-[var(--tsuki-space-0-5)] py-[var(--tsuki-space-0-125)] text-[length:var(--tsuki-text-xs)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-2xs)]">
+              {category.count}
+            </span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="italic text-[color:var(--tsuki-fg)]">暂无分组</p>
+    )}
+  </section>
+</Default>

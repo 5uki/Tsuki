@@ -12,6 +12,7 @@
 
 import type { AppContext } from '@contracts/context'
 import { createApiAdapter } from '@adapters/api'
+import { createContentAdapter } from '@adapters/content'
 import { createStorageAdapter } from '@adapters/storage'
 
 export function createAppContext(): AppContext {
@@ -19,6 +20,7 @@ export function createAppContext(): AppContext {
 
   return {
     api: createApiAdapter(apiBase),
+    content: createContentAdapter(),
     storage: createStorageAdapter(),
   }
 }

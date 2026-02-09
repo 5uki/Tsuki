@@ -166,6 +166,10 @@ button {
   --tsuki-banner-wave-height-md: 15vh;
   --tsuki-banner-wave-max-height: 9.375rem;
   --tsuki-banner-wave-min-height: 3.125rem;
+  --tsuki-banner-height-compact: clamp(10rem, 22vh, 14rem);
+  --tsuki-banner-wave-height-compact: 6vh;
+  --tsuki-banner-wave-max-height-compact: 4.5rem;
+  --tsuki-banner-wave-min-height-compact: 2rem;
   --tsuki-banner-content-max-width: 52rem;
   --tsuki-banner-inline-padding: clamp(1rem, 4vw, 2.75rem);
   --tsuki-banner-inline-padding-mobile: 1rem;
@@ -429,6 +433,7 @@ button {
   background: var(--tsuki-surface-muted);
   font-weight: 600;
 }
+
 
 @layer utilities {
   .tsuki-card-transition {

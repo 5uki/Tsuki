@@ -1,8 +1,31 @@
 ---
 import Default from '@/layouts/Default.astro'
+import { createAppContext } from '@entry/index'
+import { getMoments } from '@usecases/content'
+
+const ctx = createAppContext()
+const moments = await getMoments(ctx)
 ---
 
 <Default title="动态" description="动态时间线">
-  <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">动态</h1>
-  <p class="italic text-[color:var(--tsuki-fg)]">暂无动态</p>
+  <section class="mb-[var(--tsuki-space-2)]" transition:name="page-card">
+    <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">动态</h1>
+    {moments.length > 0 ? (
+      <div class="flex flex-col gap-[var(--tsuki-space-1)]">
+        {moments.map((moment) => (
+          <a
+            href={`/moments/${moment.id}`}
+            class="tsuki-card-transition flex flex-col gap-[var(--tsuki-space-0-5)] rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-space-1-25)] py-[var(--tsuki-space-1)] text-[color:var(--tsuki-fg)] no-underline shadow-[var(--tsuki-sidebar-card-shadow)] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)]"
+          >
+            <span class="text-[length:var(--tsuki-text-lg)] font-semibold">{moment.frontmatter.title}</span>
+            <time class="text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-post-muted-fg)]">
+              {moment.frontmatter.publishedAt}
+            </time>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="italic text-[color:var(--tsuki-fg)]">暂无动态</p>
+    )}
+  </section>
 </Default>

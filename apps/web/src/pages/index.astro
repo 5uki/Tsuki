@@ -1,52 +1,26 @@
 ---
 import Default from '@/layouts/Default.astro'
-import MainLayout from '@/components/MainLayout.astro'
 import PostCard from '@/components/PostCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
-import type { PostCardItem } from '@atoms/post-cards'
+import { toPostCardItems } from '@atoms/post-cards'
+import { createAppContext } from '@entry/index'
+import { getPostCards } from '@usecases/content'
 
-const recentPosts: PostCardItem[] = [
-  {
-    slug: 'getting-started-with-cloudflare',
-    title: 'Firefly 简单使用指南',
-    summary: '如何使用 Firefly 博客模板，快速完成主题配置、内容发布与基础样式调整。',
-    publishedAt: '2026-01-02',
-    category: '博客指南',
-    words: 667,
-    tags: ['Firefly', '博客', 'Markdown', '使用指南'],
-    pinned: true,
-    cover: '/background.png',
-  },
-  {
-    slug: 'astro-ssr-deep-dive',
-    title: 'Firefly 布局系统详解',
-    summary: '深入了解 Firefly 的布局系统，包括侧边栏布局、文章列表布局，以及移动端适配策略。',
-    publishedAt: '2026-01-03',
-    category: '博客指南',
-    words: 2075,
-    tags: ['Firefly', '布局', '博客', '使用指南'],
-    cover: '/background.png',
-  },
-  {
-    slug: 'typescript-best-practices',
-    title: 'TypeScript 最佳实践 2026',
-    summary: '总结 TypeScript 项目中的最佳实践，包括类型设计、错误处理和性能优化技巧。',
-    publishedAt: '2026-01-08',
-    category: '工程实践',
-    words: 1530,
-    tags: ['TypeScript', '工程化'],
-  },
-]
+const ctx = createAppContext()
+const posts = await getPostCards(ctx)
+const recentPosts = toPostCardItems(posts)
 ---
 
 <Default description={tsukiConfig.site.description}>
-  <MainLayout>
-    <section class="mb-[var(--tsuki-space-2)]">
+  <section class="mb-[var(--tsuki-space-2)]" transition:name="page-card">
+    {recentPosts.length > 0 ? (
       <div class="flex flex-col gap-[var(--tsuki-space-1)]">
         {recentPosts.map((post) => (
           <PostCard post={post} />
         ))}
       </div>
-    </section>
-  </MainLayout>
+    ) : (
+      <p class="italic text-[color:var(--tsuki-fg)]">暂无文章</p>
+    )}
+  </section>
 </Default>

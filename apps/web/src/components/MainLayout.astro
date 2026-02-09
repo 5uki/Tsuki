@@ -3,24 +3,35 @@ import Profile from './Profile.astro'
 import Announcement from './Announcement.astro'
 import Categories from './Categories.astro'
 import Tags from './Tags.astro'
+import type { SidebarData } from '@contracts/content'
 
 interface Props {
   class?: string
+  sidebarData?: SidebarData
 }
 
-const { class: className } = Astro.props
+const { class: className, sidebarData } = Astro.props
+const hasRightSlot = Astro.slots.has('right')
+const gridClass = hasRightSlot
+  ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)]'
+  : 'md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]'
 ---
 
 <div
-  class={`mx-auto grid max-w-[var(--tsuki-page-width)] items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)] ${className || ''}`}
+  class={`mx-auto grid max-w-[var(--tsuki-page-width)] items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
 >
   <aside class="order-first flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:order-none md:gap-[var(--tsuki-sidebar-gap)]">
-    <Profile />
+    <Profile stats={sidebarData?.stats} />
     <Announcement />
-    <Categories />
-    <Tags />
+    <Categories categories={sidebarData?.categories ?? []} />
+    <Tags tags={sidebarData?.tags ?? []} />
   </aside>
   <main class="min-w-0">
     <slot />
   </main>
+  {hasRightSlot && (
+    <aside class="flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:gap-[var(--tsuki-sidebar-gap)]">
+      <slot name="right" />
+    </aside>
+  )}
 </div>
