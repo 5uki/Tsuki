@@ -11,7 +11,7 @@ cover: "/background.png"
 
 ## 快速开始
 
-先从最基本的目录结构开始：文章放到 `cobtents/posts`，动态放到 `cobtents/moments`。下面是一个最简单的代码片段：
+先从最基本的目录结构开始：文章放到 `contents/posts`，动态放到 `contents/moments`。下面是一个最简单的代码片段：
 
 ```ts
 export function hello(name: string) {

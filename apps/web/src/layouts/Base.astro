@@ -1,7 +1,6 @@
 ﻿---
 import '@/styles/global.css'
 import '@/styles/themes.css'
-import 'katex/dist/katex.min.css'
 import tsukiConfig from '@/config/tsuki-config'
 import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
 import { ViewTransitions } from 'astro:transitions'
@@ -92,6 +91,11 @@ const VALID_THEMES = ['mauve']
         document.addEventListener('astro:after-swap', scrollToTop)
       })()
     </script>
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+      async
+    ></script>
   </head>
   <body style={bodyStyle}>
     <div

@@ -10,7 +10,7 @@ export interface ContentAdapter {
 export function createContentAdapter(): ContentAdapter {
   return {
     async getPosts() {
-      const collection = import.meta.glob('../../../cobtents/posts/*.md')
+      const collection = import.meta.glob('../../../contents/posts/*.md')
       const posts = await Promise.all(
         Object.entries(collection).map(async ([filepath, loader]) => {
           const module = await loader()
@@ -26,7 +26,7 @@ export function createContentAdapter(): ContentAdapter {
       return posts
     },
     async getPostBySlug(slug) {
-      const collection = import.meta.glob('../../../cobtents/posts/*.md')
+      const collection = import.meta.glob('../../../contents/posts/*.md')
       const entry = Object.entries(collection).find(([filepath]) =>
         filepath.endsWith(`/${slug}.md`)
       )
@@ -42,7 +42,7 @@ export function createContentAdapter(): ContentAdapter {
       return { slug: resolvedSlug, frontmatter, Content, headings }
     },
     async getMoments() {
-      const collection = import.meta.glob('../../../cobtents/moments/*.md')
+      const collection = import.meta.glob('../../../contents/moments/*.md')
       const moments = await Promise.all(
         Object.entries(collection).map(async ([filepath, loader]) => {
           const module = await loader()
@@ -58,7 +58,7 @@ export function createContentAdapter(): ContentAdapter {
       return moments
     },
     async getMomentById(id) {
-      const collection = import.meta.glob('../../../cobtents/moments/*.md')
+      const collection = import.meta.glob('../../../contents/moments/*.md')
       const entry = Object.entries(collection).find(([filepath]) =>
         filepath.endsWith(`/${id}.md`)
       )
