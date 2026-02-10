@@ -19,7 +19,7 @@ export function createContentAdapter(): ContentAdapter {
             Content: PostContent['Content']
             headings: PostContent['headings']
           }
-          const slug = filepath.split('/').pop()?.replace(/\\.md$/, '') ?? ''
+          const slug = filepath.split('/').pop()?.replace(/\.md$/, '') ?? ''
           return { slug, frontmatter, Content, headings }
         })
       )
@@ -38,7 +38,7 @@ export function createContentAdapter(): ContentAdapter {
         Content: PostContent['Content']
         headings: PostContent['headings']
       }
-      const resolvedSlug = filepath.split('/').pop()?.replace(/\\.md$/, '') ?? slug
+      const resolvedSlug = filepath.split('/').pop()?.replace(/\.md$/, '') ?? slug
       return { slug: resolvedSlug, frontmatter, Content, headings }
     },
     async getMoments() {
@@ -51,7 +51,7 @@ export function createContentAdapter(): ContentAdapter {
             Content: MomentContent['Content']
             headings: MomentContent['headings']
           }
-          const id = filepath.split('/').pop()?.replace(/\\.md$/, '') ?? ''
+          const id = filepath.split('/').pop()?.replace(/\.md$/, '') ?? ''
           return { id, frontmatter, Content, headings }
         })
       )
@@ -70,7 +70,7 @@ export function createContentAdapter(): ContentAdapter {
         Content: MomentContent['Content']
         headings: MomentContent['headings']
       }
-      const resolvedId = filepath.split('/').pop()?.replace(/\\.md$/, '') ?? id
+      const resolvedId = filepath.split('/').pop()?.replace(/\.md$/, '') ?? id
       return { id: resolvedId, frontmatter, Content, headings }
     },
   }
