@@ -328,6 +328,8 @@ button {
   --tsuki-surface-accent-soft: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
   --tsuki-surface-accent-strong: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
   --tsuki-prose-code-fg: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);
+  --tsuki-prose-inline-code-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 22%, #f2f4f8);
+  --tsuki-prose-inline-code-border: color-mix(in srgb, var(--tsuki-theme-secondary) 48%, #d7dce3);
 }
 
 .prose {
@@ -394,7 +396,8 @@ button {
 .prose code {
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
   font-size: 0.875em;
-  background: var(--tsuki-surface-muted-light);
+  background: var(--tsuki-prose-inline-code-bg);
+  border: 1px solid var(--tsuki-prose-inline-code-border);
   color: var(--tsuki-prose-code-fg);
   padding: 0.2em 0.4em;
   border-radius: var(--tsuki-radius-xs);
@@ -402,6 +405,7 @@ button {
 
 .prose pre code {
   background: transparent;
+  border: 0;
   padding: 0;
 }
 

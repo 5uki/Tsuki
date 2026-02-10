@@ -82,14 +82,69 @@ const VALID_THEMES = ['mauve']
         document.documentElement.setAttribute('data-theme', theme)
       })()
     </script>
-    <script is:inline>
-      (function() {
-        function scrollToTop() {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }
-        document.addEventListener('astro:page-load', scrollToTop)
-        document.addEventListener('astro:after-swap', scrollToTop)
-      })()
+    <script type="module" is:inline>
+      import { navigate } from 'astro:transitions/client'
+
+      const tsukiWindow = window
+
+      if (!tsukiWindow.__tsukiTopFirstNavBound) {
+        document.addEventListener('click', async (event) => {
+          if (event.defaultPrevented) return
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+          const target = event.target
+          const link = target instanceof Element ? target.closest('a[href]') : null
+          if (!link) return
+          if (link.target === '_blank' || link.hasAttribute('download') || link.hasAttribute('data-astro-reload')) return
+
+          const url = new URL(link.href, window.location.href)
+          if (url.origin !== window.location.origin) return
+          if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return
+          if (tsukiWindow.__tsukiTopFirstNavigating) return
+
+          event.preventDefault()
+          tsukiWindow.__tsukiTopFirstNavigating = true
+
+          const startTop = window.scrollY
+          const durationMs = Math.min(520, Math.max(140, Math.round(startTop * 0.45)))
+          const startedAt = performance.now()
+
+          if (startTop > 2) {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            await new Promise((resolve) => {
+              let done = false
+              const finish = () => {
+                if (done) return
+                done = true
+                window.removeEventListener('scroll', onScroll)
+                resolve()
+              }
+              const onScroll = () => {
+                if (window.scrollY <= 1) {
+                  finish()
+                }
+              }
+              window.addEventListener('scroll', onScroll, { passive: true })
+              const tick = () => {
+                if (done) return
+                const elapsed = performance.now() - startedAt
+                if (elapsed >= durationMs) {
+                  window.scrollTo({ top: 0, behavior: 'auto' })
+                  finish()
+                } else {
+                  requestAnimationFrame(tick)
+                }
+              }
+              requestAnimationFrame(tick)
+            })
+          }
+
+          await navigate(`${url.pathname}${url.search}${url.hash}`)
+          tsukiWindow.__tsukiTopFirstNavigating = false
+        }, { capture: true })
+
+        tsukiWindow.__tsukiTopFirstNavBound = true
+      }
     </script>
     <script
       is:inline
