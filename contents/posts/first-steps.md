@@ -1,7 +1,7 @@
 ---
-title: "Firefly 简单使用指南"
+title: "站点内容系统接入实战"
 summary: "如何使用 Firefly 博客模板，快速完成主题配置、内容发布与基础样式调整。"
-publishedAt: "2026-01-02"
+publishedAt: "2026-02-01"
 category: "博客指南"
 tags: ["Firefly", "博客", "Markdown", "使用指南"]
 words: 667

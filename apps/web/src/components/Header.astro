@@ -94,121 +94,145 @@ const siteTitle = tsukiConfig.site.title
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
   import { createStorageAdapter } from '@adapters/storage'
 
-  const header = document.querySelector<HTMLElement>('.header')
-  const headerTrack = document.querySelector<HTMLElement>('.header-track')
-  const main = document.querySelector<HTMLElement>('main.main')
-  const toggle = document.getElementById('theme-toggle')
-  const dropdown = document.getElementById('theme-dropdown')
-  const themeOptions = document.querySelectorAll<HTMLButtonElement>('.theme-option')
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn')
-  const mobileNav = document.getElementById('mobile-nav')
+  interface TsukiWindow extends Window {
+    __tsukiHeaderCleanup?: () => void
+    __tsukiHeaderBootBound?: boolean
+  }
+
+  const tsukiWindow = window as TsukiWindow
   const storage = createStorageAdapter()
 
-  function getCurrentTheme(): Theme {
-    const theme = document.documentElement.getAttribute('data-theme')
-    return THEMES.includes(theme as Theme) ? (theme as Theme) : DEFAULT_THEME
-  }
+  function bindHeaderInteractions() {
+    const header = document.querySelector<HTMLElement>('.header')
+    const headerTrack = document.querySelector<HTMLElement>('.header-track')
+    const main = document.querySelector<HTMLElement>('main')
+    const toggle = document.getElementById('theme-toggle')
+    const dropdown = document.getElementById('theme-dropdown')
+    const themeOptions = document.querySelectorAll<HTMLButtonElement>('.theme-option')
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn')
+    const mobileNav = document.getElementById('mobile-nav')
 
-  function setTheme(theme: Theme) {
-    document.documentElement.setAttribute('data-theme', theme)
-    storage.setTheme(theme)
-    updateActiveTheme()
-  }
-
-  function updateActiveTheme() {
-    const current = getCurrentTheme()
-    themeOptions.forEach(option => {
-      const isActive = option.getAttribute('data-theme-name') === current
-      option.classList.toggle('active', isActive)
-    })
-  }
-
-  function toggleDropdown() {
-    dropdown?.classList.toggle('open')
-  }
-
-  function closeDropdown() {
-    dropdown?.classList.remove('open')
-  }
-
-  function closeMobileNav() {
-    mobileNav?.classList.remove('open')
-  }
-
-  function closeAllMenus() {
-    closeDropdown()
-    closeMobileNav()
-  }
-
-  function updateHeaderState() {
-    const isScrolled = window.scrollY > 8
-    header?.classList.toggle('scrolled', isScrolled)
-
-    // 进入主内容区域后，收起背景条与中间胶囊
-    if (!main || !header) return
-    const mainTop = main.getBoundingClientRect().top
-    const headerHeight = header.getBoundingClientRect().height
-    const trackHeight = headerTrack?.getBoundingClientRect().height ?? headerHeight
-    const collapseOffset = Math.ceil(headerHeight + 24)
-    header.style.setProperty('--tsuki-header-collapse-offset', `-${collapseOffset}px`)
-    const collapseTriggerPx = Math.round(trackHeight - 19)
-    const approachTriggerPx = collapseTriggerPx + 10
-    const inMain = mainTop <= collapseTriggerPx
-    const inMainApproach = mainTop <= approachTriggerPx
-    header.classList.toggle('in-main-approach', inMainApproach)
-    header.classList.toggle('in-main', inMain)
-    if (inMainApproach) {
-      closeAllMenus()
+    if (!header || !headerTrack) {
+      return () => {}
     }
-  }
+    const headerEl = header
+    const headerTrackEl = headerTrack
 
-  // 主题切换事件
-  toggle?.addEventListener('click', (e) => {
-    e.stopPropagation()
-    closeMobileNav()
-    toggleDropdown()
-  })
+    const controller = new AbortController()
+    const signal = controller.signal
 
-  themeOptions.forEach(option => {
-    option.addEventListener('click', () => {
-      const theme = option.getAttribute('data-theme-name') as Theme
-      if (theme && THEMES.includes(theme)) {
-        setTheme(theme)
-        closeDropdown()
+    function getCurrentTheme(): Theme {
+      const theme = document.documentElement.getAttribute('data-theme')
+      return THEMES.includes(theme as Theme) ? (theme as Theme) : DEFAULT_THEME
+    }
+
+    function setTheme(theme: Theme) {
+      document.documentElement.setAttribute('data-theme', theme)
+      storage.setTheme(theme)
+      updateActiveTheme()
+    }
+
+    function updateActiveTheme() {
+      const current = getCurrentTheme()
+      themeOptions.forEach(option => {
+        const isActive = option.getAttribute('data-theme-name') === current
+        option.classList.toggle('active', isActive)
+      })
+    }
+
+    function toggleDropdown() {
+      dropdown?.classList.toggle('open')
+    }
+
+    function closeDropdown() {
+      dropdown?.classList.remove('open')
+    }
+
+    function closeMobileNav() {
+      mobileNav?.classList.remove('open')
+    }
+
+    function closeAllMenus() {
+      closeDropdown()
+      closeMobileNav()
+    }
+
+    function updateHeaderState() {
+      const isScrolled = window.scrollY > 8
+      headerEl.classList.toggle('scrolled', isScrolled)
+
+      if (!main) return
+      const mainTop = main.getBoundingClientRect().top
+      const headerHeight = headerEl.getBoundingClientRect().height
+      const trackHeight = headerTrackEl.getBoundingClientRect().height || headerHeight
+      const collapseOffset = Math.ceil(headerHeight + 24)
+      headerEl.style.setProperty('--tsuki-header-collapse-offset', `-${collapseOffset}px`)
+      const collapseTriggerPx = Math.round(trackHeight - 19)
+      const approachTriggerPx = collapseTriggerPx + 10
+      const inMain = mainTop <= collapseTriggerPx
+      const inMainApproach = mainTop <= approachTriggerPx
+      headerEl.classList.toggle('in-main-approach', inMainApproach)
+      headerEl.classList.toggle('in-main', inMain)
+      if (inMainApproach) {
+        closeAllMenus()
       }
+    }
+
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      closeMobileNav()
+      toggleDropdown()
+    }, { signal })
+
+    themeOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const theme = option.getAttribute('data-theme-name') as Theme
+        if (theme && THEMES.includes(theme)) {
+          setTheme(theme)
+          closeDropdown()
+        }
+      }, { signal })
     })
-  })
 
-  // 移动端菜单
-  mobileMenuBtn?.addEventListener('click', (e) => {
-    e.stopPropagation()
-    closeDropdown()
-    mobileNav?.classList.toggle('open')
-  })
+    mobileMenuBtn?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      closeDropdown()
+      mobileNav?.classList.toggle('open')
+    }, { signal })
 
-  // 点击外部关闭所有菜单
-  document.addEventListener('click', (e) => {
-    const target = e.target as Node
-    if (!dropdown?.contains(target) && target !== toggle &&
-        !mobileNav?.contains(target) && target !== mobileMenuBtn) {
-      closeAllMenus()
-    }
-  })
+    document.addEventListener('click', (e) => {
+      const target = e.target as Node
+      if (!dropdown?.contains(target) && target !== toggle &&
+          !mobileNav?.contains(target) && target !== mobileMenuBtn) {
+        closeAllMenus()
+      }
+    }, { signal })
 
-  // 键盘关闭
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeAllMenus()
-    }
-  })
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllMenus()
+      }
+    }, { signal })
 
-  // 滚动样式
-  updateHeaderState()
-  window.addEventListener('scroll', updateHeaderState, { passive: true })
-  window.addEventListener('resize', updateHeaderState, { passive: true })
+    updateHeaderState()
+    window.addEventListener('scroll', updateHeaderState, { passive: true, signal })
+    window.addEventListener('resize', updateHeaderState, { passive: true, signal })
+    updateActiveTheme()
 
-  // 初始化
-  updateActiveTheme()
+    return () => controller.abort()
+  }
+
+  function bootHeaderInteractions() {
+    tsukiWindow.__tsukiHeaderCleanup?.()
+    tsukiWindow.__tsukiHeaderCleanup = bindHeaderInteractions()
+  }
+
+  if (!tsukiWindow.__tsukiHeaderBootBound) {
+    document.addEventListener('astro:page-load', bootHeaderInteractions)
+    tsukiWindow.__tsukiHeaderBootBound = true
+  }
+
+  bootHeaderInteractions()
 </script>
 
 <style>
