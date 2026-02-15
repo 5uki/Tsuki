@@ -1,44 +1,24 @@
-# Dependencies
-node_modules/
-.pnpm-store/
+# Ignore everything by default
+*
 
-# Build outputs
-dist/
-.astro/
-.wrangler/
+# ── Project source ──────────────────────────
+!apps/
+!apps/**
+!services/
+!services/**
+!packages/
+!packages/**
+!migrations/
+!migrations/**
+!contents/
+!contents/**
 
-# Local D1
-.wrangler/state/
-
-# Environment
-.env
-.env.*
-!.env.example
-
-# IDE
-.vscode/
-!.vscode/settings.json
-!.vscode/extensions.json
-.idea/
-*.swp
-*.swo
-.claude/
-.trae/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-
-# Test coverage
-coverage/
-
-# Misc
-*.local
-
-# Local-only scratch
-*-master/
+# ── Root config ─────────────────────────────
+!.gitignore
+!.prettierrc
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!tsconfig.json
+!tsuki.config.ts
