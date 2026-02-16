@@ -157,6 +157,7 @@ const isHome = Astro.url.pathname === '/'
     color: var(--tsuki-banner-title-fg);
     text-shadow: var(--tsuki-shadow-banner-title);
     letter-spacing: -0.02em;
+    transition: opacity 280ms ease, transform 280ms ease;
   }
 
   .tsuki-banner-subtitle {
@@ -166,6 +167,14 @@ const isHome = Astro.url.pathname === '/'
     line-height: 1.65;
     color: var(--tsuki-banner-subtitle-fg);
     text-shadow: var(--tsuki-shadow-banner-subtitle);
+    transition: opacity 280ms ease, transform 280ms ease;
+  }
+
+  .tsuki-banner-content:not([data-home]) .tsuki-banner-title,
+  .tsuki-banner-content:not([data-home]) .tsuki-banner-subtitle {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
   }
 
   .tsuki-banner-waves {

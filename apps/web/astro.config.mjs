@@ -29,6 +29,10 @@ export default defineConfig({
       fs: {
         allow: [workspaceRoot],
       },
+      watch: {
+        // 监听 workspace 根目录的 contents，新增/修改 md 文件时触发热更新
+        ignored: ['!**/contents/**'],
+      },
     },
     resolve: {
       alias: {

@@ -48,11 +48,11 @@ const hasCover = !!post.cover
 
     <div class="post-meta mb-[var(--tsuki-space-0-5)] flex flex-wrap items-center gap-x-[var(--tsuki-space-0-85)] gap-y-[var(--tsuki-space-0-6)]">
       {post.pinned && (
-        <span class="meta-row inline-flex h-[var(--tsuki-meta-icon-badge-size)] min-w-0 items-center gap-[var(--tsuki-space-0-3)] rounded-[var(--tsuki-radius-0-45)] bg-[var(--tsuki-post-pinned-bg)] px-[var(--tsuki-space-0-45)] leading-none">
-          <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
+        <span class="meta-row inline-flex h-[var(--tsuki-meta-icon-badge-size)] min-w-0 items-center gap-[var(--tsuki-space-0-15)] rounded-[var(--tsuki-radius-0-45)] bg-[var(--tsuki-post-pinned-bg)] pr-[var(--tsuki-space-0-45)] leading-none">
+          <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-post-pinned-bg)]">
             <Icon name="material-symbols:pinboard" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
           </span>
-          <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">置顶</span>
+          <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-[550] leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">置顶</span>
         </span>
       )}
 

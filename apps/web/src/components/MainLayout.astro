@@ -18,7 +18,7 @@ const gridClass = hasRightSidebar
 ---
 
 <div
-  class={`grid w-full items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
+  class={`tsuki-main-grid grid w-full items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
 >
   <aside class="order-first flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:order-none md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-sidebar" transition:animate="none">
     <Profile stats={sidebarData?.stats} />
@@ -30,7 +30,7 @@ const gridClass = hasRightSidebar
     <slot />
   </main>
   {hasRightSidebar && (
-    <aside class="flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:sticky md:top-[1.5rem] md:self-start md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-right-sidebar">
+    <aside class="tsuki-right-sidebar flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:sticky md:top-[1.5rem] md:self-start md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-right-sidebar">
       <slot name="right" />
     </aside>
   )}

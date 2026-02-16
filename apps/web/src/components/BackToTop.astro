@@ -52,16 +52,15 @@
       }
     }
 
-    // 对齐到内容卡片右侧
+    // 对齐到布局网格内容区右侧（所有页面一致）
     const alignToContent = () => {
-      const card = document.querySelector('.tsuki-content-card') ||
-                   document.querySelector('[transition\\:name="page-card"]') ||
-                   document.querySelector('main')
-      if (card) {
-        const rect = card.getBoundingClientRect()
-        const rightOffset = window.innerWidth - rect.right
-        btn.style.right = `${Math.max(rightOffset, 16)}px`
-      }
+      const grid = document.querySelector('.tsuki-main-grid')
+      if (!grid) return
+      const rect = grid.getBoundingClientRect()
+      const paddingRight = parseFloat(getComputedStyle(grid).paddingRight) || 0
+      const contentRight = rect.right - paddingRight
+      const rightOffset = document.documentElement.clientWidth - contentRight
+      btn.style.right = `${Math.max(rightOffset, 16)}px`
     }
 
     window.addEventListener('scroll', update, { passive: true })
@@ -70,7 +69,26 @@
     alignToContent()
 
     btn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      const start = window.scrollY
+      if (start <= 0) return
+      const duration = Math.min(800, Math.max(300, start * 0.4))
+      const startTime = performance.now()
+
+      function easeOutCubic(t: number) {
+        return 1 - Math.pow(1 - t, 3)
+      }
+
+      function step(now: number) {
+        const elapsed = now - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        const eased = easeOutCubic(progress)
+        window.scrollTo(0, start * (1 - eased))
+        if (progress < 1) {
+          requestAnimationFrame(step)
+        }
+      }
+
+      requestAnimationFrame(step)
     })
   }
 
@@ -111,14 +129,11 @@
   }
 
   .back-to-top:hover {
-    background: var(--tsuki-theme-accent, #a78bfa);
-    color: var(--tsuki-color-on-primary, #fff);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
   }
-  .back-to-top:hover .progress-track {
-    stroke: rgba(255, 255, 255, 0.3);
-  }
-  .back-to-top:hover .progress-bar {
-    stroke: var(--tsuki-color-on-primary, #fff);
+  .back-to-top:active {
+    transform: translateY(0);
   }
 
   .progress-ring {

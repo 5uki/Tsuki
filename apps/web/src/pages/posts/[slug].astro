@@ -1,6 +1,7 @@
 ---
 import Default from '@/layouts/Default.astro'
 import TableOfContents from '@/components/TableOfContents.astro'
+import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getPostCards, getPostDetail } from '@usecases/content'
 
@@ -13,22 +14,56 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 const ctx = createAppContext()
 const post = await getPostDetail(ctx, slug)
+const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) : 0
 ---
 
 <Default title={post ? post.frontmatter.title : `文章: ${slug}`} description="文章详情" hasRightSidebar={!!post}>
   {post ? (
     <article
-      class="tsuki-content-card rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-space-1-5)] py-[var(--tsuki-space-1-75)] shadow-[var(--tsuki-sidebar-card-shadow)]"
+      class="tsuki-content-card rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-space-1-5)] pt-[var(--tsuki-space-1)] pb-[var(--tsuki-space-1-75)] shadow-[var(--tsuki-sidebar-card-shadow)] md:px-[var(--tsuki-space-2-25)]"
       transition:name="page-card"
     >
       <header class="mb-[var(--tsuki-space-1-5)] border-b border-[var(--tsuki-surface-border)] pb-[var(--tsuki-space-1)]">
-        <h1 class="mb-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-text-3xl)] text-[color:var(--tsuki-fg)]">
+        <h1 class="post-detail-title mb-[var(--tsuki-space-0-75)] text-[length:var(--tsuki-text-3xl)] font-semibold leading-[var(--tsuki-line-height-heading)] text-[color:var(--tsuki-fg)] md:relative md:before:absolute md:before:top-[var(--tsuki-space-0-7)] md:before:h-[var(--tsuki-space-1-25)] md:before:w-[var(--tsuki-space-0-25)] md:before:rounded-[var(--tsuki-radius-xs)] md:before:bg-[var(--tsuki-theme-accent)] md:before:content-['']">
           {post.frontmatter.title}
         </h1>
-        <div class="flex flex-wrap items-center gap-[var(--tsuki-space-0-6)] text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-post-muted-fg)]">
-          <time datetime={post.frontmatter.publishedAt}>{post.frontmatter.publishedAt}</time>
-          <span>{post.frontmatter.category}</span>
-          <span>{post.frontmatter.words} 字</span>
+        <div class="post-meta mb-[var(--tsuki-space-0-5)] flex flex-wrap items-center gap-x-[var(--tsuki-space-0-85)] gap-y-[var(--tsuki-space-0-6)]">
+          <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
+            <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
+              <Icon name="material-symbols:calendar-today-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
+            </span>
+            <time datetime={post.frontmatter.publishedAt} class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.frontmatter.publishedAt}</time>
+          </span>
+
+          <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
+            <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
+              <Icon name="material-symbols:book-2-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
+            </span>
+            <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.frontmatter.category}</span>
+          </span>
+
+          <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
+            <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
+              <Icon name="material-symbols:article-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
+            </span>
+            <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.frontmatter.words} 字</span>
+          </span>
+
+          <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
+            <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)]">
+              <Icon name="material-symbols:schedule-outline-rounded" class="meta-icon h-[var(--tsuki-meta-icon-size)] w-[var(--tsuki-meta-icon-size)] text-[color:var(--tsuki-theme-accent)]" />
+            </span>
+            <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{readingTime} 分钟</span>
+          </span>
+
+          {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
+            <span class="meta-row inline-flex min-w-0 items-center gap-[var(--tsuki-space-0-3)] leading-none">
+              <span class="meta-icon-badge grid h-[var(--tsuki-meta-icon-badge-size)] w-[var(--tsuki-meta-icon-badge-size)] place-items-center rounded-[var(--tsuki-radius-0-4)] bg-[var(--tsuki-theme-secondary)] text-[length:var(--tsuki-meta-icon-size)] font-bold text-[color:var(--tsuki-theme-accent)]">
+                #
+              </span>
+              <span class="meta-text whitespace-nowrap text-[length:var(--tsuki-text-meta)] font-normal leading-[var(--tsuki-line-height-meta)] text-[color:var(--tsuki-post-meta-fg)] sm:text-[length:var(--tsuki-sidebar-body-text-size-desktop)]">{post.frontmatter.tags.join(' / ')}</span>
+            </span>
+          )}
         </div>
       </header>
       <div class="prose">
@@ -46,3 +81,11 @@ const post = await getPostDetail(ctx, slug)
     {post && <TableOfContents headings={post.headings} />}
   </div>
 </Default>
+
+<style>
+  @media (min-width: 768px) {
+    .post-detail-title::before {
+      left: calc(var(--tsuki-space-1-25) * -1);
+    }
+  }
+</style>
