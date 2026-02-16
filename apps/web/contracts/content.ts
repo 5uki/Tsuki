@@ -37,13 +37,7 @@ export interface SidebarStats {
   groups: number
 }
 
-export interface SidebarCategoryItem {
-  name: string
-  count: number
-  slug: string
-}
-
-export interface SidebarTagItem {
+export interface SidebarCountItem {
   name: string
   count: number
   slug: string
@@ -51,6 +45,6 @@ export interface SidebarTagItem {
 
 export interface SidebarData {
   stats: SidebarStats
-  categories: SidebarCategoryItem[]
-  tags: SidebarTagItem[]
+  categories: SidebarCountItem[]
+  tags: SidebarCountItem[]
 }

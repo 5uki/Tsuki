@@ -90,9 +90,6 @@ export function createApiAdapter(options: ApiAdapterOptions | string): ApiAdapte
         },
       })
 
-      clearTimeout(timeoutId)
-
-      // 处理网络层错误
       if (!response.ok && response.status >= 500) {
         throw new ApiException(ErrorCodes.INTERNAL_ERROR, `服务器错误 (${response.status})`)
       }
@@ -104,7 +101,6 @@ export function createApiAdapter(options: ApiAdapterOptions | string): ApiAdapte
         throw new ApiException(ErrorCodes.INTERNAL_ERROR, '响应解析失败')
       }
 
-      // 处理业务错误
       if (!result.ok) {
         const code = result.error.code as keyof typeof ErrorCodes
         throw new ApiException(
@@ -116,28 +112,19 @@ export function createApiAdapter(options: ApiAdapterOptions | string): ApiAdapte
 
       return result.data
     } catch (error) {
-      clearTimeout(timeoutId)
-
-      // 已经是 ApiException，直接抛出
-      if (error instanceof ApiException) {
-        throw error
-      }
-
-      // 超时错误
+      if (error instanceof ApiException) throw error
       if (error instanceof Error && error.name === 'AbortError') {
         throw new ApiException(ErrorCodes.INTERNAL_ERROR, '请求超时')
       }
-
-      // 网络错误
       if (error instanceof TypeError) {
         throw new ApiException(ErrorCodes.INTERNAL_ERROR, '网络连接失败')
       }
-
-      // 其他错误
       throw new ApiException(
         ErrorCodes.INTERNAL_ERROR,
         error instanceof Error ? error.message : '未知错误'
       )
+    } finally {
+      clearTimeout(timeoutId)
     }
   }
 

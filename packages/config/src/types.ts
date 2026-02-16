@@ -65,6 +65,8 @@ export interface NavLink {
   label: string
   /** 链接地址，必须以 / 或 https:// 开头 */
   href: string
+  /** 可选图标：内联 SVG 字符串 */
+  icon?: string
 }
 
 /**

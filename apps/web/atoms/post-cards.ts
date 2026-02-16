@@ -1,4 +1,6 @@
-﻿export interface PostCardItem {
+﻿import type { PostContent } from '@contracts/content'
+
+export interface PostCardItem {
   slug: string
   title: string
   summary: string
@@ -10,7 +12,9 @@
   cover?: string
 }
 
-import type { PostContent } from '@contracts/content'
+export function toSlug(value: string): string {
+  return value.trim().toLowerCase().replace(/\s+/g, '-')
+}
 
 export function toPostCardItems(posts: PostContent[]): PostCardItem[] {
   return posts
