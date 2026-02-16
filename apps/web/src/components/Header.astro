@@ -8,7 +8,7 @@ const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
 ---
 
-<header class="header">
+<header class="header" transition:name="tsuki-header" transition:animate="none">
   <div class="header-inner">
     <div class="header-track">
       <div class="header-pill header-brand">
@@ -249,7 +249,6 @@ const siteTitle = tsukiConfig.site.title
 
   .header-inner {
     width: 100%;
-    max-width: var(--tsuki-page-width);
     margin: 0 auto;
     padding: var(--tsuki-header-inner-padding-block) var(--tsuki-page-inline-padding);
     position: relative;

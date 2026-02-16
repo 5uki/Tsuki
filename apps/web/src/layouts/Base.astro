@@ -23,7 +23,7 @@ const faviconHref =
     : `/${rawFaviconHref}`
 const faviconType = faviconHref.endsWith('.svg') ? 'image/svg+xml' : undefined
 
-const rawTopBgImageHref = tsukiConfig.hero?.backgroundImageHref?.trim()
+const rawTopBgImageHref = tsukiConfig.hero?.backgroundImage?.href?.trim()
 const topBgImageHref =
   rawTopBgImageHref &&
   (rawTopBgImageHref.startsWith('http://') ||
@@ -33,17 +33,17 @@ const topBgImageHref =
     : `/${rawTopBgImageHref}`)
 
 const isHome = Astro.url.pathname === '/'
+const bgPositionY = tsukiConfig.hero?.backgroundImage?.positionY ?? 50
 const bodyVars: string[] = []
 if (topBgImageHref) {
   bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
+  bodyVars.push(`--tsuki-banner-image-position-y: ${Math.max(0, Math.min(100, bgPositionY))}%;`)
 }
 if (!isHome) {
   bodyVars.push('--tsuki-banner-height: var(--tsuki-banner-height-compact);')
-  bodyVars.push('--tsuki-banner-wave-height: var(--tsuki-banner-wave-height-compact);')
-  bodyVars.push('--tsuki-banner-wave-max-height: var(--tsuki-banner-wave-max-height-compact);')
-  bodyVars.push('--tsuki-banner-wave-min-height: var(--tsuki-banner-wave-min-height-compact);')
 }
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
+const bannerImageVar = topBgImageHref ? `url('${topBgImageHref}')` : 'none'
 
 // 主题列表用于验证
 const VALID_THEMES = ['mauve']
@@ -62,7 +62,7 @@ const VALID_THEMES = ['mauve']
     <link rel="apple-touch-icon" href={faviconHref} />
     <title>{title}</title>
     <ViewTransitions />
-    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
+    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES, bannerImageVar: bannerImageVar }}>
       // 主题初始化：内联脚本确保在渲染前执行
       (function() {
         const storageKey = 'tsuki.theme'
@@ -80,7 +80,85 @@ const VALID_THEMES = ['mauve']
           theme = defaultTheme
         }
         document.documentElement.setAttribute('data-theme', theme)
+
+        // 保存 banner 图片配置供 SPA 切换使用
+        window.__tsukiBannerImage = bannerImageVar
       })()
+    </script>
+    <script type="module" is:inline>
+      // SPA 切换前：将新页面的 body style 提前应用，确保 View Transition 能正确计算起止状态
+      if (!window.__tsukiSwapBound) {
+        // 跟踪 popstate（浏览器回退/前进）
+        var __tsukiIsPopstate = false
+        window.addEventListener('popstate', function() { __tsukiIsPopstate = true })
+
+        document.addEventListener('astro:before-swap', (event) => {
+          // 将当前页面的主题传递到新页面
+          const currentTheme = document.documentElement.getAttribute('data-theme')
+          if (currentTheme) {
+            event.newDocument.documentElement.setAttribute('data-theme', currentTheme)
+          }
+
+          var oldHasCompact = !!document.body.style.getPropertyValue('--tsuki-banner-height')
+          var newBody = event.newDocument.body
+          var newHasCompact = !!newBody.style.getPropertyValue('--tsuki-banner-height')
+          var sameHeight = oldHasCompact === newHasCompact
+
+          if (__tsukiIsPopstate || sameHeight) {
+            // 回退/前进 或 高度不变：不做动画，直接设置目标高度
+            newBody.dataset.tsukiBannerSkipAnim = '1'
+          } else {
+            // 正向导航且高度变化：先用旧高度启动，再过渡
+            newBody.dataset.tsukiBannerTarget = newHasCompact ? '1' : '0'
+            if (oldHasCompact) {
+              newBody.style.setProperty('--tsuki-banner-height', 'var(--tsuki-banner-height-compact)')
+            } else {
+              newBody.style.removeProperty('--tsuki-banner-height')
+            }
+          }
+        })
+
+        document.addEventListener('astro:after-swap', function() {
+          var skipAnim = document.body.dataset.tsukiBannerSkipAnim
+          var target = document.body.dataset.tsukiBannerTarget
+
+          delete document.body.dataset.tsukiBannerSkipAnim
+          delete document.body.dataset.tsukiBannerTarget
+
+          if (skipAnim) {
+            // 跳过动画：banner 立即到位
+            var banner = document.querySelector('.tsuki-banner')
+            if (banner) {
+              banner.style.transition = 'none'
+              requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                  banner.style.transition = ''
+                })
+              })
+            }
+            // 恢复回退前保存的滚动位置
+            var savedY = history.state && history.state.__tsukiScrollY
+            if (savedY !== undefined && savedY > 0) {
+              requestAnimationFrame(function() {
+                window.scrollTo(0, savedY)
+              })
+            }
+          } else if (target !== undefined) {
+            // 正向导航：触发 CSS transition
+            requestAnimationFrame(function() {
+              if (target === '1') {
+                document.body.style.setProperty('--tsuki-banner-height', 'var(--tsuki-banner-height-compact)')
+              } else {
+                document.body.style.removeProperty('--tsuki-banner-height')
+              }
+            })
+          }
+
+          __tsukiIsPopstate = false
+        })
+
+        window.__tsukiSwapBound = true
+      }
     </script>
     <script type="module" is:inline>
       import { navigate } from 'astro:transitions/client'
@@ -106,6 +184,13 @@ const VALID_THEMES = ['mauve']
           tsukiWindow.__tsukiTopFirstNavigating = true
 
           const startTop = window.scrollY
+
+          // 保存原始滚动位置到当前 history entry，回退时可恢复
+          try {
+            const s = history.state || {}
+            history.replaceState(Object.assign({}, s, { __tsukiScrollY: startTop }), '')
+          } catch (e) { void e }
+
           const durationMs = Math.min(520, Math.max(140, Math.round(startTop * 0.45)))
           const startedAt = performance.now()
 
@@ -146,19 +231,29 @@ const VALID_THEMES = ['mauve']
         tsukiWindow.__tsukiTopFirstNavBound = true
       }
     </script>
+    <script is:inline>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        },
+      };
+    </script>
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
       async
     ></script>
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        const MJ = (window as any).MathJax;
+        if (MJ?.typesetPromise) {
+          MJ.typesetPromise().catch(() => {});
+        }
+      });
+    </script>
   </head>
-  <body style={bodyStyle}>
-    <div
-      class="absolute inset-x-0 top-0 z-0 h-[var(--tsuki-banner-height)] pointer-events-none bg-[var(--tsuki-top-backdrop-bg,var(--tsuki-theme-gradient))] bg-no-repeat bg-[length:100%_100%] bg-[position:0_0] [contain:paint]"
-      aria-hidden="true"
-    ></div>
-    <div class="relative z-[1]">
-      <slot />
-    </div>
+  <body style={bodyStyle} data-is-home={isHome ? '' : undefined}>
+    <slot />
   </body>
 </html>

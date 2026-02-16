@@ -6,10 +6,12 @@ const titleHtml = tsukiConfig.hero?.titleHtml
 const subtitleHtml = tsukiConfig.hero?.subtitleHtml
 const fallbackTitle = tsukiConfig.site.title
 const fallbackSubtitle = tsukiConfig.site.description
+
+const isHome = Astro.url.pathname === '/'
 ---
 
 <section class="tsuki-banner" aria-label="Banner">
-  <div class="tsuki-banner-content">
+  <div class="tsuki-banner-content" transition:name="banner-content" data-home={isHome ? '' : undefined}>
     {titleHtml ? (
       <h1 class="tsuki-banner-title" set:html={titleHtml}></h1>
     ) : (
@@ -23,7 +25,7 @@ const fallbackSubtitle = tsukiConfig.site.description
     )}
   </div>
 
-  <div id="header-waves" class="tsuki-banner-waves waves" aria-hidden="true">
+  <div id="header-waves" class="tsuki-banner-waves waves" aria-hidden="true" transition:persist="banner-waves">
     <svg
       class="waves"
       xmlns="http://www.w3.org/2000/svg"
@@ -47,12 +49,12 @@ const fallbackSubtitle = tsukiConfig.site.description
           <animateTransform
             attributeName="transform"
             type="translate"
-            values="-120 0; 120 0; -120 0"
-            dur="6s"
+            values="-90 0; 90 0; -90 0"
+            dur="10s"
             repeatCount="indefinite"
-            begin="-1.5s"
+            begin="-2s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
             keyTimes="0;0.5;1"
           />
         </use>
@@ -60,12 +62,12 @@ const fallbackSubtitle = tsukiConfig.site.description
           <animateTransform
             attributeName="transform"
             type="translate"
-            values="-120 0; 120 0; -120 0"
-            dur="9s"
+            values="-90 0; 90 0; -90 0"
+            dur="14s"
             repeatCount="indefinite"
-            begin="-2.5s"
+            begin="-4s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
             keyTimes="0;0.5;1"
           />
         </use>
@@ -73,12 +75,12 @@ const fallbackSubtitle = tsukiConfig.site.description
           <animateTransform
             attributeName="transform"
             type="translate"
-            values="-120 0; 120 0; -120 0"
-            dur="12s"
+            values="-90 0; 90 0; -90 0"
+            dur="20s"
             repeatCount="indefinite"
-            begin="-3.5s"
+            begin="-6s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
             keyTimes="0;0.5;1"
           />
         </use>
@@ -86,12 +88,12 @@ const fallbackSubtitle = tsukiConfig.site.description
           <animateTransform
             attributeName="transform"
             type="translate"
-            values="-120 0; 120 0; -120 0"
-            dur="18s"
+            values="-90 0; 90 0; -90 0"
+            dur="28s"
             repeatCount="indefinite"
-            begin="-4.5s"
+            begin="-8s"
             calcMode="spline"
-            keySplines="0.5 0.5 0.45 0.5; 0.5 0.5 0.45 0.5"
+            keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
             keyTimes="0;0.5;1"
           />
         </use>
@@ -104,6 +106,8 @@ const fallbackSubtitle = tsukiConfig.site.description
   .tsuki-banner {
     position: relative;
     height: var(--tsuki-banner-height);
+    transition: height var(--tsuki-vt-duration, 380ms) var(--tsuki-vt-ease, ease);
+    overflow-anchor: none;
     margin-top: calc(-1 * var(--tsuki-header-overlap-block-size));
     padding:
       var(--tsuki-header-overlap-block-size)
@@ -126,7 +130,7 @@ const fallbackSubtitle = tsukiConfig.site.description
     background-image: var(--tsuki-banner-image);
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: center var(--tsuki-banner-image-position-y, 50%);
     opacity: var(--tsuki-banner-image-opacity);
     filter: var(--tsuki-banner-image-filter);
     mask-image: var(--tsuki-banner-image-mask);
@@ -181,24 +185,8 @@ const fallbackSubtitle = tsukiConfig.site.description
     margin-bottom: -1px;
     mix-blend-mode: normal;
     opacity: 1;
-    mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--tsuki-banner-mask-soft) 22%,
-      var(--tsuki-banner-mask-ink) 55%,
-      var(--tsuki-banner-mask-ink) 100%
-    );
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--tsuki-banner-mask-soft) 22%,
-      var(--tsuki-banner-mask-ink) 55%,
-      var(--tsuki-banner-mask-ink) 100%
-    );
-    -webkit-mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
+    mask-image: none;
+    -webkit-mask-image: none;
     filter: blur(var(--tsuki-banner-wave-blur));
   }
 

@@ -8,19 +8,19 @@ import type { SidebarData } from '@contracts/content'
 interface Props {
   class?: string
   sidebarData?: SidebarData
+  hasRightSidebar?: boolean
 }
 
-const { class: className, sidebarData } = Astro.props
-const hasRightSlot = Astro.slots.has('right')
-const gridClass = hasRightSlot
-  ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)]'
-  : 'md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,4fr)]'
+const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
+const gridClass = hasRightSidebar
+  ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)]'
+  : 'md:grid-cols-[minmax(0,1fr)_minmax(0,5fr)]'
 ---
 
 <div
-  class={`mx-auto grid max-w-[var(--tsuki-page-width)] items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
+  class={`grid w-full items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
 >
-  <aside class="order-first flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:order-none md:gap-[var(--tsuki-sidebar-gap)]">
+  <aside class="order-first flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:order-none md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-sidebar" transition:animate="none">
     <Profile stats={sidebarData?.stats} />
     <Announcement />
     <Categories categories={sidebarData?.categories ?? []} />
@@ -29,8 +29,8 @@ const gridClass = hasRightSlot
   <main class="min-w-0">
     <slot />
   </main>
-  {hasRightSlot && (
-    <aside class="flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:gap-[var(--tsuki-sidebar-gap)]">
+  {hasRightSidebar && (
+    <aside class="flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:sticky md:top-[1.5rem] md:self-start md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-right-sidebar">
       <slot name="right" />
     </aside>
   )}

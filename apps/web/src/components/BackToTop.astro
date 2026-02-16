@@ -1,0 +1,151 @@
+---
+// 返回顶部按钮 - 圆角方形，边框显示滚动进度，与内容卡片右侧对齐
+---
+
+<button
+  id="back-to-top"
+  class="back-to-top"
+  aria-label="返回顶部"
+  title="返回顶部"
+>
+  <svg class="progress-ring" viewBox="0 0 52 52" fill="none">
+    <rect class="progress-track" x="1.5" y="1.5" width="49" height="49" rx="6.5" ry="6.5" />
+    <rect class="progress-bar" x="1.5" y="1.5" width="49" height="49" rx="6.5" ry="6.5" />
+  </svg>
+  <svg class="arrow-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<script>
+  function initBackToTop() {
+    const btn = document.getElementById('back-to-top') as HTMLButtonElement | null
+    if (!btn) return
+
+    const progressBar = btn.querySelector('.progress-bar') as SVGRectElement | null
+    if (!progressBar) return
+
+    // 获取进度条周长，加余量避免首尾间隙
+    const perimeter = progressBar.getTotalLength() + 2
+    progressBar.style.strokeDasharray = `${perimeter}`
+    progressBar.style.strokeDashoffset = `${perimeter}`
+
+    let visible = false
+    const threshold = 450
+
+    const update = () => {
+      const scrollY = window.scrollY
+      const shouldShow = scrollY > threshold
+
+      if (shouldShow !== visible) {
+        visible = shouldShow
+        btn.classList.toggle('visible', visible)
+      }
+
+      // 更新滚动进度
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      if (docHeight > 0) {
+        const raw = scrollY / docHeight
+        const progress = raw >= 0.95 ? 1 : Math.min(raw, 1)
+        const offset = perimeter * (1 - progress)
+        progressBar.style.strokeDashoffset = offset < 1 ? '0' : `${offset}`
+      }
+    }
+
+    // 对齐到内容卡片右侧
+    const alignToContent = () => {
+      const card = document.querySelector('.tsuki-content-card') ||
+                   document.querySelector('[transition\\:name="page-card"]') ||
+                   document.querySelector('main')
+      if (card) {
+        const rect = card.getBoundingClientRect()
+        const rightOffset = window.innerWidth - rect.right
+        btn.style.right = `${Math.max(rightOffset, 16)}px`
+      }
+    }
+
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', alignToContent, { passive: true })
+    update()
+    alignToContent()
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+  }
+
+  initBackToTop()
+  document.addEventListener('astro:after-swap', initBackToTop)
+</script>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: var(--tsuki-sidebar-card-bg, rgba(255, 255, 255, 0.85));
+    color: var(--tsuki-fg);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.15s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 0;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .back-to-top:hover {
+    background: var(--tsuki-theme-accent, #a78bfa);
+    color: var(--tsuki-color-on-primary, #fff);
+  }
+  .back-to-top:hover .progress-track {
+    stroke: rgba(255, 255, 255, 0.3);
+  }
+  .back-to-top:hover .progress-bar {
+    stroke: var(--tsuki-color-on-primary, #fff);
+  }
+
+  .progress-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .progress-track {
+    stroke: var(--tsuki-surface-border, rgba(0, 0, 0, 0.1));
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .progress-bar {
+    stroke: var(--tsuki-theme-accent, #a78bfa);
+    stroke-width: 2.5;
+    fill: none;
+    transition: stroke-dashoffset 0.1s linear;
+    /* 从顶部中间开始 */
+    transform-origin: center;
+  }
+
+  .arrow-icon {
+    position: relative;
+    z-index: 1;
+  }
+</style>

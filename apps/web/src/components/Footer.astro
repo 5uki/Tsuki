@@ -6,7 +6,7 @@ const siteTitle = tsukiConfig.site.title
 const year = new Date().getFullYear()
 ---
 
-<footer class="border-t border-[var(--tsuki-surface-border)] bg-transparent transition-colors duration-[var(--tsuki-motion-fast)]">
+<footer class="border-t border-[var(--tsuki-surface-border)] bg-transparent transition-colors duration-[var(--tsuki-motion-fast)]" transition:name="tsuki-footer" transition:animate="none">
   <div class="mx-auto flex max-w-[var(--tsuki-content-width)] items-center justify-between px-[var(--tsuki-space-1)] py-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">
     <p class="m-0">&copy; {year} {siteTitle}. All rights reserved.</p>
     <nav class="flex gap-[var(--tsuki-space-1)]">

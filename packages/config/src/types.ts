@@ -86,6 +86,25 @@ export interface SiteConfig {
 }
 
 /**
+ * 背景图配置
+ */
+export interface BackgroundImageConfig {
+  /**
+   * 图片地址
+   * - 站内静态路径：/media/hero.jpg
+   * - 外部 URL：https://...
+   */
+  href: string
+  /**
+   * 垂直焦点位置（0-100）
+   * - 0 = 显示图片顶部
+   * - 50 = 居中（默认）
+   * - 100 = 显示图片底部
+   */
+  positionY?: number
+}
+
+/**
  * 首页 Hero 配置（支持 HTML）
  */
 export interface HeroConfig {
@@ -93,12 +112,8 @@ export interface HeroConfig {
   titleHtml?: string
   /** 第二行副标题（HTML 字符串） */
   subtitleHtml?: string
-  /**
-   * Hero 背景图（可选）
-   * - 站内静态路径：/media/hero.jpg
-   * - 外部 URL：https://...
-   */
-  backgroundImageHref?: string
+  /** Hero 背景图（可选） */
+  backgroundImage?: BackgroundImageConfig
 }
 
 /**

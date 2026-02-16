@@ -42,7 +42,7 @@ export const DEFAULT_CONFIG: TsukiConfig = {
   hero: {
     titleHtml: undefined,
     subtitleHtml: undefined,
-    backgroundImageHref: undefined,
+    backgroundImage: undefined,
   },
   profile: {
     avatar: undefined,

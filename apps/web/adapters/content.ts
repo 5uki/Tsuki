@@ -13,14 +13,13 @@ export function createContentAdapter(): ContentAdapter {
       const collection = import.meta.glob('../../../contents/posts/*.md')
       const posts = await Promise.all(
         Object.entries(collection).map(async ([filepath, loader]) => {
-          const module = await loader()
-          const { frontmatter, Content, headings } = module as {
+          const module = (await loader()) as {
             frontmatter: PostContent['frontmatter']
             Content: PostContent['Content']
-            headings: PostContent['headings']
+            getHeadings(): PostContent['headings']
           }
           const slug = filepath.split('/').pop()?.replace(/\.md$/, '') ?? ''
-          return { slug, frontmatter, Content, headings }
+          return { slug, frontmatter: module.frontmatter, Content: module.Content, headings: module.getHeadings() }
         })
       )
       return posts
@@ -32,27 +31,25 @@ export function createContentAdapter(): ContentAdapter {
       )
       if (!entry) return null
       const [filepath, loader] = entry
-      const module = await loader()
-      const { frontmatter, Content, headings } = module as {
+      const module = (await loader()) as {
         frontmatter: PostContent['frontmatter']
         Content: PostContent['Content']
-        headings: PostContent['headings']
+        getHeadings(): PostContent['headings']
       }
       const resolvedSlug = filepath.split('/').pop()?.replace(/\.md$/, '') ?? slug
-      return { slug: resolvedSlug, frontmatter, Content, headings }
+      return { slug: resolvedSlug, frontmatter: module.frontmatter, Content: module.Content, headings: module.getHeadings() }
     },
     async getMoments() {
       const collection = import.meta.glob('../../../contents/moments/*.md')
       const moments = await Promise.all(
         Object.entries(collection).map(async ([filepath, loader]) => {
-          const module = await loader()
-          const { frontmatter, Content, headings } = module as {
+          const module = (await loader()) as {
             frontmatter: MomentContent['frontmatter']
             Content: MomentContent['Content']
-            headings: MomentContent['headings']
+            getHeadings(): MomentContent['headings']
           }
           const id = filepath.split('/').pop()?.replace(/\.md$/, '') ?? ''
-          return { id, frontmatter, Content, headings }
+          return { id, frontmatter: module.frontmatter, Content: module.Content, headings: module.getHeadings() }
         })
       )
       return moments
@@ -64,14 +61,13 @@ export function createContentAdapter(): ContentAdapter {
       )
       if (!entry) return null
       const [filepath, loader] = entry
-      const module = await loader()
-      const { frontmatter, Content, headings } = module as {
+      const module = (await loader()) as {
         frontmatter: MomentContent['frontmatter']
         Content: MomentContent['Content']
-        headings: MomentContent['headings']
+        getHeadings(): MomentContent['headings']
       }
       const resolvedId = filepath.split('/').pop()?.replace(/\.md$/, '') ?? id
-      return { id: resolvedId, frontmatter, Content, headings }
+      return { id: resolvedId, frontmatter: module.frontmatter, Content: module.Content, headings: module.getHeadings() }
     },
   }
 }

@@ -10,7 +10,10 @@ export default defineConfig({
   hero: {
     titleHtml: '<span style="letter-spacing: -0.02em;">Tsuki</span>',
     subtitleHtml: '<span>一个认真写字的地方</span>',
-    backgroundImageHref: '/background.png',
+    backgroundImage: {
+      href: '/background.png',
+      positionY: 25,
+    },
   },
   nav: [
     { label: '首页', href: '/' },

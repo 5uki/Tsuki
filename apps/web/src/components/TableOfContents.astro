@@ -5,7 +5,7 @@ interface Props {
   headings: MarkdownHeading[]
 }
 
-const { headings } = Astro.props
+const { headings = [] } = Astro.props
 const displayHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3)
 ---
 

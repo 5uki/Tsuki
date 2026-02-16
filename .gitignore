@@ -13,6 +13,11 @@
 !contents/
 !contents/**
 
+# ── Exclude common dirs ─────────────────────
+**/node_modules/
+**/.astro/
+**/.wrangler/
+
 # ── Root config ─────────────────────────────
 !.gitignore
 !.prettierrc
