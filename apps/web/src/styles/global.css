@@ -1,8 +1,4 @@
-﻿@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-*,
+﻿*,
 *::before,
 *::after {
   box-sizing: border-box;
@@ -443,23 +439,154 @@ button {
 }
 
 
-@layer utilities {
-  .tsuki-card-transition {
+@layer components {
+  /* ── Sidebar Card ── */
+  .tsuki-sidebar-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--tsuki-sidebar-card-radius);
+    border: 1px solid var(--tsuki-sidebar-card-border);
+    background: var(--tsuki-sidebar-card-bg);
+    padding: var(--tsuki-sidebar-card-title-top-padding) var(--tsuki-sidebar-card-padding-inline) var(--tsuki-sidebar-card-padding);
+    box-shadow: var(--tsuki-sidebar-card-shadow);
+    will-change: transform, box-shadow, border-color;
     transition:
       transform var(--tsuki-motion-card-transform-duration) var(--tsuki-motion-card-transform-ease),
       box-shadow var(--tsuki-motion-card-shadow-duration) var(--tsuki-motion-ease-out),
       border-color var(--tsuki-motion-card-border-duration) var(--tsuki-motion-ease-out);
   }
-
-  .tsuki-card-transition:where(:hover, :focus-visible, :active) {
+  .tsuki-sidebar-card:where(:hover, :focus-visible, :active) {
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
     border-color: var(--tsuki-sidebar-card-border-hover);
   }
-
-  .tsuki-card-transition:active {
+  .tsuki-sidebar-card:hover {
     transform: translateY(var(--tsuki-sidebar-card-hover-translate));
-    box-shadow: var(--tsuki-sidebar-card-shadow-hover);
-    border-color: var(--tsuki-sidebar-card-border-hover);
+  }
+  @media (min-width: 640px) {
+    .tsuki-sidebar-card {
+      padding: var(--tsuki-sidebar-card-title-top-padding-compact) var(--tsuki-sidebar-card-padding-inline-compact) var(--tsuki-sidebar-card-padding-compact);
+    }
+  }
+
+  /* ── Section Title (h3 with accent marker) ── */
+  .tsuki-section-title {
+    margin-top: 0;
+    margin-bottom: var(--tsuki-space-0-75);
+    display: flex;
+    align-items: center;
+    gap: var(--tsuki-space-0-5);
+    font-size: var(--tsuki-sidebar-section-title-size);
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+  .tsuki-section-title::before {
+    content: '';
+    height: var(--tsuki-sidebar-section-marker-height);
+    width: var(--tsuki-sidebar-section-marker-width);
+    border-radius: var(--tsuki-radius-2xs);
+    background: var(--tsuki-theme-accent);
+  }
+  @media (min-width: 640px) {
+    .tsuki-section-title {
+      font-size: var(--tsuki-sidebar-section-title-size-desktop);
+    }
+  }
+
+  /* ── Tag Pill ── */
+  .tsuki-tag-pill {
+    display: inline-block;
+    border-radius: var(--tsuki-radius-md);
+    background: var(--tsuki-surface-accent-strong);
+    padding: var(--tsuki-space-0-3125) var(--tsuki-space-0-625);
+    font-size: var(--tsuki-sidebar-body-text-size);
+    font-weight: 500;
+    color: var(--tsuki-theme-accent);
+    text-decoration: none;
+    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .tsuki-tag-pill:hover {
+    transform: translateY(var(--tsuki-translate-1px));
+    background: var(--tsuki-surface-accent-soft);
+  }
+  @media (min-width: 640px) {
+    .tsuki-tag-pill {
+      padding: var(--tsuki-space-0-375) var(--tsuki-space-0-75);
+      font-size: var(--tsuki-sidebar-body-text-size-desktop);
+    }
+  }
+
+  /* ── Meta Row ── */
+  .tsuki-meta-row {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: var(--tsuki-space-0-3);
+    line-height: 1;
+  }
+
+  /* ── Meta Icon Badge ── */
+  .tsuki-meta-icon-badge {
+    display: grid;
+    height: var(--tsuki-meta-icon-badge-size);
+    width: var(--tsuki-meta-icon-badge-size);
+    place-items: center;
+    border-radius: var(--tsuki-radius-0-4);
+    background: var(--tsuki-theme-secondary);
+  }
+
+  /* ── Meta Icon ── */
+  .tsuki-meta-icon {
+    height: var(--tsuki-meta-icon-size);
+    width: var(--tsuki-meta-icon-size);
+    color: var(--tsuki-theme-accent);
+  }
+
+  /* ── Meta Text ── */
+  .tsuki-meta-text {
+    white-space: nowrap;
+    font-size: var(--tsuki-text-meta);
+    font-weight: 400;
+    line-height: var(--tsuki-line-height-meta);
+    color: var(--tsuki-post-meta-fg);
+  }
+  @media (min-width: 640px) {
+    .tsuki-meta-text {
+      font-size: var(--tsuki-sidebar-body-text-size-desktop);
+    }
+  }
+
+  /* ── Content Card ── */
+  .tsuki-content-card {
+    border-radius: var(--tsuki-sidebar-card-radius);
+    border: 1px solid var(--tsuki-sidebar-card-border);
+    background: var(--tsuki-sidebar-card-bg);
+    padding: var(--tsuki-space-1) var(--tsuki-space-1-5) var(--tsuki-space-1-75);
+    box-shadow: var(--tsuki-sidebar-card-shadow);
+  }
+  @media (min-width: 768px) {
+    .tsuki-content-card {
+      padding-inline: var(--tsuki-space-2-25);
+    }
+  }
+
+  /* ── Page Title ── */
+  .tsuki-page-title {
+    margin-bottom: var(--tsuki-space-1-5);
+    font-size: var(--tsuki-text-page-title);
+  }
+
+  /* ── Card List ── */
+  .tsuki-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-space-1);
+  }
+
+  /* ── Empty State ── */
+  .tsuki-empty-state {
+    font-style: italic;
+    color: var(--tsuki-fg);
   }
 }
 

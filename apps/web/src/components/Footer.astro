@@ -1,27 +1,53 @@
-﻿---
-// 椤佃剼缁勪欢
+---
 import tsukiConfig from '@/config/tsuki-config'
 
 const siteTitle = tsukiConfig.site.title
 const year = new Date().getFullYear()
 ---
 
-<footer class="border-t border-[var(--tsuki-surface-border)] bg-transparent transition-colors duration-[var(--tsuki-motion-fast)]" transition:name="tsuki-footer" transition:animate="none">
-  <div class="mx-auto flex max-w-[var(--tsuki-content-width)] items-center justify-between px-[var(--tsuki-space-1)] py-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-sm)] text-[color:var(--tsuki-fg)]">
-    <p class="m-0">&copy; {year} {siteTitle}. All rights reserved.</p>
-    <nav class="flex gap-[var(--tsuki-space-1)]">
-      <a
-        href="/rss.xml"
-        class="text-[color:var(--tsuki-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] hover:text-[color:var(--tsuki-theme-accent)]"
-      >
-        RSS
-      </a>
-      <a
-        href="/sitemap.xml"
-        class="text-[color:var(--tsuki-fg)] no-underline transition-colors duration-[var(--tsuki-motion-fast)] hover:text-[color:var(--tsuki-theme-accent)]"
-      >
-        Sitemap
-      </a>
+<footer class="site-footer" transition:name="tsuki-footer" transition:animate="none">
+  <div class="footer-inner">
+    <p class="footer-copy">&copy; {year} {siteTitle}. All rights reserved.</p>
+    <nav class="footer-nav">
+      <a href="/rss.xml" class="footer-link">RSS</a>
+      <a href="/sitemap.xml" class="footer-link">Sitemap</a>
     </nav>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--tsuki-surface-border);
+    background: transparent;
+    transition: color var(--tsuki-motion-fast);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--tsuki-content-width);
+    margin-inline: auto;
+    padding: var(--tsuki-space-1-5) var(--tsuki-space-1);
+    font-size: var(--tsuki-text-sm);
+    color: var(--tsuki-fg);
+  }
+
+  .footer-copy {
+    margin: 0;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: var(--tsuki-space-1);
+  }
+
+  .footer-link {
+    color: var(--tsuki-fg);
+    text-decoration: none;
+    transition: color var(--tsuki-motion-fast);
+  }
+  .footer-link:hover {
+    color: var(--tsuki-theme-accent);
+  }
+</style>

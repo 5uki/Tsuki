@@ -1,4 +1,4 @@
-﻿---
+---
 import Default from '@/layouts/Default.astro'
 import PostCard from '@/components/PostCard.astro'
 import { toPostCardItems } from '@atoms/post-cards'
@@ -11,16 +11,22 @@ const postCards = toPostCardItems(posts)
 ---
 
 <Default title="文章" description="所有文章列表">
-  <section class="mb-[var(--tsuki-space-2)]" transition:name="page-card">
-    <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">文章</h1>
+  <section class="page-section" transition:name="page-card">
+    <h1 class="tsuki-page-title">文章</h1>
     {postCards.length > 0 ? (
-      <div class="flex flex-col gap-[var(--tsuki-space-1)]">
+      <div class="tsuki-card-list">
         {postCards.map((post) => (
           <PostCard post={post} />
         ))}
       </div>
     ) : (
-      <p class="italic text-[color:var(--tsuki-fg)]">暂无文章</p>
+      <p class="tsuki-empty-state">暂无文章</p>
     )}
   </section>
 </Default>
+
+<style>
+  .page-section {
+    margin-bottom: var(--tsuki-space-2);
+  }
+</style>

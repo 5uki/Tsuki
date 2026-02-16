@@ -12,26 +12,73 @@ interface Props {
 }
 
 const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
-const gridClass = hasRightSidebar
-  ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,4fr)_minmax(0,1fr)]'
-  : 'md:grid-cols-[minmax(0,1fr)_minmax(0,5fr)]'
 ---
 
 <div
-  class={`tsuki-main-grid grid w-full items-start gap-[var(--tsuki-sidebar-gap-compact)] px-0 md:gap-[var(--tsuki-sidebar-gap)] md:px-[var(--tsuki-page-inline-padding)] ${gridClass} ${className || ''}`}
+  class:list={['tsuki-main-grid', { 'has-right-sidebar': hasRightSidebar }, className]}
 >
-  <aside class="order-first flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:order-none md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-sidebar" transition:animate="none">
+  <aside class="left-sidebar" transition:name="tsuki-sidebar" transition:animate="none">
     <Profile stats={sidebarData?.stats} />
     <Announcement />
     <Categories categories={sidebarData?.categories ?? []} />
     <Tags tags={sidebarData?.tags ?? []} />
   </aside>
-  <main class="min-w-0">
+  <main class="main-content">
     <slot />
   </main>
   {hasRightSidebar && (
-    <aside class="tsuki-right-sidebar flex flex-col gap-[var(--tsuki-sidebar-gap-compact)] md:sticky md:top-[1.5rem] md:self-start md:gap-[var(--tsuki-sidebar-gap)]" transition:name="tsuki-right-sidebar">
+    <aside class="right-sidebar" transition:name="tsuki-right-sidebar">
       <slot name="right" />
     </aside>
   )}
 </div>
+
+<style>
+  .tsuki-main-grid {
+    display: grid;
+    width: 100%;
+    align-items: start;
+    gap: var(--tsuki-sidebar-gap-compact);
+  }
+  @media (min-width: 768px) {
+    .tsuki-main-grid {
+      gap: var(--tsuki-sidebar-gap);
+      padding-inline: var(--tsuki-page-inline-padding);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 5fr);
+    }
+    .tsuki-main-grid.has-right-sidebar {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 4fr) minmax(0, 1fr);
+    }
+  }
+
+  .left-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-sidebar-gap-compact);
+    order: -1;
+  }
+  @media (min-width: 768px) {
+    .left-sidebar {
+      order: 0;
+      gap: var(--tsuki-sidebar-gap);
+    }
+  }
+
+  .main-content {
+    min-width: 0;
+  }
+
+  .right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-sidebar-gap-compact);
+  }
+  @media (min-width: 768px) {
+    .right-sidebar {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+      gap: var(--tsuki-sidebar-gap);
+    }
+  }
+</style>

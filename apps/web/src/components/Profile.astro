@@ -39,66 +39,53 @@ const resolveIcon = (icon: string) => {
   }
   return { type: 'text', value: icon.slice(0, 1).toUpperCase() }
 }
-
-function formatNumber(num: number): string {
-  return num.toLocaleString()
-}
 ---
 
-<div class="flex flex-col items-center rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-sidebar-card-padding-inline)] pb-[var(--tsuki-sidebar-card-padding)] pt-[var(--tsuki-sidebar-card-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:px-[var(--tsuki-sidebar-card-padding-inline-compact)] sm:pb-[var(--tsuki-sidebar-card-padding-compact)] sm:pt-[var(--tsuki-sidebar-card-padding-compact)]">
+<div class="tsuki-sidebar-card profile-card">
   {safeProfile.avatar && (
     <a
       href={safeProfile.avatarLink || '#'}
-      class="group relative mb-[var(--tsuki-space-1)] block w-full overflow-hidden rounded-[var(--tsuki-radius-lg)] no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--tsuki-theme-accent)] focus-visible:ring-offset-[var(--tsuki-space-0-5)] focus-visible:ring-offset-[color:var(--tsuki-sidebar-card-bg)]"
+      class="avatar-link"
       aria-label="查看个人资料"
     >
-      <span class="absolute inset-0 z-[1] grid place-items-center bg-transparent transition-[background-color] duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] group-hover:bg-[var(--tsuki-profile-avatar-overlay)] group-focus-visible:bg-[var(--tsuki-profile-avatar-overlay)]" aria-hidden="true">
-        <span
-          class="opacity-0 scale-[var(--tsuki-scale-overlay-initial)] text-[color:var(--tsuki-profile-avatar-overlay-icon)] transition-[opacity,transform] duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] [filter:drop-shadow(var(--tsuki-profile-avatar-shadow))] group-hover:opacity-100 group-hover:scale-[var(--tsuki-scale-overlay-active)] group-focus-visible:opacity-100 group-focus-visible:scale-[var(--tsuki-scale-overlay-active)]"
-          set:html={overlayIcon}
-        ></span>
+      <span class="avatar-overlay" aria-hidden="true">
+        <span class="overlay-icon" set:html={overlayIcon}></span>
       </span>
       <img
         src={safeProfile.avatar}
         alt={safeProfile.name}
-        class="block aspect-square w-full object-cover transition-transform duration-[var(--tsuki-motion-medium)] ease-[var(--tsuki-motion-ease-out)] group-hover:scale-[var(--tsuki-scale-avatar-hover)] group-focus-visible:scale-[var(--tsuki-scale-avatar-hover)]"
+        class="avatar-img"
       />
     </a>
   )}
-  <h2 class="mb-[var(--tsuki-space-0-5)] text-center text-[length:var(--tsuki-text-lg)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-xl)]">
+  <h2 class="profile-name">
     {safeProfile.name}
   </h2>
   {safeProfile.bio && (
-    <p class="mb-[var(--tsuki-space-0-75)] text-center text-[length:var(--tsuki-text-sm-compact)] leading-[var(--tsuki-line-height-snug)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
+    <p class="profile-bio">
       {safeProfile.bio}
     </p>
   )}
 
   {stats?.enable && statsData && (
-    <div class="mb-[var(--tsuki-space-0-9)] grid w-full grid-cols-3 items-center justify-center text-center" aria-label="站点统计">
-      <div class="grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)]">
-        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">文章</span>
-        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
-          {formatNumber(statsData.posts)}
-        </span>
+    <div class="profile-stats" aria-label="站点统计">
+      <div class="profile-stat-cell">
+        <span class="profile-stat-label">文章</span>
+        <span class="profile-stat-value">{statsData.posts.toLocaleString()}</span>
       </div>
-      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
-        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">标签</span>
-        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
-          {formatNumber(statsData.tags)}
-        </span>
+      <div class="profile-stat-cell profile-stat-divider">
+        <span class="profile-stat-label">标签</span>
+        <span class="profile-stat-value">{statsData.tags.toLocaleString()}</span>
       </div>
-      <div class="relative grid gap-[var(--tsuki-space-0-35)] px-[var(--tsuki-space-0-75)] before:absolute before:left-0 before:top-1/2 before:h-[var(--tsuki-space-1)] before:w-[var(--tsuki-border-hairline)] before:-translate-y-1/2 before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-surface-divider)] before:content-['']">
-        <span class="text-[length:var(--tsuki-text-2xs)] text-[color:var(--tsuki-fg)]">分组</span>
-        <span class="text-[length:var(--tsuki-text-base)] font-semibold text-[color:var(--tsuki-fg)]">
-          {formatNumber(statsData.groups)}
-        </span>
+      <div class="profile-stat-cell profile-stat-divider">
+        <span class="profile-stat-label">分组</span>
+        <span class="profile-stat-value">{statsData.groups.toLocaleString()}</span>
       </div>
     </div>
   )}
 
   {safeProfile.links && safeProfile.links.length > 0 && (
-    <div class="flex w-full flex-wrap justify-center gap-[var(--tsuki-space-0-5)]">
+    <div class="profile-links">
       {safeProfile.links.map((link) => {
         const icon = resolveIcon(link.icon)
         return (
@@ -106,15 +93,15 @@ function formatNumber(num: number): string {
             href={link.url}
             target={isExternalLink(link.url) ? '_blank' : undefined}
             rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
-            class="flex h-[var(--tsuki-icon-button-size)] w-[var(--tsuki-icon-button-size)] items-center justify-center rounded-[var(--tsuki-radius-md)] bg-[var(--tsuki-link-icon-bg)] text-[color:var(--tsuki-fg)] shadow-[var(--tsuki-shadow-icon)] transition-[background-color,transform] duration-[var(--tsuki-motion-fast)] ease-[var(--tsuki-motion-ease-out)] hover:translate-y-[var(--tsuki-translate-1px)] hover:bg-[var(--tsuki-link-icon-bg-hover)]"
+            class="link-icon-btn"
             aria-label={link.name}
           >
             {icon.type === 'image' ? (
-              <img src={icon.value} alt="" class="h-[var(--tsuki-icon-size-md)] w-[var(--tsuki-icon-size-md)] object-contain" />
+              <img src={icon.value} alt="" class="link-icon-img" />
             ) : icon.type === 'inline' ? (
-              <span class="inline-flex items-center justify-center text-[length:var(--tsuki-text-xl)] leading-none" set:html={icon.value}></span>
+              <span class="link-icon-svg" set:html={icon.value}></span>
             ) : (
-              <span class="text-[length:var(--tsuki-text-2xs)] font-semibold">{icon.value}</span>
+              <span class="link-icon-text">{icon.value}</span>
             )}
           </a>
         )
@@ -122,3 +109,183 @@ function formatNumber(num: number): string {
     </div>
   )}
 </div>
+
+<style>
+  .profile-card {
+    align-items: center;
+    padding: var(--tsuki-sidebar-card-padding) var(--tsuki-sidebar-card-padding-inline);
+  }
+  @media (min-width: 640px) {
+    .profile-card {
+      padding: var(--tsuki-sidebar-card-padding-compact) var(--tsuki-sidebar-card-padding-inline-compact);
+    }
+  }
+
+  .avatar-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-bottom: var(--tsuki-space-1);
+    overflow: hidden;
+    border-radius: var(--tsuki-radius-lg);
+    text-decoration: none;
+  }
+  .avatar-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--tsuki-theme-accent), 0 0 0 calc(2px + var(--tsuki-space-0-5)) var(--tsuki-sidebar-card-bg);
+  }
+
+  .avatar-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    transition: background-color var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+  }
+  .avatar-link:hover .avatar-overlay,
+  .avatar-link:focus-visible .avatar-overlay {
+    background: var(--tsuki-profile-avatar-overlay);
+  }
+
+  .overlay-icon {
+    opacity: 0;
+    transform: scale(var(--tsuki-scale-overlay-initial));
+    color: var(--tsuki-profile-avatar-overlay-icon);
+    filter: drop-shadow(var(--tsuki-profile-avatar-shadow));
+    transition: opacity var(--tsuki-motion-medium) var(--tsuki-motion-ease-out),
+                transform var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+  }
+  .avatar-link:hover .overlay-icon,
+  .avatar-link:focus-visible .overlay-icon {
+    opacity: 1;
+    transform: scale(var(--tsuki-scale-overlay-active));
+  }
+
+  .avatar-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    transition: transform var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+  }
+  .avatar-link:hover .avatar-img,
+  .avatar-link:focus-visible .avatar-img {
+    transform: scale(var(--tsuki-scale-avatar-hover));
+  }
+
+  .profile-name {
+    margin-bottom: var(--tsuki-space-0-5);
+    text-align: center;
+    font-size: var(--tsuki-text-lg);
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+  @media (min-width: 640px) {
+    .profile-name {
+      font-size: var(--tsuki-text-xl);
+    }
+  }
+
+  .profile-bio {
+    margin-bottom: var(--tsuki-space-0-75);
+    text-align: center;
+    font-size: var(--tsuki-text-sm-compact);
+    line-height: var(--tsuki-line-height-snug);
+    color: var(--tsuki-fg);
+  }
+  @media (min-width: 640px) {
+    .profile-bio {
+      font-size: var(--tsuki-text-sm);
+    }
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: var(--tsuki-space-0-9);
+  }
+
+  .profile-stat-cell {
+    display: grid;
+    gap: var(--tsuki-space-0-35);
+    padding-inline: var(--tsuki-space-0-75);
+  }
+
+  .profile-stat-divider {
+    position: relative;
+  }
+  .profile-stat-divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: var(--tsuki-space-1);
+    width: var(--tsuki-border-hairline);
+    transform: translateY(-50%);
+    border-radius: var(--tsuki-radius-2xs);
+    background: var(--tsuki-surface-divider);
+  }
+
+  .profile-stat-label {
+    font-size: var(--tsuki-text-2xs);
+    color: var(--tsuki-fg);
+  }
+
+  .profile-stat-value {
+    font-size: var(--tsuki-text-base);
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+
+  .profile-links {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--tsuki-space-0-5);
+  }
+
+  .link-icon-btn {
+    display: flex;
+    height: var(--tsuki-icon-button-size);
+    width: var(--tsuki-icon-button-size);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--tsuki-radius-md);
+    background: var(--tsuki-link-icon-bg);
+    color: var(--tsuki-fg);
+    box-shadow: var(--tsuki-shadow-icon);
+    text-decoration: none;
+    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .link-icon-btn:hover {
+    transform: translateY(var(--tsuki-translate-1px));
+    background: var(--tsuki-link-icon-bg-hover);
+  }
+
+  .link-icon-img {
+    height: var(--tsuki-icon-size-md);
+    width: var(--tsuki-icon-size-md);
+    object-fit: contain;
+  }
+
+  .link-icon-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--tsuki-text-xl);
+    line-height: 1;
+  }
+
+  .link-icon-text {
+    font-size: var(--tsuki-text-2xs);
+    font-weight: 600;
+  }
+</style>

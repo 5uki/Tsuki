@@ -1,13 +1,9 @@
-﻿---
+---
 import Default from '@/layouts/Default.astro'
 import PostCard from '@/components/PostCard.astro'
-import { toPostCardItems } from '@atoms/post-cards'
+import { toPostCardItems, toSlug } from '@atoms/post-cards'
 import { createAppContext } from '@entry/index'
 import { getPostCards } from '@usecases/content'
-
-function toSlug(value: string): string {
-  return value.trim().toLowerCase().replace(/\\s+/g, '-')
-}
 
 export async function getStaticPaths() {
   const ctx = createAppContext()
@@ -29,16 +25,22 @@ const postCards = toPostCardItems(filtered)
 ---
 
 <Default title={`分组: ${slug}`} description={`分组 ${slug} 下的文章`}>
-  <section class="mb-[var(--tsuki-space-2)]" transition:name="page-card">
-    <h1 class="mb-[var(--tsuki-space-1-5)] text-[length:var(--tsuki-text-page-title)]">{slug}</h1>
+  <section class="page-section" transition:name="page-card">
+    <h1 class="tsuki-page-title">{slug}</h1>
     {postCards.length > 0 ? (
-      <div class="flex flex-col gap-[var(--tsuki-space-1)]">
+      <div class="tsuki-card-list">
         {postCards.map((post) => (
           <PostCard post={post} />
         ))}
       </div>
     ) : (
-      <p class="italic text-[color:var(--tsuki-fg)]">该分组下暂无文章</p>
+      <p class="tsuki-empty-state">该分组下暂无文章</p>
     )}
   </section>
 </Default>
+
+<style>
+  .page-section {
+    margin-bottom: var(--tsuki-space-2);
+  }
+</style>

@@ -34,11 +34,11 @@ if (hasRightSidebar && Astro.slots.has('right')) {
 ---
 
 <Base title={title} description={description} noindex={noindex}>
-  <div class="flex min-h-screen flex-col">
+  <div class="page-shell">
     <Header />
     <Banner />
-    <div class="flex flex-1 flex-col [background:var(--tsuki-theme-gradient)]">
-      <main class="mx-auto w-full flex-1 px-[var(--tsuki-space-5px)] py-[var(--tsuki-space-2)] md:px-0">
+    <div class="page-body">
+      <main class="page-main">
         {withSidebar ? (
           <MainLayout sidebarData={sidebarData || undefined} hasRightSidebar={!!rightHtml}>
             <slot />
@@ -55,3 +55,30 @@ if (hasRightSidebar && Astro.slots.has('right')) {
     <BackToTop />
   </div>
 </Base>
+
+<style>
+  .page-shell {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .page-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background: var(--tsuki-theme-gradient);
+  }
+
+  .page-main {
+    margin-inline: auto;
+    width: 100%;
+    flex: 1;
+    padding: var(--tsuki-space-2) var(--tsuki-space-5px);
+  }
+  @media (min-width: 768px) {
+    .page-main {
+      padding-inline: 0;
+    }
+  }
+</style>

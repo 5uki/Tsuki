@@ -19,8 +19,8 @@ const headingsWithNumber = displayHeadings.map((heading) => {
 })
 ---
 
-<div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-sidebar-card-padding-inline)] pb-[var(--tsuki-sidebar-card-padding)] pt-[var(--tsuki-sidebar-card-title-top-padding)] shadow-[var(--tsuki-sidebar-card-shadow)]">
-  <h3 class="mt-0 mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-sidebar-section-title-size)] font-semibold text-[color:var(--tsuki-fg)] before:h-[var(--tsuki-sidebar-section-marker-height)] before:w-[var(--tsuki-sidebar-section-marker-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] before:content-[''] sm:text-[length:var(--tsuki-sidebar-section-title-size-desktop)]">
+<div class="tsuki-sidebar-card toc-card">
+  <h3 class="tsuki-section-title">
     目录
   </h3>
   {displayHeadings.length > 0 ? (
@@ -55,13 +55,27 @@ const headingsWithNumber = displayHeadings.map((heading) => {
       </ul>
     </div>
   ) : (
-    <p class="m-0 text-[length:var(--tsuki-sidebar-body-text-size)] text-[color:var(--tsuki-post-muted-fg)]">
+    <p class="toc-empty">
       暂无目录
     </p>
   )}
 </div>
 
 <style>
+  .toc-card {
+    /* No hover transform for TOC card */
+    will-change: auto;
+  }
+  .toc-card:hover {
+    transform: none;
+  }
+
+  .toc-empty {
+    margin: 0;
+    font-size: var(--tsuki-sidebar-body-text-size);
+    color: var(--tsuki-post-muted-fg);
+  }
+
   .toc-wrapper {
     position: relative;
     max-height: 65vh;
@@ -177,11 +191,15 @@ const headingsWithNumber = displayHeadings.map((heading) => {
 
     if (!tocList || !tocHighlight || !tocWrapper || !tocLinks.length || !headingEls.length) return
 
+    const list = tocList
+    const highlight = tocHighlight
+    const wrapper = tocWrapper
+
     // 轻量平滑滚动（比 CSS scroll-behavior 快，但不瞬移）
     let scrollRaf = 0
     function smoothScrollToc(target: number) {
       cancelAnimationFrame(scrollRaf)
-      const start = tocWrapper.scrollTop
+      const start = wrapper.scrollTop
       const diff = target - start
       if (Math.abs(diff) < 1) return
       const duration = Math.min(150, Math.abs(diff) * 1.5)
@@ -189,7 +207,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
       function step(now: number) {
         const t = Math.min((now - startTime) / duration, 1)
         const ease = 1 - Math.pow(1 - t, 2)
-        tocWrapper.scrollTop = start + diff * ease
+        wrapper.scrollTop = start + diff * ease
         if (t < 1) scrollRaf = requestAnimationFrame(step)
       }
       scrollRaf = requestAnimationFrame(step)
@@ -225,13 +243,13 @@ const headingsWithNumber = displayHeadings.map((heading) => {
 
       // 更新高亮框位置
       if (activeIds.size === 0) {
-        tocHighlight.classList.remove('visible')
+        highlight.classList.remove('visible')
         ticking = false
         return
       }
 
       // 找到第一个和最后一个 active 的 li 元素
-      const items = tocList.querySelectorAll<HTMLLIElement>('.toc-item')
+      const items = list.querySelectorAll<HTMLLIElement>('.toc-item')
       let firstEl: HTMLElement | null = null
       let lastEl: HTMLElement | null = null
 
@@ -246,30 +264,30 @@ const headingsWithNumber = displayHeadings.map((heading) => {
       })
 
       if (firstEl && lastEl) {
-        const wrapperRect = tocWrapper.getBoundingClientRect()
-        const firstRect = firstEl.getBoundingClientRect()
-        const lastRect = lastEl.getBoundingClientRect()
+        const wrapperRect = wrapper.getBoundingClientRect()
+        const firstRect = (firstEl as HTMLElement).getBoundingClientRect()
+        const lastRect = (lastEl as HTMLElement).getBoundingClientRect()
 
-        const top = firstRect.top - wrapperRect.top + tocWrapper.scrollTop
+        const top = firstRect.top - wrapperRect.top + wrapper.scrollTop
         const height = lastRect.bottom - firstRect.top
 
-        tocHighlight.style.top = `${top}px`
-        tocHighlight.style.height = `${height}px`
-        tocHighlight.classList.add('visible')
+        highlight.style.top = `${top}px`
+        highlight.style.height = `${height}px`
+        highlight.classList.add('visible')
 
         // 自动滚动目录，让高亮区域保持可见
         const visibleTop = firstRect.top - wrapperRect.top
         const visibleBottom = lastRect.bottom - wrapperRect.top
-        const wrapperHeight = tocWrapper.clientHeight
+        const wrapperHeight = wrapper.clientHeight
         const pad = 32
 
         if (visibleTop < pad) {
-          smoothScrollToc(tocWrapper.scrollTop + visibleTop - pad)
+          smoothScrollToc(wrapper.scrollTop + visibleTop - pad)
         } else if (visibleBottom > wrapperHeight - pad) {
-          smoothScrollToc(tocWrapper.scrollTop + visibleBottom - wrapperHeight + pad)
+          smoothScrollToc(wrapper.scrollTop + visibleBottom - wrapperHeight + pad)
         }
       } else {
-        tocHighlight.classList.remove('visible')
+        highlight.classList.remove('visible')
       }
 
       ticking = false

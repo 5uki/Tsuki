@@ -10,42 +10,66 @@ interface Props {
 }
 
 const { stats } = Astro.props
-
-function formatNumber(num: number): string {
-  return num.toLocaleString()
-}
 ---
 
 {configStats?.enable && (
-  <div class="flex flex-col rounded-[var(--tsuki-sidebar-card-radius)] border border-[var(--tsuki-sidebar-card-border)] bg-[var(--tsuki-sidebar-card-bg)] px-[var(--tsuki-sidebar-card-padding-inline)] pb-[var(--tsuki-sidebar-card-padding)] pt-[var(--tsuki-sidebar-card-title-top-padding)] shadow-[var(--tsuki-sidebar-card-shadow)] tsuki-card-transition will-change-[transform,box-shadow,border-color] hover:translate-y-[var(--tsuki-sidebar-card-hover-translate)] hover:border-[var(--tsuki-sidebar-card-border-hover)] hover:shadow-[var(--tsuki-sidebar-card-shadow-hover)] sm:px-[var(--tsuki-sidebar-card-padding-inline-compact)] sm:pb-[var(--tsuki-sidebar-card-padding-compact)] sm:pt-[var(--tsuki-sidebar-card-title-top-padding-compact)]">
-    <h3 class="mt-0 mb-[var(--tsuki-space-0-75)] flex items-center gap-[var(--tsuki-space-0-5)] text-[length:var(--tsuki-sidebar-section-title-size-mobile)] font-semibold text-[color:var(--tsuki-fg)] before:content-[''] before:h-[var(--tsuki-sidebar-section-marker-height)] before:w-[var(--tsuki-sidebar-section-marker-width)] before:rounded-[var(--tsuki-radius-2xs)] before:bg-[var(--tsuki-theme-accent)] sm:text-[length:var(--tsuki-sidebar-section-title-size)]">
+  <div class="tsuki-sidebar-card">
+    <h3 class="tsuki-section-title">
       站点统计
     </h3>
-    <div class="flex flex-col gap-[var(--tsuki-space-0-5)]">
-      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
-        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          文章
-        </span>
-        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          {formatNumber(stats.posts)}
-        </span>
+    <div class="stat-list">
+      <div class="stat-row">
+        <span class="stat-label">文章</span>
+        <span class="stat-value">{stats.posts.toLocaleString()}</span>
       </div>
-      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
-        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          标签
-        </span>
-        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          {formatNumber(stats.tags)}
-        </span>
+      <div class="stat-row">
+        <span class="stat-label">标签</span>
+        <span class="stat-value">{stats.tags.toLocaleString()}</span>
       </div>
-      <div class="flex items-center justify-between border-b border-[var(--tsuki-surface-divider)] py-[var(--tsuki-space-0-5)] last:border-b-0">
-        <span class="text-[length:var(--tsuki-text-sm-compact)] text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          分组
-        </span>
-        <span class="text-[length:var(--tsuki-text-sm-compact)] font-semibold text-[color:var(--tsuki-fg)] sm:text-[length:var(--tsuki-text-sm)]">
-          {formatNumber(stats.groups)}
-        </span>
+      <div class="stat-row stat-row-last">
+        <span class="stat-label">分组</span>
+        <span class="stat-value">{stats.groups.toLocaleString()}</span>
       </div>
     </div>
   </div>
 )}
+
+<style>
+  .stat-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-space-0-5);
+  }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--tsuki-surface-divider);
+    padding-block: var(--tsuki-space-0-5);
+  }
+  .stat-row-last {
+    border-bottom: 0;
+  }
+
+  .stat-label {
+    font-size: var(--tsuki-text-sm-compact);
+    color: var(--tsuki-fg);
+  }
+  @media (min-width: 640px) {
+    .stat-label {
+      font-size: var(--tsuki-text-sm);
+    }
+  }
+
+  .stat-value {
+    font-size: var(--tsuki-text-sm-compact);
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+  @media (min-width: 640px) {
+    .stat-value {
+      font-size: var(--tsuki-text-sm);
+    }
+  }
+</style>
