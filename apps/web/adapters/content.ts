@@ -35,6 +35,7 @@ export function createContentAdapter(): ContentAdapter {
       return entries.map(entry => ({
         id: entry.id,
         frontmatter: entry.data,
+        body: entry.body,
       }))
     },
 

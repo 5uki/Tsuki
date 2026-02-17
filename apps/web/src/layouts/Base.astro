@@ -183,8 +183,27 @@ const VALID_THEMES = ['mauve']
             history.replaceState(Object.assign({}, s, { __tsukiScrollY: scrollY }), '')
           } catch (e) { void e }
 
-          // 瞬间回到顶部，然后立即发起导航（两者并行）
-          scrollTo(0, 0)
+          // 卡片 morph：在被点击的卡片上设置 view-transition-name
+          var card = link.closest('[data-vt-card]')
+          if (card) {
+            // 清除其他卡片残留的 transition name
+            document.querySelectorAll('[data-vt-card]').forEach(function(el) {
+              el.style.viewTransitionName = ''
+            })
+            card.style.viewTransitionName = 'page-card'
+            // 卡片过渡由 View Transition 处理位移，不手动 scrollTo
+          } else {
+            // 普通导航：快速平滑滚动到顶部
+            if (scrollY > 0) {
+              document.documentElement.style.scrollBehavior = 'smooth'
+              scrollTo(0, 0)
+              // 短暂后恢复，避免影响其他滚动
+              setTimeout(function() {
+                document.documentElement.style.scrollBehavior = ''
+              }, 300)
+            }
+          }
+
           navigate(url.pathname + url.search + url.hash)
         }, { capture: true })
 

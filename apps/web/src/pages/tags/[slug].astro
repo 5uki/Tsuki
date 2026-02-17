@@ -27,7 +27,7 @@ const postCards = toPostCardItems(filtered)
 ---
 
 <Default title={`标签: ${slug}`} description={`标签 ${slug} 下的内容`}>
-  <section class="page-section" transition:name="page-card">
+  <section class="page-section">
     <h1 class="tsuki-page-title">#{slug}</h1>
     {postCards.length > 0 ? (
       <div class="tsuki-card-list">

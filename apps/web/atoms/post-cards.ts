@@ -5,7 +5,8 @@ export interface PostCardItem {
   title: string
   summary: string
   publishedAt: string
-  category: string
+  category?: string
+  series?: string
   words: number
   tags: string[]
   pinned?: boolean
@@ -24,6 +25,7 @@ export function toPostCardItems(posts: PostEntry[]): PostCardItem[] {
       summary: post.frontmatter.summary,
       publishedAt: post.frontmatter.publishedAt,
       category: post.frontmatter.category,
+      series: post.frontmatter.series,
       words: post.frontmatter.words,
       tags: post.frontmatter.tags,
       pinned: post.frontmatter.pinned,

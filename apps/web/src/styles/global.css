@@ -124,6 +124,19 @@
     }
   }
 
+  /* ── Meta Link (clickable meta row) ── */
+  a.tsuki-meta-link {
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  a.tsuki-meta-link:hover {
+    opacity: 0.75;
+  }
+  a.tsuki-meta-link:hover .tsuki-meta-text {
+    color: var(--tsuki-theme-accent);
+  }
+
   /* ── Content Card ── */
   .tsuki-content-card {
     border-radius: var(--tsuki-sidebar-card-radius);

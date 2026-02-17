@@ -23,7 +23,7 @@ export default defineConfig({
     { label: '分组', href: '/groups', icon: navIcons.groups },
   ],
   profile: {
-    avatar: '/background.png',
+    avatar: '/avatar.png',
     avatarLink: '/about',
     name: 'Suki',
     bio: '热爱技术，喜欢分享',
@@ -31,17 +31,7 @@ export default defineConfig({
       {
         name: 'GitHub',
         icon: 'fa6-brands:github',
-        url: 'https://github.com',
-      },
-      {
-        name: 'Twitter',
-        icon: 'fa6-brands:x-twitter',
-        url: 'https://twitter.com',
-      },
-      {
-        name: 'Email',
-        icon: 'fa6-solid:mail',
-        url: 'mailto:example@email.com',
+        url: 'https://github.com/5uki/Tsuki',
       },
     ],
   },

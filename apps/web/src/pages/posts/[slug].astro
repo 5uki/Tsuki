@@ -4,6 +4,7 @@ import TableOfContents from '@/components/TableOfContents.astro'
 import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getPostEntries, getPostDetail } from '@usecases/content'
+import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
@@ -34,12 +35,23 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
             <time datetime={post.frontmatter.publishedAt} class="tsuki-meta-text">{post.frontmatter.publishedAt}</time>
           </span>
 
-          <span class="tsuki-meta-row">
-            <span class="tsuki-meta-icon-badge">
-              <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+          {post.frontmatter.category && (
+            <a href={`/groups/${toSlug(post.frontmatter.category)}`} class="tsuki-meta-row tsuki-meta-link">
+              <span class="tsuki-meta-icon-badge">
+                <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+              </span>
+              <span class="tsuki-meta-text">{post.frontmatter.category}</span>
+            </a>
+          )}
+
+          {post.frontmatter.series && (
+            <span class="tsuki-meta-row">
+              <span class="tsuki-meta-icon-badge">
+                <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
+              </span>
+              <span class="tsuki-meta-text">{post.frontmatter.series}</span>
             </span>
-            <span class="tsuki-meta-text">{post.frontmatter.category}</span>
-          </span>
+          )}
 
           <span class="tsuki-meta-row">
             <span class="tsuki-meta-icon-badge">
@@ -54,16 +66,17 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
             </span>
             <span class="tsuki-meta-text">{readingTime} 分钟</span>
           </span>
-
-          {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
-            <span class="tsuki-meta-row">
-              <span class="tsuki-meta-icon-badge tag-hash-badge">
-                #
-              </span>
-              <span class="tsuki-meta-text">{post.frontmatter.tags.join(' / ')}</span>
-            </span>
-          )}
         </div>
+
+        {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
+          <div class="tag-list">
+            {post.frontmatter.tags.map(tag => (
+              <a href={`/tags/${tag.toLowerCase()}`} class="tsuki-tag-pill tag-item">
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
       </header>
       <div class="prose">
         <post.Content />
@@ -123,6 +136,17 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
     font-size: var(--tsuki-meta-icon-size);
     font-weight: 700;
     color: var(--tsuki-theme-accent);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tsuki-space-0-5);
+    margin-top: var(--tsuki-space-0-75);
+  }
+
+  .tag-item {
+    font-size: var(--tsuki-text-sm-compact);
   }
 
   .not-found-text {

@@ -1,5 +1,6 @@
 ---
 import type { PostCardItem } from '@atoms/post-cards'
+import { toSlug } from '@atoms/post-cards'
 import { Icon } from 'astro-icon/components'
 
 interface Props {
@@ -22,6 +23,7 @@ const hasCover = !!post.cover
     },
     className,
   ]}
+  data-vt-card
 >
   <div
     class:list={[
@@ -60,12 +62,23 @@ const hasCover = !!post.cover
         <time datetime={post.publishedAt} class="tsuki-meta-text">{post.publishedAt}</time>
       </span>
 
-      <span class="tsuki-meta-row">
-        <span class="tsuki-meta-icon-badge">
-          <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+      {post.category && (
+        <a href={`/groups/${toSlug(post.category)}`} class="tsuki-meta-row tsuki-meta-link">
+          <span class="tsuki-meta-icon-badge">
+            <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+          </span>
+          <span class="tsuki-meta-text">{post.category}</span>
+        </a>
+      )}
+
+      {post.series && (
+        <span class="tsuki-meta-row">
+          <span class="tsuki-meta-icon-badge">
+            <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
+          </span>
+          <span class="tsuki-meta-text">{post.series}</span>
         </span>
-        <span class="tsuki-meta-text">{post.category}</span>
-      </span>
+      )}
 
       <span class="tsuki-meta-row">
         <span class="tsuki-meta-icon-badge">

@@ -13,8 +13,7 @@ const postCards = toPostCardItems(posts)
 ---
 
 <Default title="文章" description="所有文章列表">
-  <section class="page-section" transition:name="page-card">
-    <h1 class="tsuki-page-title">文章</h1>
+  <section class="page-section">
     {postCards.length > 0 ? (
       <div class="tsuki-card-list">
         {postCards.map((post) => (

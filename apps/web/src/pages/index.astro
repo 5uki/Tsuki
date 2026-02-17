@@ -14,7 +14,7 @@ const recentPosts = toPostCardItems(posts)
 ---
 
 <Default description={tsukiConfig.site.description}>
-  <section class="page-section" transition:name="page-card">
+  <section class="page-section">
     {recentPosts.length > 0 ? (
       <div class="tsuki-card-list">
         {recentPosts.map((post) => (

@@ -1,8 +1,12 @@
 ---
 import Default from '@/layouts/Default.astro'
-import TableOfContents from '@/components/TableOfContents.astro'
+import ImageGrid from '@/components/ImageGrid.astro'
+import Lightbox from '@/components/Lightbox.astro'
+import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getMomentDetail, getMomentEntries } from '@usecases/content'
+import { filterSafeMedia } from '@atoms/moment-cards'
+import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
@@ -15,22 +19,62 @@ export async function getStaticPaths() {
 const { id } = Astro.params
 const ctx = createAppContext()
 const moment = await getMomentDetail(ctx, id)
+const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
 ---
 
-<Default title="动态" description="动态详情" hasRightSidebar={!!moment}>
+<Default title={moment ? moment.frontmatter.title : '动态'} description="动态详情">
   {moment ? (
     <article class="tsuki-content-card" transition:name="page-card">
       <header class="moment-header">
-        <h1 class="moment-title">
+        <h1 class="moment-detail-title">
           {moment.frontmatter.title}
         </h1>
         <div class="moment-meta">
-          <time datetime={moment.frontmatter.publishedAt}>{moment.frontmatter.publishedAt}</time>
+          <span class="tsuki-meta-row">
+            <span class="tsuki-meta-icon-badge">
+              <Icon name="material-symbols:calendar-today-outline-rounded" class="tsuki-meta-icon" />
+            </span>
+            <time datetime={moment.frontmatter.publishedAt} class="tsuki-meta-text">{moment.frontmatter.publishedAt}</time>
+          </span>
+
+          {moment.frontmatter.category && (
+            <a href={`/groups/${toSlug(moment.frontmatter.category)}`} class="tsuki-meta-row tsuki-meta-link">
+              <span class="tsuki-meta-icon-badge">
+                <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+              </span>
+              <span class="tsuki-meta-text">{moment.frontmatter.category}</span>
+            </a>
+          )}
+
+          {moment.frontmatter.series && (
+            <span class="tsuki-meta-row">
+              <span class="tsuki-meta-icon-badge">
+                <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
+              </span>
+              <span class="tsuki-meta-text">{moment.frontmatter.series}</span>
+            </span>
+          )}
         </div>
+
+        {moment.frontmatter.tags && moment.frontmatter.tags.length > 0 && (
+          <div class="tag-list">
+            {moment.frontmatter.tags.map(tag => (
+              <a href={`/tags/${tag.toLowerCase()}`} class="tsuki-tag-pill tag-item">
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
       </header>
       <div class="prose">
         <moment.Content />
       </div>
+      {media.length > 0 && (
+        <div class="moment-images">
+          <ImageGrid images={media} maxDisplay={99} />
+        </div>
+      )}
+      <div class="comment-placeholder"><!-- 评论区将在 M4 接入 --></div>
     </article>
   ) : (
     <div class="tsuki-content-card">
@@ -39,9 +83,7 @@ const moment = await getMomentDetail(ctx, id)
       </p>
     </div>
   )}
-  <div slot="right">
-    {moment && <TableOfContents headings={moment.headings} />}
-  </div>
+  <Lightbox />
 </Default>
 
 <style>
@@ -51,19 +93,64 @@ const moment = await getMomentDetail(ctx, id)
     padding-bottom: var(--tsuki-space-1);
   }
 
-  .moment-title {
-    margin-bottom: var(--tsuki-space-0-5);
-    font-size: var(--tsuki-text-2xl);
+  .moment-detail-title {
+    margin-bottom: var(--tsuki-space-0-75);
+    font-size: var(--tsuki-text-3xl);
+    font-weight: 600;
+    line-height: var(--tsuki-line-height-heading);
     color: var(--tsuki-fg);
+  }
+  @media (min-width: 768px) {
+    .moment-detail-title {
+      position: relative;
+    }
+    .moment-detail-title::before {
+      content: '';
+      position: absolute;
+      top: var(--tsuki-space-0-7);
+      left: calc(var(--tsuki-space-1-25) * -1);
+      height: var(--tsuki-space-1-25);
+      width: var(--tsuki-space-0-25);
+      border-radius: var(--tsuki-radius-xs);
+      background: var(--tsuki-theme-accent);
+    }
   }
 
   .moment-meta {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-6);
-    font-size: var(--tsuki-text-sm);
-    color: var(--tsuki-post-muted-fg);
+    gap: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
+    margin-bottom: var(--tsuki-space-0-5);
+  }
+
+  .tag-hash-badge {
+    font-size: var(--tsuki-meta-icon-size);
+    font-weight: 700;
+    color: var(--tsuki-theme-accent);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tsuki-space-0-5);
+    margin-top: var(--tsuki-space-0-75);
+  }
+
+  .tag-item {
+    font-size: var(--tsuki-text-sm-compact);
+  }
+
+  .moment-images {
+    margin-top: var(--tsuki-space-1-5);
+    padding-top: var(--tsuki-space-1);
+    border-top: 1px solid var(--tsuki-surface-border);
+  }
+
+  .comment-placeholder {
+    margin-top: var(--tsuki-space-2);
+    padding-top: var(--tsuki-space-1);
+    border-top: 1px solid var(--tsuki-surface-border);
   }
 
   .not-found-text {

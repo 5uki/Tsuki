@@ -4,7 +4,8 @@ export interface PostFrontmatter {
   title: string
   summary: string
   publishedAt: string
-  category: string
+  category?: string
+  series?: string
   tags: string[]
   words: number
   cover?: string
@@ -14,7 +15,10 @@ export interface PostFrontmatter {
 export interface MomentFrontmatter {
   title: string
   publishedAt: string
+  category?: string
+  series?: string
   tags?: string[]
+  media?: string[]
 }
 
 /** 文章列表项（不含渲染后的内容） */
@@ -33,6 +37,7 @@ export interface PostContent extends PostEntry {
 export interface MomentEntry {
   id: string
   frontmatter: MomentFrontmatter
+  body?: string
 }
 
 /** 动态详情 */

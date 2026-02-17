@@ -22,12 +22,12 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 const ctx = createAppContext()
 const posts = await getPostEntries(ctx)
-const filtered = posts.filter((post) => toSlug(post.frontmatter.category) === slug)
+const filtered = posts.filter((post) => post.frontmatter.category && toSlug(post.frontmatter.category) === slug)
 const postCards = toPostCardItems(filtered)
 ---
 
 <Default title={`分组: ${slug}`} description={`分组 ${slug} 下的文章`}>
-  <section class="page-section" transition:name="page-card">
+  <section class="page-section">
     <h1 class="tsuki-page-title">{slug}</h1>
     {postCards.length > 0 ? (
       <div class="tsuki-card-list">

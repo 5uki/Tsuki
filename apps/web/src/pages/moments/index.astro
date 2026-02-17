@@ -1,32 +1,102 @@
 ---
 import Default from '@/layouts/Default.astro'
+import ImageGrid from '@/components/ImageGrid.astro'
+import Lightbox from '@/components/Lightbox.astro'
+import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getMomentEntries } from '@usecases/content'
+import { groupMomentsByDate } from '@atoms/moment-cards'
+import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
 const ctx = createAppContext()
 const moments = await getMomentEntries(ctx)
+
+const bodyMap = new Map<string, string>()
+for (const m of moments) {
+  if (m.body) bodyMap.set(m.id, m.body)
+}
+
+const groups = groupMomentsByDate(moments, bodyMap)
 ---
 
 <Default title="动态" description="动态时间线">
-  <section class="page-section" transition:name="page-card">
-    <h1 class="tsuki-page-title">动态</h1>
-    {moments.length > 0 ? (
-      <div class="tsuki-card-list">
-        {moments.map((moment) => (
-          <a href={`/moments/${moment.id}`} class="moment-card">
-            <span class="moment-title">{moment.frontmatter.title}</span>
-            <time class="moment-time">
-              {moment.frontmatter.publishedAt}
-            </time>
-          </a>
+  <section class="page-section">
+    {groups.length > 0 ? (
+      <div class="timeline">
+        {groups.map((group) => (
+          <div class="timeline-group">
+            <div class="timeline-date-label">
+              <span class="date-text">{group.date}</span>
+            </div>
+            <div class="timeline-items">
+              {group.items.map((item) => (
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="moment-card" data-vt-card>
+                    <div class="moment-card-content">
+                      <a href={`/moments/${item.id}`} class="moment-card-title group">
+                        <span class="title-text">{item.title}</span>
+                        <span class="title-arrow" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 18 6-6-6-6"></path>
+                          </svg>
+                        </span>
+                      </a>
+                      <div class="moment-meta">
+                        <span class="tsuki-meta-row">
+                          <span class="tsuki-meta-icon-badge">
+                            <Icon name="material-symbols:calendar-today-outline-rounded" class="tsuki-meta-icon" />
+                          </span>
+                          <time datetime={item.publishedAt} class="tsuki-meta-text">{item.publishedAt}</time>
+                        </span>
+                        {item.category && (
+                          <a href={`/groups/${toSlug(item.category)}`} class="tsuki-meta-row tsuki-meta-link">
+                            <span class="tsuki-meta-icon-badge">
+                              <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+                            </span>
+                            <span class="tsuki-meta-text">{item.category}</span>
+                          </a>
+                        )}
+                        {item.series && (
+                          <span class="tsuki-meta-row">
+                            <span class="tsuki-meta-icon-badge">
+                              <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
+                            </span>
+                            <span class="tsuki-meta-text">{item.series}</span>
+                          </span>
+                        )}
+                        {item.tags.length > 0 && (
+                          <span class="tsuki-meta-row">
+                            <span class="tsuki-meta-icon-badge tag-hash-badge">
+                              #
+                            </span>
+                            <span class="tsuki-meta-text">{item.tags.join(' / ')}</span>
+                          </span>
+                        )}
+                      </div>
+                      {item.summary && (
+                        <p class="moment-summary">{item.summary}</p>
+                      )}
+                    </div>
+                    {item.media.length > 0 && (
+                      <div class="moment-media">
+                        <ImageGrid images={item.media} maxDisplay={4} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     ) : (
       <p class="tsuki-empty-state">暂无动态</p>
     )}
   </section>
+  <Lightbox />
 </Default>
 
 <style>
@@ -34,16 +104,77 @@ const moments = await getMomentEntries(ctx)
     margin-bottom: var(--tsuki-space-2);
   }
 
-  .moment-card {
+  /* ── Timeline ── */
+  .timeline {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--tsuki-space-0-5);
+    gap: var(--tsuki-space-2);
+    padding-left: var(--tsuki-space-1-5);
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--tsuki-space-0-35);
+    width: 2px;
+    background: var(--tsuki-surface-border);
+  }
+
+  /* ── Date label ── */
+  .timeline-date-label {
+    position: relative;
+    margin-bottom: var(--tsuki-space-0-5);
+    margin-left: calc(var(--tsuki-space-1-5) * -1);
+    padding-left: var(--tsuki-space-1-75);
+  }
+  .timeline-date-label::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: var(--tsuki-space-0-35);
+    transform: translate(-50%, -50%);
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: var(--tsuki-theme-accent);
+    box-shadow: 0 0 0 3px var(--tsuki-surface-accent-soft);
+  }
+  .date-text {
+    font-size: var(--tsuki-text-sm);
+    font-weight: 600;
+    color: var(--tsuki-theme-accent);
+  }
+
+  /* ── Items list ── */
+  .timeline-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-space-1);
+  }
+
+  /* ── Single item ── */
+  .timeline-item {
+    position: relative;
+  }
+  .timeline-dot {
+    position: absolute;
+    top: var(--tsuki-space-0-8);
+    left: calc(var(--tsuki-space-0-35) - var(--tsuki-space-1-5));
+    transform: translateX(-50%);
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--tsuki-surface-border-strong);
+  }
+
+  /* ── Moment card (matching PostCard style) ── */
+  .moment-card {
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
-    padding: var(--tsuki-space-1) var(--tsuki-space-1-25);
-    color: var(--tsuki-fg);
-    text-decoration: none;
+    overflow: hidden;
     box-shadow: var(--tsuki-sidebar-card-shadow);
     transition:
       transform var(--tsuki-motion-card-transform-duration) var(--tsuki-motion-card-transform-ease),
@@ -56,13 +187,108 @@ const moments = await getMomentEntries(ctx)
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
   }
 
-  .moment-title {
-    font-size: var(--tsuki-text-lg);
-    font-weight: 600;
+  .moment-card-content {
+    padding: var(--tsuki-space-1-5);
+  }
+  @media (min-width: 768px) {
+    .moment-card-content {
+      padding: var(--tsuki-space-1-75) var(--tsuki-space-2-25);
+    }
   }
 
-  .moment-time {
-    font-size: var(--tsuki-text-sm);
+  /* Title with accent bar (matching PostCard) */
+  .moment-card-title {
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    align-items: center;
+    margin-bottom: var(--tsuki-space-0-75);
+    font-size: var(--tsuki-text-post-title);
+    font-weight: 700;
+    line-height: var(--tsuki-line-height-heading);
+    color: var(--tsuki-post-title-fg);
+    text-decoration: none;
+    transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .moment-card-title:hover,
+  .moment-card-title:focus-visible {
+    color: var(--tsuki-theme-accent);
+  }
+  @media (min-width: 768px) {
+    .moment-card-title {
+      position: relative;
+    }
+    .moment-card-title::before {
+      content: '';
+      position: absolute;
+      top: var(--tsuki-space-0-35);
+      left: calc(var(--tsuki-space-1-25) * -1);
+      height: var(--tsuki-space-1-25);
+      width: var(--tsuki-space-0-25);
+      border-radius: var(--tsuki-radius-xs);
+      background: var(--tsuki-theme-accent);
+    }
+  }
+
+  .title-text {
+    overflow-wrap: break-word;
+  }
+
+  .title-arrow {
+    display: inline-flex;
+    height: var(--tsuki-post-title-arrow-size);
+    width: var(--tsuki-post-title-arrow-size);
+    align-items: center;
+    justify-content: center;
+    margin-left: var(--tsuki-space-0-2);
+    color: var(--tsuki-theme-accent);
+    opacity: 0;
+    transform: translateX(var(--tsuki-translate-0-2));
+    transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .moment-card-title:hover .title-arrow,
+  .moment-card-title:focus-visible .title-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Meta row (matching PostCard icon-badge style) */
+  .moment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
+    margin-bottom: var(--tsuki-space-0-5);
+  }
+
+  .tag-hash-badge {
+    font-size: var(--tsuki-meta-icon-size);
+    font-weight: 700;
+    color: var(--tsuki-theme-accent);
+  }
+
+  .moment-summary {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-right: var(--tsuki-space-1);
+    font-size: var(--tsuki-text-post-summary);
+    line-height: var(--tsuki-line-height-base);
     color: var(--tsuki-post-muted-fg);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ── Media inside card ── */
+  .moment-media {
+    padding: 0 var(--tsuki-space-1) var(--tsuki-space-1);
+  }
+  @media (min-width: 768px) {
+    .moment-media {
+      padding: 0 var(--tsuki-space-1-5) var(--tsuki-space-1-25);
+      max-width: 22rem;
+    }
   }
 </style>
