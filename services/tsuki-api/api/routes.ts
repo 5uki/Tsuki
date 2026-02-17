@@ -8,22 +8,14 @@
 import { Hono } from 'hono'
 import type { Env, AppContext } from '@contracts/env'
 import { authRoutes } from './auth'
-import { postsRoutes } from './posts'
-import { momentsRoutes } from './moments'
 import { commentsRoutes } from './comments'
-import { tagsRoutes } from './tags'
-import { groupsRoutes } from './groups'
 import { settingsRoutes } from './settings'
 
 export function createRoutes() {
   const api = new Hono<{ Bindings: Env; Variables: AppContext }>()
   // 挂载各模块路由
   api.route('/auth', authRoutes())
-  api.route('/posts', postsRoutes())
-  api.route('/moments', momentsRoutes())
   api.route('/comments', commentsRoutes())
-  api.route('/tags', tagsRoutes())
-  api.route('/groups', groupsRoutes())
   api.route('/settings', settingsRoutes())
 
   // 健康检查
@@ -35,9 +27,5 @@ export function createRoutes() {
 }
 
 export * from './auth'
-export * from './posts'
-export * from './moments'
 export * from './comments'
-export * from './tags'
-export * from './groups'
 export * from './settings'

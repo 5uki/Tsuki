@@ -4,10 +4,12 @@ import PostCard from '@/components/PostCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
 import { toPostCardItems } from '@atoms/post-cards'
 import { createAppContext } from '@entry/index'
-import { getPostCards } from '@usecases/content'
+import { getPostEntries } from '@usecases/content'
+
+export const prerender = true
 
 const ctx = createAppContext()
-const posts = await getPostCards(ctx)
+const posts = await getPostEntries(ctx)
 const recentPosts = toPostCardItems(posts)
 ---
 

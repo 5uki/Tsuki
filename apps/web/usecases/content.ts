@@ -1,9 +1,9 @@
-import type { MomentContent, PostContent, SidebarCountItem, SidebarData } from '@contracts/content'
+import type { PostEntry, PostContent, MomentEntry, MomentContent, SidebarCountItem, SidebarData } from '@contracts/content'
 import type { AppContext } from '@contracts/context'
 import { toSlug } from '@atoms/post-cards'
 
-export async function getPostCards(ctx: AppContext): Promise<PostContent[]> {
-  return ctx.content.getPosts()
+export async function getPostEntries(ctx: AppContext): Promise<PostEntry[]> {
+  return ctx.content.getPostEntries()
 }
 
 export async function getPostDetail(
@@ -13,8 +13,8 @@ export async function getPostDetail(
   return ctx.content.getPostBySlug(slug)
 }
 
-export async function getMoments(ctx: AppContext): Promise<MomentContent[]> {
-  return ctx.content.getMoments()
+export async function getMomentEntries(ctx: AppContext): Promise<MomentEntry[]> {
+  return ctx.content.getMomentEntries()
 }
 
 export async function getMomentDetail(
@@ -39,7 +39,7 @@ function sortedValues(map: Map<string, SidebarCountItem>): SidebarCountItem[] {
 }
 
 export async function getSidebarData(ctx: AppContext): Promise<SidebarData> {
-  const posts = await ctx.content.getPosts()
+  const posts = await ctx.content.getPostEntries()
   const tagsMap = new Map<string, SidebarCountItem>()
   const categoriesMap = new Map<string, SidebarCountItem>()
 

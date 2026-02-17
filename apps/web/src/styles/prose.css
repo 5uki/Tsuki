@@ -1,0 +1,120 @@
+/**
+ * Prose 排版样式
+ * 文章正文的 Markdown 渲染规则
+ */
+
+.prose {
+  font-size: var(--tsuki-text-base);
+  line-height: var(--tsuki-line-height-prose);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin-top: var(--tsuki-space-2);
+  margin-bottom: var(--tsuki-space-1);
+  font-weight: 600;
+  line-height: var(--tsuki-line-height-heading);
+}
+
+.prose h1 {
+  font-size: var(--tsuki-text-3xl);
+}
+
+.prose h2 {
+  font-size: var(--tsuki-text-2xl);
+}
+
+.prose h3 {
+  font-size: var(--tsuki-text-xl);
+}
+
+.prose h4 {
+  font-size: var(--tsuki-text-lg);
+}
+
+.prose p {
+  margin-bottom: var(--tsuki-space-1-25);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--tsuki-space-1-5);
+  margin-bottom: var(--tsuki-space-1-25);
+}
+
+.prose li {
+  margin-bottom: var(--tsuki-space-0-5);
+}
+
+.prose blockquote {
+  margin: var(--tsuki-space-1) 0;
+  padding: var(--tsuki-space-0-5) var(--tsuki-space-1);
+  border-left: 4px solid var(--tsuki-theme-accent);
+  background: var(--tsuki-surface-muted);
+  color: var(--tsuki-fg);
+  border-radius: 0 var(--tsuki-radius-sm) var(--tsuki-radius-sm) 0;
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose blockquote p + p {
+  margin-top: var(--tsuki-space-0-5);
+}
+
+.prose pre {
+  margin: var(--tsuki-space-1-5) 0;
+  padding: var(--tsuki-space-1);
+  background: var(--tsuki-surface-muted-light);
+  border-radius: var(--tsuki-radius-md);
+  overflow-x: auto;
+}
+
+.prose code {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.875em;
+  background: var(--tsuki-prose-inline-code-bg);
+  border: 1px solid var(--tsuki-prose-inline-code-border);
+  color: var(--tsuki-prose-code-fg);
+  padding: 0.2em 0.4em;
+  border-radius: var(--tsuki-radius-xs);
+}
+
+.prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.prose img {
+  border-radius: var(--tsuki-radius-md);
+  margin: var(--tsuki-space-1-5) 0;
+}
+
+.prose hr {
+  margin: var(--tsuki-space-2) 0;
+  border: none;
+  border-top: 1px solid var(--tsuki-surface-divider);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--tsuki-space-1-5) 0;
+}
+
+.prose th,
+.prose td {
+  padding: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, var(--tsuki-fg) 22%, transparent);
+}
+
+.prose th {
+  background: var(--tsuki-surface-muted);
+  font-weight: 600;
+  border-bottom: 2px solid color-mix(in srgb, var(--tsuki-fg) 35%, transparent);
+}

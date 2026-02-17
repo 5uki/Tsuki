@@ -1,4 +1,4 @@
-import type { MarkdownHeading, MarkdownInstance } from 'astro'
+import type { MarkdownHeading } from 'astro'
 
 export interface PostFrontmatter {
   title: string
@@ -17,17 +17,27 @@ export interface MomentFrontmatter {
   tags?: string[]
 }
 
-export interface PostContent {
+/** 文章列表项（不含渲染后的内容） */
+export interface PostEntry {
   slug: string
   frontmatter: PostFrontmatter
-  Content: MarkdownInstance<PostFrontmatter>['Content']
+}
+
+/** 文章详情（含渲染后的内容和标题树） */
+export interface PostContent extends PostEntry {
+  Content: any
   headings: MarkdownHeading[]
 }
 
-export interface MomentContent {
+/** 动态列表项 */
+export interface MomentEntry {
   id: string
   frontmatter: MomentFrontmatter
-  Content: MarkdownInstance<MomentFrontmatter>['Content']
+}
+
+/** 动态详情 */
+export interface MomentContent extends MomentEntry {
+  Content: any
   headings: MarkdownHeading[]
 }
 

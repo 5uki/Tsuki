@@ -46,7 +46,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
                   {heading.number}
                 </span>
               )}
-              <span class="toc-text line-clamp-1">
+              <span class="toc-text">
                 {heading.text}
               </span>
             </a>
@@ -172,6 +172,13 @@ const headingsWithNumber = displayHeadings.map((heading) => {
     color: var(--tsuki-color-on-primary);
   }
 
+  .toc-text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
   .toc-h4 .toc-link {
     color: color-mix(in srgb, var(--tsuki-fg) 38%, transparent);
   }
@@ -181,105 +188,107 @@ const headingsWithNumber = displayHeadings.map((heading) => {
   }
 </style>
 
-<script>
-  function initTOC() {
-    const tocList = document.getElementById('toc-list')
-    const tocHighlight = document.getElementById('toc-highlight')
-    const tocWrapper = document.getElementById('toc-wrapper')
-    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('#toc-list .toc-link')
-    const headingEls = document.querySelectorAll<HTMLElement>('article h2, article h3, article h4')
+<script is:inline>
+  // TOC 初始化函数：定义为全局函数以便 astro:page-load 也能调用
+  window.__tsukiInitTOC = function() {
+    // 清理上一次 SPA 导航留下的 scroll listener
+    if (window.__tsukiTocCleanup) {
+      window.__tsukiTocCleanup()
+      window.__tsukiTocCleanup = null
+    }
+
+    var tocList = document.getElementById('toc-list')
+    var tocHighlight = document.getElementById('toc-highlight')
+    var tocWrapper = document.getElementById('toc-wrapper')
+    var tocLinks = document.querySelectorAll('#toc-list .toc-link')
+    var headingEls = document.querySelectorAll('article h2, article h3, article h4')
 
     if (!tocList || !tocHighlight || !tocWrapper || !tocLinks.length || !headingEls.length) return
 
-    const list = tocList
-    const highlight = tocHighlight
-    const wrapper = tocWrapper
+    var list = tocList
+    var highlight = tocHighlight
+    var wrapper = tocWrapper
 
-    // 轻量平滑滚动（比 CSS scroll-behavior 快，但不瞬移）
-    let scrollRaf = 0
-    function smoothScrollToc(target: number) {
+    // 轻量平滑滚动
+    var scrollRaf = 0
+    function smoothScrollToc(target) {
       cancelAnimationFrame(scrollRaf)
-      const start = wrapper.scrollTop
-      const diff = target - start
+      var start = wrapper.scrollTop
+      var diff = target - start
       if (Math.abs(diff) < 1) return
-      const duration = Math.min(150, Math.abs(diff) * 1.5)
-      const startTime = performance.now()
-      function step(now: number) {
-        const t = Math.min((now - startTime) / duration, 1)
-        const ease = 1 - Math.pow(1 - t, 2)
+      var duration = Math.min(150, Math.abs(diff) * 1.5)
+      var startTime = performance.now()
+      function step(now) {
+        var t = Math.min((now - startTime) / duration, 1)
+        var ease = 1 - Math.pow(1 - t, 2)
         wrapper.scrollTop = start + diff * ease
         if (t < 1) scrollRaf = requestAnimationFrame(step)
       }
       scrollRaf = requestAnimationFrame(step)
     }
 
-    const topOffset = 100
-    let ticking = false
+    var topOffset = 100
+    var ticking = false
 
     function update() {
-      const vh = window.innerHeight
-      const activeIds = new Set<string>()
-      let lastAboveId: string | null = null
+      var vh = window.innerHeight
+      var activeIds = []
+      var lastAboveId = null
 
-      headingEls.forEach((el) => {
-        const top = el.getBoundingClientRect().top
+      headingEls.forEach(function(el) {
+        var top = el.getBoundingClientRect().top
         if (top < topOffset) {
           lastAboveId = el.id
         } else if (top >= topOffset && top < vh * 0.75) {
-          activeIds.add(el.id)
+          activeIds.push(el.id)
         }
       })
 
-      // 当前所在章节（最近一个滚过的标题）始终高亮
       if (lastAboveId) {
-        activeIds.add(lastAboveId)
+        activeIds.push(lastAboveId)
       }
 
-      // 更新文字高亮
-      tocLinks.forEach((link) => {
-        const id = link.getAttribute('data-heading-id')
-        link.classList.toggle('toc-active', id !== null && activeIds.has(id))
+      tocLinks.forEach(function(link) {
+        var id = link.getAttribute('data-heading-id')
+        link.classList.toggle('toc-active', id !== null && activeIds.indexOf(id) !== -1)
       })
 
-      // 更新高亮框位置
-      if (activeIds.size === 0) {
+      if (activeIds.length === 0) {
         highlight.classList.remove('visible')
         ticking = false
         return
       }
 
-      // 找到第一个和最后一个 active 的 li 元素
-      const items = list.querySelectorAll<HTMLLIElement>('.toc-item')
-      let firstEl: HTMLElement | null = null
-      let lastEl: HTMLElement | null = null
+      var items = list.querySelectorAll('.toc-item')
+      var firstEl = null
+      var lastEl = null
 
-      items.forEach((item) => {
-        const link = item.querySelector<HTMLAnchorElement>('.toc-link')
+      items.forEach(function(item) {
+        var link = item.querySelector('.toc-link')
         if (!link) return
-        const id = link.getAttribute('data-heading-id')
-        if (id && activeIds.has(id)) {
+        var id = link.getAttribute('data-heading-id')
+        if (id && activeIds.indexOf(id) !== -1) {
           if (!firstEl) firstEl = item
           lastEl = item
         }
       })
 
       if (firstEl && lastEl) {
-        const wrapperRect = wrapper.getBoundingClientRect()
-        const firstRect = (firstEl as HTMLElement).getBoundingClientRect()
-        const lastRect = (lastEl as HTMLElement).getBoundingClientRect()
+        var wrapperRect = wrapper.getBoundingClientRect()
+        var firstRect = firstEl.getBoundingClientRect()
+        var lastRect = lastEl.getBoundingClientRect()
 
-        const top = firstRect.top - wrapperRect.top + wrapper.scrollTop
-        const height = lastRect.bottom - firstRect.top
+        var top = firstRect.top - wrapperRect.top + wrapper.scrollTop
+        var height = lastRect.bottom - firstRect.top
 
-        highlight.style.top = `${top}px`
-        highlight.style.height = `${height}px`
+        highlight.style.top = top + 'px'
+        highlight.style.height = height + 'px'
         highlight.classList.add('visible')
 
-        // 自动滚动目录，让高亮区域保持可见
-        const visibleTop = firstRect.top - wrapperRect.top
-        const visibleBottom = lastRect.bottom - wrapperRect.top
-        const wrapperHeight = wrapper.clientHeight
-        const pad = 32
+        var visibleTop = firstRect.top - wrapperRect.top
+        var visibleBottom = lastRect.bottom - wrapperRect.top
+        var wrapperHeight = wrapper.clientHeight
+        var pad = 32
 
         if (visibleTop < pad) {
           smoothScrollToc(wrapper.scrollTop + visibleTop - pad)
@@ -301,9 +310,23 @@ const headingsWithNumber = displayHeadings.map((heading) => {
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.__tsukiTocCleanup = function() {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(scrollRaf)
+    }
+
     update()
+    requestAnimationFrame(function() { requestAnimationFrame(update) })
   }
 
-  document.addEventListener('DOMContentLoaded', initTOC)
-  document.addEventListener('astro:page-load', initTOC)
+  // 立即执行：处理首次加载和 is:inline 重新执行的情况
+  window.__tsukiInitTOC()
+
+  // 注册全局 astro:page-load 监听器（仅一次），确保每次 SPA 导航都能初始化
+  if (!window.__tsukiTocPageLoadBound) {
+    window.__tsukiTocPageLoadBound = true
+    document.addEventListener('astro:page-load', function() {
+      if (window.__tsukiInitTOC) window.__tsukiInitTOC()
+    })
+  }
 </script>

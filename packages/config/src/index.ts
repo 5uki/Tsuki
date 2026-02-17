@@ -6,3 +6,6 @@ export { defineConfig } from './define'
 
 // Defaults
 export { DEFAULT_CONFIG } from './defaults'
+
+// Icons (re-export for config convenience)
+export { navIcons } from '@tsuki/shared/icons'

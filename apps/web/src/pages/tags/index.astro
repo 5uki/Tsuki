@@ -3,6 +3,8 @@ import Default from '@/layouts/Default.astro'
 import { createAppContext } from '@entry/index'
 import { getSidebarData } from '@usecases/content'
 
+export const prerender = true
+
 const ctx = createAppContext()
 const sidebarData = await getSidebarData(ctx)
 ---

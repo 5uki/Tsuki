@@ -16,3 +16,6 @@ export * from './theme'
 
 // 时间工具
 export * from './time'
+
+// 图标
+export * from './icons'

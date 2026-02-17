@@ -1,4 +1,4 @@
-﻿import type { PostContent } from '@contracts/content'
+﻿import type { PostEntry } from '@contracts/content'
 
 export interface PostCardItem {
   slug: string
@@ -16,7 +16,7 @@ export function toSlug(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, '-')
 }
 
-export function toPostCardItems(posts: PostContent[]): PostCardItem[] {
+export function toPostCardItems(posts: PostEntry[]): PostCardItem[] {
   return posts
     .map((post) => ({
       slug: post.slug,

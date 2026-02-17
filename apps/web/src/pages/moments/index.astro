@@ -1,10 +1,12 @@
 ---
 import Default from '@/layouts/Default.astro'
 import { createAppContext } from '@entry/index'
-import { getMoments } from '@usecases/content'
+import { getMomentEntries } from '@usecases/content'
+
+export const prerender = true
 
 const ctx = createAppContext()
-const moments = await getMoments(ctx)
+const moments = await getMomentEntries(ctx)
 ---
 
 <Default title="动态" description="动态时间线">

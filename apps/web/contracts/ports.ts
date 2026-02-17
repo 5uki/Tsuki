@@ -9,16 +9,11 @@
 import type {
   ApiResult,
   CommentDTO,
-  GroupDTO,
-  MomentDTO,
   PaginatedResponse,
-  PostDetailDTO,
-  PostSummaryDTO,
   SettingsPublicDTO,
-  TagDTO,
   UserDTO,
 } from './dto'
-import type { MomentContent, PostContent } from './content'
+import type { MomentContent, MomentEntry, PostContent, PostEntry } from './content'
 
 export interface ApiPort {
   // Auth
@@ -27,40 +22,11 @@ export interface ApiPort {
   // Settings
   getPublicSettings(): Promise<SettingsPublicDTO>
 
-  // Posts
-  getPosts(params?: {
-    limit?: number
-    cursor?: string
-    tag?: string
-    group?: string
-    q?: string
-  }): Promise<PaginatedResponse<PostSummaryDTO>>
-  getPostBySlug(slug: string): Promise<PostDetailDTO>
-
-  // Moments
-  getMoments(params?: {
-    limit?: number
-    cursor?: string
-    tag?: string
-  }): Promise<PaginatedResponse<MomentDTO>>
-  getMomentById(id: string): Promise<MomentDTO>
-
   // Comments
   getComments(
     targetType: 'post' | 'moment',
     targetId: string
   ): Promise<PaginatedResponse<CommentDTO>>
-
-  // Tags & Groups
-  getTags(): Promise<PaginatedResponse<{ tag: TagDTO; post_count: number; moment_count: number }>>
-  getTagBySlug(slug: string): Promise<TagDTO>
-  getGroups(type?: 'category' | 'series'): Promise<
-    PaginatedResponse<{
-      group: GroupDTO
-      post_count: number
-    }>
-  >
-  getGroupBySlug(slug: string): Promise<GroupDTO>
 }
 
 export interface StoragePort {
@@ -73,9 +39,9 @@ export interface StoragePort {
 }
 
 export interface ContentPort {
-  getPosts(): Promise<PostContent[]>
+  getPostEntries(): Promise<PostEntry[]>
   getPostBySlug(slug: string): Promise<PostContent | null>
-  getMoments(): Promise<MomentContent[]>
+  getMomentEntries(): Promise<MomentEntry[]>
   getMomentById(id: string): Promise<MomentContent | null>
 }
 

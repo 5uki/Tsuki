@@ -1,58 +1,53 @@
-import type { MomentContent, PostContent } from '@contracts/content'
+import { getCollection, getEntry, render } from 'astro:content'
+import type { PostEntry, PostContent, MomentEntry, MomentContent } from '@contracts/content'
 
 export interface ContentAdapter {
-  getPosts(): Promise<PostContent[]>
+  getPostEntries(): Promise<PostEntry[]>
   getPostBySlug(slug: string): Promise<PostContent | null>
-  getMoments(): Promise<MomentContent[]>
+  getMomentEntries(): Promise<MomentEntry[]>
   getMomentById(id: string): Promise<MomentContent | null>
-}
-
-/** Astro glob 导入的 Markdown 模块结构 */
-interface MarkdownModule<F> {
-  frontmatter: F
-  Content: any
-  getHeadings(): any[]
-}
-
-function extractSlug(filepath: string): string {
-  return filepath.split('/').pop()?.replace(/\.md$/, '') ?? ''
 }
 
 export function createContentAdapter(): ContentAdapter {
   return {
-    async getPosts() {
-      const collection = import.meta.glob('../../../contents/posts/*.md')
-      return Promise.all(
-        Object.entries(collection).map(async ([filepath, loader]) => {
-          const mod = (await loader()) as MarkdownModule<PostContent['frontmatter']>
-          return { slug: extractSlug(filepath), frontmatter: mod.frontmatter, Content: mod.Content, headings: mod.getHeadings() }
-        })
-      )
+    async getPostEntries() {
+      const entries = await getCollection('posts')
+      return entries.map(entry => ({
+        slug: entry.id,
+        frontmatter: entry.data,
+      }))
     },
+
     async getPostBySlug(slug) {
-      const collection = import.meta.glob('../../../contents/posts/*.md')
-      const entry = Object.entries(collection).find(([fp]) => fp.endsWith(`/${slug}.md`))
+      const entry = await getEntry('posts', slug)
       if (!entry) return null
-      const [filepath, loader] = entry
-      const mod = (await loader()) as MarkdownModule<PostContent['frontmatter']>
-      return { slug: extractSlug(filepath), frontmatter: mod.frontmatter, Content: mod.Content, headings: mod.getHeadings() }
+      const rendered = await render(entry)
+      return {
+        slug: entry.id,
+        frontmatter: entry.data,
+        Content: rendered.Content,
+        headings: rendered.headings,
+      }
     },
-    async getMoments() {
-      const collection = import.meta.glob('../../../contents/moments/*.md')
-      return Promise.all(
-        Object.entries(collection).map(async ([filepath, loader]) => {
-          const mod = (await loader()) as MarkdownModule<MomentContent['frontmatter']>
-          return { id: extractSlug(filepath), frontmatter: mod.frontmatter, Content: mod.Content, headings: mod.getHeadings() }
-        })
-      )
+
+    async getMomentEntries() {
+      const entries = await getCollection('moments')
+      return entries.map(entry => ({
+        id: entry.id,
+        frontmatter: entry.data,
+      }))
     },
+
     async getMomentById(id) {
-      const collection = import.meta.glob('../../../contents/moments/*.md')
-      const entry = Object.entries(collection).find(([fp]) => fp.endsWith(`/${id}.md`))
+      const entry = await getEntry('moments', id)
       if (!entry) return null
-      const [filepath, loader] = entry
-      const mod = (await loader()) as MarkdownModule<MomentContent['frontmatter']>
-      return { id: extractSlug(filepath), frontmatter: mod.frontmatter, Content: mod.Content, headings: mod.getHeadings() }
+      const rendered = await render(entry)
+      return {
+        id: entry.id,
+        frontmatter: entry.data,
+        Content: rendered.Content,
+        headings: rendered.headings,
+      }
     },
   }
 }

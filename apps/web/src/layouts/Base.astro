@@ -1,6 +1,5 @@
 ﻿---
 import '@/styles/global.css'
-import '@/styles/themes.css'
 import tsukiConfig from '@/config/tsuki-config'
 import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
 import { ViewTransitions } from 'astro:transitions'
@@ -163,72 +162,33 @@ const VALID_THEMES = ['mauve']
     <script type="module" is:inline>
       import { navigate } from 'astro:transitions/client'
 
-      const tsukiWindow = window
-
-      if (!tsukiWindow.__tsukiTopFirstNavBound) {
-        document.addEventListener('click', async (event) => {
+      if (!window.__tsukiTopFirstNavBound) {
+        document.addEventListener('click', (event) => {
           if (event.defaultPrevented) return
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
 
-          const target = event.target
-          const link = target instanceof Element ? target.closest('a[href]') : null
+          const link = event.target instanceof Element ? event.target.closest('a[href]') : null
           if (!link) return
           if (link.target === '_blank' || link.hasAttribute('download') || link.hasAttribute('data-astro-reload')) return
 
-          const url = new URL(link.href, window.location.href)
-          if (url.origin !== window.location.origin) return
-          if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return
-          if (tsukiWindow.__tsukiTopFirstNavigating) return
+          const url = new URL(link.href, location.href)
+          if (url.origin !== location.origin) return
+          if (url.pathname === location.pathname && url.search === location.search && url.hash) return
 
           event.preventDefault()
-          tsukiWindow.__tsukiTopFirstNavigating = true
 
-          const startTop = window.scrollY
-
-          // 保存原始滚动位置到当前 history entry，回退时可恢复
+          // 保存当前滚动位置到 history，回退时可恢复
           try {
-            const s = history.state || {}
-            history.replaceState(Object.assign({}, s, { __tsukiScrollY: startTop }), '')
+            var s = history.state || {}
+            history.replaceState(Object.assign({}, s, { __tsukiScrollY: scrollY }), '')
           } catch (e) { void e }
 
-          const durationMs = Math.min(520, Math.max(140, Math.round(startTop * 0.45)))
-          const startedAt = performance.now()
-
-          if (startTop > 2) {
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-            await new Promise((resolve) => {
-              let done = false
-              const finish = () => {
-                if (done) return
-                done = true
-                window.removeEventListener('scroll', onScroll)
-                resolve()
-              }
-              const onScroll = () => {
-                if (window.scrollY <= 1) {
-                  finish()
-                }
-              }
-              window.addEventListener('scroll', onScroll, { passive: true })
-              const tick = () => {
-                if (done) return
-                const elapsed = performance.now() - startedAt
-                if (elapsed >= durationMs) {
-                  window.scrollTo({ top: 0, behavior: 'auto' })
-                  finish()
-                } else {
-                  requestAnimationFrame(tick)
-                }
-              }
-              requestAnimationFrame(tick)
-            })
-          }
-
-          await navigate(`${url.pathname}${url.search}${url.hash}`)
-          tsukiWindow.__tsukiTopFirstNavigating = false
+          // 瞬间回到顶部，然后立即发起导航（两者并行）
+          scrollTo(0, 0)
+          navigate(url.pathname + url.search + url.hash)
         }, { capture: true })
 
-        tsukiWindow.__tsukiTopFirstNavBound = true
+        window.__tsukiTopFirstNavBound = true
       }
     </script>
     <script is:inline>

@@ -3,10 +3,12 @@ import Default from '@/layouts/Default.astro'
 import PostCard from '@/components/PostCard.astro'
 import { toPostCardItems } from '@atoms/post-cards'
 import { createAppContext } from '@entry/index'
-import { getPostCards } from '@usecases/content'
+import { getPostEntries } from '@usecases/content'
+
+export const prerender = true
 
 const ctx = createAppContext()
-const posts = await getPostCards(ctx)
+const posts = await getPostEntries(ctx)
 const postCards = toPostCardItems(posts)
 ---
 

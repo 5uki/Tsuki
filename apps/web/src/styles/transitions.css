@@ -1,0 +1,113 @@
+/**
+ * View Transition 动画
+ */
+
+:root {
+  --tsuki-vt-duration: 380ms;
+  --tsuki-vt-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Fill gaps between transition groups with the base background color */
+::view-transition {
+  background: var(--tsuki-theme-secondary);
+}
+
+/* Root: no crossfade on unnamed elements */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Banner content: fade + slide */
+@keyframes tsuki-banner-content-exit {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+@keyframes tsuki-banner-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+::view-transition-group(banner-content) {
+  animation-duration: var(--tsuki-vt-duration);
+  animation-timing-function: var(--tsuki-vt-ease);
+}
+::view-transition-old(banner-content) {
+  animation: calc(var(--tsuki-vt-duration) * 0.5) ease-in forwards tsuki-banner-content-exit;
+}
+::view-transition-new(banner-content) {
+  animation: calc(var(--tsuki-vt-duration) * 0.6) ease-out calc(var(--tsuki-vt-duration) * 0.35) both tsuki-banner-content-enter;
+}
+
+/* Left sidebar: stable morph */
+::view-transition-group(tsuki-sidebar) {
+  animation-duration: var(--tsuki-vt-duration);
+  animation-timing-function: var(--tsuki-vt-ease);
+}
+::view-transition-old(tsuki-sidebar),
+::view-transition-new(tsuki-sidebar) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Right sidebar: fade in/out */
+@keyframes tsuki-right-sidebar-enter {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+@keyframes tsuki-right-sidebar-exit {
+  to {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+::view-transition-group(tsuki-right-sidebar) {
+  animation-duration: var(--tsuki-vt-duration);
+  animation-timing-function: var(--tsuki-vt-ease);
+}
+::view-transition-old(tsuki-right-sidebar) {
+  animation: calc(var(--tsuki-vt-duration) * 0.4) ease-in forwards tsuki-right-sidebar-exit;
+}
+::view-transition-new(tsuki-right-sidebar) {
+  animation: calc(var(--tsuki-vt-duration) * 0.5) ease-out calc(var(--tsuki-vt-duration) * 0.4) both tsuki-right-sidebar-enter;
+}
+
+/* Header & Footer: stable */
+::view-transition-group(tsuki-header),
+::view-transition-group(tsuki-footer) {
+  animation-duration: var(--tsuki-vt-duration);
+  animation-timing-function: var(--tsuki-vt-ease);
+}
+::view-transition-old(tsuki-header),
+::view-transition-new(tsuki-header),
+::view-transition-old(tsuki-footer),
+::view-transition-new(tsuki-footer) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Content card: vertical slide */
+@keyframes tsuki-card-exit {
+  to {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}
+@keyframes tsuki-card-enter {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+::view-transition-old(page-card) {
+  animation: calc(var(--tsuki-vt-duration) * 0.45) ease-in forwards tsuki-card-exit;
+}
+::view-transition-new(page-card) {
+  animation: calc(var(--tsuki-vt-duration) * 0.55) ease-out calc(var(--tsuki-vt-duration) * 0.2) both tsuki-card-enter;
+}
