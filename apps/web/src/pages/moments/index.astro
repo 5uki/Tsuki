@@ -6,7 +6,6 @@ import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getMomentEntries } from '@usecases/content'
 import { groupMomentsByDate } from '@atoms/moment-cards'
-import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
@@ -52,12 +51,12 @@ const groups = groupMomentsByDate(moments, bodyMap)
                           <time datetime={item.publishedAt} class="tsuki-meta-text">{item.publishedAt}</time>
                         </span>
                         {item.category && (
-                          <a href={`/groups/${toSlug(item.category)}`} class="tsuki-meta-row tsuki-meta-link">
+                          <span class="tsuki-meta-row">
                             <span class="tsuki-meta-icon-badge">
                               <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
                             </span>
                             <span class="tsuki-meta-text">{item.category}</span>
-                          </a>
+                          </span>
                         )}
                         {item.series && (
                           <span class="tsuki-meta-row">

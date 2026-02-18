@@ -1,5 +1,6 @@
 ---
 import type { SidebarCountItem } from '@contracts/content'
+import { toSlug } from '@atoms/post-cards'
 
 interface Props {
   series: SidebarCountItem[]
@@ -18,7 +19,7 @@ const hasMore = series.length > VISIBLE_COUNT
     {series.length > 0 ? (
       series.map((item, index) => (
         <a
-          href={`/series/${item.slug}`}
+          href={`/posts?series=${toSlug(item.name)}`}
           class:list={['series-item', { 'series-hidden': hasMore && index >= VISIBLE_COUNT }]}
         >
           <span class="series-name">

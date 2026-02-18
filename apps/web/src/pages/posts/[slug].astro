@@ -2,9 +2,9 @@
 import Default from '@/layouts/Default.astro'
 import TableOfContents from '@/components/TableOfContents.astro'
 import { Icon } from 'astro-icon/components'
+import { toSlug } from '@atoms/post-cards'
 import { createAppContext } from '@entry/index'
 import { getPostEntries, getPostDetail } from '@usecases/content'
-import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
@@ -22,7 +22,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
 
 <Default title={post ? post.frontmatter.title : `文章: ${slug}`} description="文章详情">
   {post ? (
-    <article class="tsuki-content-card">
+    <article class="tsuki-content-card" data-pagefind-body>
       <header class="post-header">
         <h1 class="post-detail-title">
           {post.frontmatter.title}
@@ -36,12 +36,12 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
           </span>
 
           {post.frontmatter.category && (
-            <a href={`/groups/${toSlug(post.frontmatter.category)}`} class="tsuki-meta-row tsuki-meta-link">
+            <span class="tsuki-meta-row">
               <span class="tsuki-meta-icon-badge">
                 <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
               </span>
-              <span class="tsuki-meta-text">{post.frontmatter.category}</span>
-            </a>
+              <a href={`/posts?category=${toSlug(post.frontmatter.category)}`} class="tsuki-meta-text detail-meta-link">{post.frontmatter.category}</a>
+            </span>
           )}
 
           {post.frontmatter.series && (
@@ -49,7 +49,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
               <span class="tsuki-meta-icon-badge">
                 <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
               </span>
-              <span class="tsuki-meta-text">{post.frontmatter.series}</span>
+              <a href={`/posts?series=${toSlug(post.frontmatter.series)}`} class="tsuki-meta-text detail-meta-link">{post.frontmatter.series}</a>
             </span>
           )}
 
@@ -75,7 +75,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
               <span class="tsuki-meta-text tag-inline-text">
                 {post.frontmatter.tags.map((tag, i) => (
                   <>
-                    <a href={`/tags/${toSlug(tag)}`} class="tag-inline-link">{tag}</a>{i < post.frontmatter.tags.length - 1 && <span class="tag-sep">/</span>}
+                    <a href={`/posts?tag=${toSlug(tag)}`} class="tag-inline-label detail-meta-link">{tag}</a>{i < post.frontmatter.tags.length - 1 && <span class="tag-sep">/</span>}
                   </>
                 ))}
               </span>
@@ -151,12 +151,21 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
     white-space: normal;
   }
 
-  .tag-inline-link {
+  .tag-inline-label {
     color: var(--tsuki-post-meta-fg);
     text-decoration: none;
     transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
-  .tag-inline-link:hover {
+  .tag-inline-label:hover {
+    color: var(--tsuki-theme-accent);
+  }
+
+  .detail-meta-link {
+    text-decoration: none;
+    color: var(--tsuki-post-meta-fg);
+    transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .detail-meta-link:hover {
     color: var(--tsuki-theme-accent);
   }
 

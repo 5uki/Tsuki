@@ -36,9 +36,9 @@ const siteTitle = tsukiConfig.site.title
         </a>
       </div>
 
-      <a href="/search" class="action-btn search-btn" aria-label="搜索">
+      <button class="action-btn search-btn" data-search-open aria-label="搜索">
         <span set:html={uiIcons.search} />
-      </a>
+      </button>
 
       <div class="theme-switcher">
         <button id="theme-toggle" class="action-btn" aria-label="切换主题" aria-haspopup="true">

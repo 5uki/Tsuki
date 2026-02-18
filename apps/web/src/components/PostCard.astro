@@ -22,7 +22,11 @@ const hasCover = !!post.cover
       'is-pinned': !!post.pinned,
     },
     className,
-  ]}>
+  ]}
+  data-tags={post.tags.map(t => toSlug(t)).join(',')}
+  data-category={post.category ? toSlug(post.category) : ''}
+  data-series={post.series ? toSlug(post.series) : ''}
+>
   <div
     class:list={[
       'post-card-content',
@@ -61,12 +65,12 @@ const hasCover = !!post.cover
       </span>
 
       {post.category && (
-        <a href={`/groups/${toSlug(post.category)}`} class="tsuki-meta-row tsuki-meta-link">
+        <span class="tsuki-meta-row">
           <span class="tsuki-meta-icon-badge">
             <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
           </span>
-          <span class="tsuki-meta-text">{post.category}</span>
-        </a>
+          <a href={`/posts?category=${toSlug(post.category)}`} class="tsuki-meta-text meta-link">{post.category}</a>
+        </span>
       )}
 
       {post.series && (
@@ -74,7 +78,7 @@ const hasCover = !!post.cover
           <span class="tsuki-meta-icon-badge">
             <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
           </span>
-          <span class="tsuki-meta-text">{post.series}</span>
+          <a href={`/posts?series=${toSlug(post.series)}`} class="tsuki-meta-text meta-link">{post.series}</a>
         </span>
       )}
 
@@ -92,7 +96,7 @@ const hasCover = !!post.cover
 
     <div class="tag-list">
       {post.tags.map(tag => (
-        <a href={`/tags/${tag.toLowerCase()}`} class="tsuki-tag-pill tag-item">
+        <a href={`/posts?tag=${toSlug(tag)}`} class="tsuki-tag-pill tag-item">
           {tag}
         </a>
       ))}
@@ -281,6 +285,15 @@ const hasCover = !!post.cover
 
   .tag-item {
     font-size: var(--tsuki-text-sm-compact);
+  }
+
+  .meta-link {
+    text-decoration: none;
+    color: var(--tsuki-post-meta-fg);
+    transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .meta-link:hover {
+    color: var(--tsuki-theme-accent);
   }
 
   .post-card-image {

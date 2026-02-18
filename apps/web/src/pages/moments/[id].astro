@@ -6,7 +6,6 @@ import { Icon } from 'astro-icon/components'
 import { createAppContext } from '@entry/index'
 import { getMomentDetail, getMomentEntries } from '@usecases/content'
 import { filterSafeMedia } from '@atoms/moment-cards'
-import { toSlug } from '@atoms/post-cards'
 
 export const prerender = true
 
@@ -38,12 +37,12 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
           </span>
 
           {moment.frontmatter.category && (
-            <a href={`/groups/${toSlug(moment.frontmatter.category)}`} class="tsuki-meta-row tsuki-meta-link">
+            <span class="tsuki-meta-row">
               <span class="tsuki-meta-icon-badge">
                 <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
               </span>
               <span class="tsuki-meta-text">{moment.frontmatter.category}</span>
-            </a>
+            </span>
           )}
 
           {moment.frontmatter.series && (
@@ -65,7 +64,7 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
               <span class="tsuki-meta-text tag-inline-text">
                 {moment.frontmatter.tags.map((tag, i) => (
                   <>
-                    <a href={`/tags/${tag.toLowerCase()}`} class="tag-inline-link">{tag}</a>{i < (moment.frontmatter.tags?.length ?? 0) - 1 && <span class="tag-sep">/</span>}
+                    <span class="tag-inline-label">{tag}</span>{i < (moment.frontmatter.tags?.length ?? 0) - 1 && <span class="tag-sep">/</span>}
                   </>
                 ))}
               </span>

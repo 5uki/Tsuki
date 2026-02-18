@@ -3,6 +3,7 @@ title: "深入理解现代前端架构设计"
 summary: "从组件化、状态管理到构建优化，全面剖析前端工程化的核心概念与最佳实践。"
 publishedAt: "2026-02-15"
 category: "前端开发"
+series: "前端工程化实战"
 tags: ["架构", "TypeScript", "性能优化", "组件化"]
 words: 2450
 ---

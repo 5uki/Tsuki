@@ -19,8 +19,6 @@ export default defineConfig({
     { label: '首页', href: '/', icon: navIcons.home },
     { label: '文章', href: '/posts', icon: navIcons.posts },
     { label: '动态', href: '/moments', icon: navIcons.moments },
-    { label: '标签', href: '/tags', icon: navIcons.tags },
-    { label: '分组', href: '/groups', icon: navIcons.groups },
   ],
   profile: {
     avatar: '/avatar.png',

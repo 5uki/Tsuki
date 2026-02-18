@@ -3,6 +3,7 @@ title: "TypeScript 业务建模笔记"
 summary: "总结 TypeScript 项目中的最佳实践，包括类型设计、错误处理和性能优化技巧。"
 publishedAt: "2026-02-08"
 category: "工程实践"
+series: "前端工程化实战"
 tags: ["TypeScript", "工程化"]
 words: 1530
 ---

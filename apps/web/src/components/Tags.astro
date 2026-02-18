@@ -1,5 +1,6 @@
 ---
 import type { SidebarCountItem } from '@contracts/content'
+import { toSlug } from '@atoms/post-cards'
 
 interface Props {
   tags: SidebarCountItem[]
@@ -17,7 +18,7 @@ const hasMore = tags.length > SHOW_MORE_THRESHOLD
   <div class:list={['tag-list', { 'tag-list-collapsed': hasMore }]} data-tag-list>
     {tags.length > 0 ? (
       tags.map((tag) => (
-        <a href={`/tags/${tag.slug}`} class="tsuki-tag-pill">
+        <a href={`/posts?tag=${toSlug(tag.name)}`} class="tsuki-tag-pill">
           {tag.name}
         </a>
       ))

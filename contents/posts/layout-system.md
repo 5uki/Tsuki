@@ -3,6 +3,7 @@ title: "三栏布局与侧边栏联动设计"
 summary: "深入了解 Firefly 的布局系统，包括侧边栏布局、文章列表布局，以及移动端适配策略。"
 publishedAt: "2026-02-03"
 category: "博客指南"
+series: "Firefly 建站教程"
 tags: ["Firefly", "布局", "博客", "使用指南"]
 words: 2075
 cover: "/background.png"
