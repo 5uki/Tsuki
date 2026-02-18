@@ -62,4 +62,22 @@ export interface SidebarData {
   stats: SidebarStats
   categories: SidebarCountItem[]
   tags: SidebarCountItem[]
+  series: SidebarCountItem[]
+}
+
+export interface CalendarArticle {
+  slug: string
+  title: string
+  day: number
+}
+
+export interface CalendarData {
+  year: number
+  month: number
+  articles: CalendarArticle[]
+}
+
+/** 所有文章的发布日期映射，用于日历客户端切换月份 */
+export interface CalendarIndex {
+  [yearMonth: string]: CalendarArticle[]
 }

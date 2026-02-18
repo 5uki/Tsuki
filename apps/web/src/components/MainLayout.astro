@@ -3,34 +3,31 @@ import Profile from './Profile.astro'
 import Announcement from './Announcement.astro'
 import Categories from './Categories.astro'
 import Tags from './Tags.astro'
+import Series from './Series.astro'
 import type { SidebarData } from '@contracts/content'
 
 interface Props {
   class?: string
   sidebarData?: SidebarData
-  hasRightSidebar?: boolean
 }
 
-const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
+const { class: className, sidebarData } = Astro.props
 ---
 
-<div
-  class:list={['tsuki-main-grid', { 'has-right-sidebar': hasRightSidebar }, className]}
->
-  <aside class="left-sidebar" transition:name="tsuki-sidebar" transition:animate="none">
+<div class:list={['tsuki-main-grid', className]}>
+  <aside class="left-sidebar">
     <Profile stats={sidebarData?.stats} />
     <Announcement />
     <Categories categories={sidebarData?.categories ?? []} />
     <Tags tags={sidebarData?.tags ?? []} />
+    <Series series={sidebarData?.series ?? []} />
   </aside>
   <main class="main-content">
     <slot />
   </main>
-  {hasRightSidebar && (
-    <aside class="right-sidebar" transition:name="tsuki-right-sidebar">
-      <slot name="right" />
-    </aside>
-  )}
+  <aside class="right-sidebar">
+    <slot name="right" />
+  </aside>
 </div>
 
 <style>
@@ -40,14 +37,11 @@ const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
     align-items: start;
     gap: var(--tsuki-sidebar-gap-compact);
   }
+
   @media (min-width: 768px) {
     .tsuki-main-grid {
       gap: var(--tsuki-sidebar-gap);
-      padding-inline: var(--tsuki-page-inline-padding);
-      grid-template-columns: minmax(0, 1fr) minmax(0, 5fr);
-    }
-    .tsuki-main-grid.has-right-sidebar {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 4fr) minmax(0, 1fr);
+      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
     }
   }
 
@@ -60,12 +54,18 @@ const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
   @media (min-width: 768px) {
     .left-sidebar {
       order: 0;
+      grid-column: 2;
       gap: var(--tsuki-sidebar-gap);
     }
   }
 
   .main-content {
     min-width: 0;
+  }
+  @media (min-width: 768px) {
+    .main-content {
+      grid-column: 3;
+    }
   }
 
   .right-sidebar {
@@ -75,9 +75,8 @@ const { class: className, sidebarData, hasRightSidebar = false } = Astro.props
   }
   @media (min-width: 768px) {
     .right-sidebar {
-      position: sticky;
-      top: 1.5rem;
-      align-self: start;
+      grid-column: 4;
+      align-self: stretch;
       gap: var(--tsuki-sidebar-gap);
     }
   }

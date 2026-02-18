@@ -9,7 +9,7 @@ const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
 ---
 
-<header class="header" transition:name="tsuki-header" transition:animate="none">
+<header class="header">
   <div class="header-inner">
     <div class="header-track">
       <div class="header-pill header-brand">
@@ -62,8 +62,8 @@ const siteTitle = tsukiConfig.site.title
       </div>
 
       <a href="/login" class="login-btn">
-        <span set:html={uiIcons.githubLogin} />
-        <span>登录</span>
+        <span class="login-icon" set:html={uiIcons.githubLogin} />
+        <span class="login-text">登录</span>
       </a>
 
       <div class="mobile-menu-switcher">
@@ -100,7 +100,7 @@ const siteTitle = tsukiConfig.site.title
   function bindHeaderInteractions() {
     const header = document.querySelector<HTMLElement>('.header')
     const headerTrack = document.querySelector<HTMLElement>('.header-track')
-    const main = document.querySelector<HTMLElement>('main')
+    const banner = document.querySelector<HTMLElement>('.tsuki-banner')
     const toggle = document.getElementById('theme-toggle')
     const dropdown = document.getElementById('theme-dropdown')
     const themeOptions = document.querySelectorAll<HTMLButtonElement>('.theme-option')
@@ -111,7 +111,6 @@ const siteTitle = tsukiConfig.site.title
       return () => {}
     }
     const headerEl = header
-    const headerTrackEl = headerTrack
 
     const controller = new AbortController()
     const signal = controller.signal
@@ -153,19 +152,18 @@ const siteTitle = tsukiConfig.site.title
     }
 
     function updateHeaderState() {
-      const isScrolled = window.scrollY > 8
+      const scrollTop = window.scrollY
+      const isScrolled = scrollTop > 8
       headerEl.classList.toggle('scrolled', isScrolled)
 
-      if (!main) return
-      const mainTop = main.getBoundingClientRect().top
-      const headerHeight = headerEl.getBoundingClientRect().height
-      const trackHeight = headerTrackEl.getBoundingClientRect().height || headerHeight
-      const collapseOffset = Math.ceil(headerHeight + 24)
-      headerEl.style.setProperty('--tsuki-header-collapse-offset', `-${collapseOffset}px`)
-      const collapseTriggerPx = Math.round(trackHeight - 19)
-      const approachTriggerPx = collapseTriggerPx + 10
-      const inMain = mainTop <= collapseTriggerPx
-      const inMainApproach = mainTop <= approachTriggerPx
+      if (!banner) return
+
+      // 与 Firefly 一致：用绝对滚动位置判断，不用 getBoundingClientRect
+      // threshold = banner 高度 - 88px（navbar 高度余量）
+      const threshold = banner.offsetHeight - 88
+
+      const inMain = scrollTop >= threshold
+      const inMainApproach = scrollTop >= threshold - 40
       headerEl.classList.toggle('in-main-approach', inMainApproach)
       headerEl.classList.toggle('in-main', inMain)
       if (inMainApproach) {
@@ -239,13 +237,16 @@ const siteTitle = tsukiConfig.site.title
     border-bottom: none;
     --tsuki-header-collapse-offset: -78px;
     --tsuki-header-track-duration: 220ms;
-    transition: background-color 150ms;
+    transition: background-color 150ms,
+                opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .header-inner {
     width: 100%;
     margin: 0 auto;
-    padding: var(--tsuki-header-inner-padding-block) var(--tsuki-page-inline-padding);
+    padding-block: var(--tsuki-header-inner-padding-block);
+    padding-inline: 0;
     position: relative;
   }
 
@@ -261,10 +262,7 @@ const siteTitle = tsukiConfig.site.title
         var(--tsuki-header-frame-top-overflow)
       )
     );
-    margin-inline: calc(
-      var(--tsuki-main-inline-padding) +
-      var(--tsuki-header-card-align-offset)
-    );
+    margin-inline: calc((100% + 3 * var(--tsuki-sidebar-gap)) / 7);
     padding: calc(
       var(--tsuki-header-frame-top-gap) +
       var(--tsuki-header-frame-top-overflow)
@@ -335,13 +333,14 @@ const siteTitle = tsukiConfig.site.title
     transition: transform 220ms ease-out;
   }
 
-  .header.in-main .header-track {
-    --tsuki-header-track-shift-y: var(--tsuki-header-collapse-offset);
-    pointer-events: auto;
+  .header.in-main {
+    opacity: 0;
+    transform: translateY(-4rem);
+    pointer-events: none;
   }
 
-  .header.in-main-approach .header-track {
-    pointer-events: auto;
+  .header.in-main-approach {
+    /* 仅用于关闭菜单，无视觉变化 */
   }
 
   .header.in-main .theme-dropdown,
@@ -457,6 +456,12 @@ const siteTitle = tsukiConfig.site.title
     color: var(--tsuki-fg);
     transition: all 150ms;
     text-decoration: none;
+  }
+
+  .action-btn > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .logo,
@@ -621,6 +626,12 @@ const siteTitle = tsukiConfig.site.title
     border: 1px solid var(--tsuki-login-border);
   }
 
+  .login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .login-btn:hover {
     opacity: 0.9;
     text-decoration: none;
@@ -766,7 +777,7 @@ const siteTitle = tsukiConfig.site.title
       color: var(--tsuki-fg);
     }
 
-    .login-btn span {
+    .login-btn .login-text {
       display: none;
     }
 

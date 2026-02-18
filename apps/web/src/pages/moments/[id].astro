@@ -24,7 +24,7 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
 
 <Default title={moment ? moment.frontmatter.title : '动态'} description="动态详情">
   {moment ? (
-    <article class="tsuki-content-card" transition:name="page-card">
+    <article class="tsuki-content-card">
       <header class="moment-header">
         <h1 class="moment-detail-title">
           {moment.frontmatter.title}
@@ -57,12 +57,19 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
         </div>
 
         {moment.frontmatter.tags && moment.frontmatter.tags.length > 0 && (
-          <div class="tag-list">
-            {moment.frontmatter.tags.map(tag => (
-              <a href={`/tags/${tag.toLowerCase()}`} class="tsuki-tag-pill tag-item">
-                {tag}
-              </a>
-            ))}
+          <div class="moment-meta" style="margin-top: var(--tsuki-space-0-5);">
+            <span class="tsuki-meta-row">
+              <span class="tsuki-meta-icon-badge">
+                <span class="tag-hash-badge">#</span>
+              </span>
+              <span class="tsuki-meta-text tag-inline-text">
+                {moment.frontmatter.tags.map((tag, i) => (
+                  <>
+                    <a href={`/tags/${tag.toLowerCase()}`} class="tag-inline-link">{tag}</a>{i < (moment.frontmatter.tags?.length ?? 0) - 1 && <span class="tag-sep">/</span>}
+                  </>
+                ))}
+              </span>
+            </span>
           </div>
         )}
       </header>
@@ -130,15 +137,26 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
     color: var(--tsuki-theme-accent);
   }
 
-  .tag-list {
-    display: flex;
+  .tag-inline-text {
+    display: inline-flex;
     flex-wrap: wrap;
-    gap: var(--tsuki-space-0-5);
-    margin-top: var(--tsuki-space-0-75);
+    align-items: center;
+    gap: var(--tsuki-space-0-2);
+    white-space: normal;
   }
 
-  .tag-item {
-    font-size: var(--tsuki-text-sm-compact);
+  .tag-inline-link {
+    color: var(--tsuki-fg);
+    text-decoration: none;
+    transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .tag-inline-link:hover {
+    color: var(--tsuki-theme-accent);
+  }
+
+  .tag-sep {
+    color: var(--tsuki-post-muted-fg);
+    margin-inline: var(--tsuki-space-0-15);
   }
 
   .moment-images {

@@ -1,8 +1,7 @@
-﻿---
+---
 import '@/styles/global.css'
 import tsukiConfig from '@/config/tsuki-config'
 import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
-import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
   title: string
@@ -42,7 +41,6 @@ if (!isHome) {
   bodyVars.push('--tsuki-banner-height: var(--tsuki-banner-height-compact);')
 }
 const bodyStyle = bodyVars.length > 0 ? bodyVars.join(' ') : undefined
-const bannerImageVar = topBgImageHref ? `url('${topBgImageHref}')` : 'none'
 
 // 主题列表用于验证
 const VALID_THEMES = ['mauve']
@@ -59,9 +57,9 @@ const VALID_THEMES = ['mauve']
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
     <link rel="icon" href={faviconHref} type={faviconType} />
     <link rel="apple-touch-icon" href={faviconHref} />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
     <title>{title}</title>
-    <ViewTransitions />
-    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES, bannerImageVar: bannerImageVar }}>
+    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
       // 主题初始化：内联脚本确保在渲染前执行
       (function() {
         const storageKey = 'tsuki.theme'
@@ -79,157 +77,31 @@ const VALID_THEMES = ['mauve']
           theme = defaultTheme
         }
         document.documentElement.setAttribute('data-theme', theme)
-
-        // 保存 banner 图片配置供 SPA 切换使用
-        window.__tsukiBannerImage = bannerImageVar
       })()
     </script>
-    <script type="module" is:inline>
-      // SPA 切换前：将新页面的 body style 提前应用，确保 View Transition 能正确计算起止状态
-      if (!window.__tsukiSwapBound) {
-        // 跟踪 popstate（浏览器回退/前进）
-        var __tsukiIsPopstate = false
-        window.addEventListener('popstate', function() { __tsukiIsPopstate = true })
-
-        document.addEventListener('astro:before-swap', (event) => {
-          // 将当前页面的主题传递到新页面
-          const currentTheme = document.documentElement.getAttribute('data-theme')
-          if (currentTheme) {
-            event.newDocument.documentElement.setAttribute('data-theme', currentTheme)
-          }
-
-          var oldHasCompact = !!document.body.style.getPropertyValue('--tsuki-banner-height')
-          var newBody = event.newDocument.body
-          var newHasCompact = !!newBody.style.getPropertyValue('--tsuki-banner-height')
-          var sameHeight = oldHasCompact === newHasCompact
-
-          if (__tsukiIsPopstate || sameHeight) {
-            // 回退/前进 或 高度不变：不做动画，直接设置目标高度
-            newBody.dataset.tsukiBannerSkipAnim = '1'
-          } else {
-            // 正向导航且高度变化：先用旧高度启动，再过渡
-            newBody.dataset.tsukiBannerTarget = newHasCompact ? '1' : '0'
-            if (oldHasCompact) {
-              newBody.style.setProperty('--tsuki-banner-height', 'var(--tsuki-banner-height-compact)')
-            } else {
-              newBody.style.removeProperty('--tsuki-banner-height')
-            }
-          }
-        })
-
-        document.addEventListener('astro:after-swap', function() {
-          var skipAnim = document.body.dataset.tsukiBannerSkipAnim
-          var target = document.body.dataset.tsukiBannerTarget
-
-          delete document.body.dataset.tsukiBannerSkipAnim
-          delete document.body.dataset.tsukiBannerTarget
-
-          if (skipAnim) {
-            // 跳过动画：banner 立即到位
-            var banner = document.querySelector('.tsuki-banner')
-            if (banner) {
-              banner.style.transition = 'none'
-              requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                  banner.style.transition = ''
-                })
-              })
-            }
-            // 恢复回退前保存的滚动位置
-            var savedY = history.state && history.state.__tsukiScrollY
-            if (savedY !== undefined && savedY > 0) {
-              requestAnimationFrame(function() {
-                window.scrollTo(0, savedY)
-              })
-            }
-          } else if (target !== undefined) {
-            // 正向导航：触发 CSS transition
-            requestAnimationFrame(function() {
-              if (target === '1') {
-                document.body.style.setProperty('--tsuki-banner-height', 'var(--tsuki-banner-height-compact)')
-              } else {
-                document.body.style.removeProperty('--tsuki-banner-height')
-              }
-            })
-          }
-
-          __tsukiIsPopstate = false
-        })
-
-        window.__tsukiSwapBound = true
-      }
-    </script>
-    <script type="module" is:inline>
-      import { navigate } from 'astro:transitions/client'
-
-      if (!window.__tsukiTopFirstNavBound) {
-        document.addEventListener('click', (event) => {
-          if (event.defaultPrevented) return
-          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-
-          const link = event.target instanceof Element ? event.target.closest('a[href]') : null
-          if (!link) return
-          if (link.target === '_blank' || link.hasAttribute('download') || link.hasAttribute('data-astro-reload')) return
-
-          const url = new URL(link.href, location.href)
-          if (url.origin !== location.origin) return
-          if (url.pathname === location.pathname && url.search === location.search && url.hash) return
-
-          event.preventDefault()
-
-          // 保存当前滚动位置到 history，回退时可恢复
-          try {
-            var s = history.state || {}
-            history.replaceState(Object.assign({}, s, { __tsukiScrollY: scrollY }), '')
-          } catch (e) { void e }
-
-          // 卡片 morph：在被点击的卡片上设置 view-transition-name
-          var card = link.closest('[data-vt-card]')
-          if (card) {
-            // 清除其他卡片残留的 transition name
-            document.querySelectorAll('[data-vt-card]').forEach(function(el) {
-              el.style.viewTransitionName = ''
-            })
-            card.style.viewTransitionName = 'page-card'
-            // 卡片过渡由 View Transition 处理位移，不手动 scrollTo
-          } else {
-            // 普通导航：快速平滑滚动到顶部
-            if (scrollY > 0) {
-              document.documentElement.style.scrollBehavior = 'smooth'
-              scrollTo(0, 0)
-              // 短暂后恢复，避免影响其他滚动
-              setTimeout(function() {
-                document.documentElement.style.scrollBehavior = ''
-              }, 300)
-            }
-          }
-
-          navigate(url.pathname + url.search + url.hash)
-        }, { capture: true })
-
-        window.__tsukiTopFirstNavBound = true
-      }
-    </script>
-    <script is:inline>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        },
-      };
-    </script>
-    <script
-      is:inline
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-      async
-    ></script>
     <script>
-      document.addEventListener('astro:page-load', () => {
-        const MJ = (window as any).MathJax;
-        if (MJ?.typesetPromise) {
-          MJ.typesetPromise().catch(() => {});
+      // Swup 页面切换后更新 banner 高度和内容可见性
+      function updateBannerHeight() {
+        const isHome = window.location.pathname === '/'
+        if (isHome) {
+          document.body.style.removeProperty('--tsuki-banner-height')
+        } else {
+          document.body.style.setProperty('--tsuki-banner-height', 'var(--tsuki-banner-height-compact)')
         }
-      });
+
+        // Banner 不在 swup 容器内，需要 JS 同步内容状态
+        const bannerContent = document.querySelector('.tsuki-banner-content')
+        if (bannerContent) {
+          if (isHome) {
+            bannerContent.setAttribute('data-home', '')
+          } else {
+            bannerContent.removeAttribute('data-home')
+          }
+        }
+      }
+
+      // 首次加载和每次 swup 导航后触发
+      document.addEventListener('astro:page-load', updateBannerHeight)
     </script>
   </head>
   <body style={bodyStyle} data-is-home={isHome ? '' : undefined}>

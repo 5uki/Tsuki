@@ -5,52 +5,68 @@ import Banner from '@/components/Banner.astro'
 import Footer from '@/components/Footer.astro'
 import BackToTop from '@/components/BackToTop.astro'
 import MainLayout from '@/components/MainLayout.astro'
+import MusicCard from '@/components/MusicCard.astro'
+import CalendarCard from '@/components/CalendarCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
 import { createAppContext } from '@entry/index'
-import { getSidebarData } from '@usecases/content'
+import { getSidebarData, getCalendarDataForCurrentMonth, getCalendarIndex } from '@usecases/content'
 
 interface Props {
   title?: string
   description?: string
   noindex?: boolean
   withSidebar?: boolean
-  hasRightSidebar?: boolean
 }
 
 const siteTitle = tsukiConfig.site.title
 const rawTitle = Astro.props.title?.trim()
 const title = rawTitle ? `${rawTitle} - ${siteTitle}` : siteTitle
 const description = Astro.props.description ?? tsukiConfig.site.description
-const { noindex, hasRightSidebar = false } = Astro.props
+const { noindex } = Astro.props
 
 const withSidebar = Astro.props.withSidebar ?? true
 const ctx = createAppContext()
 const sidebarData = withSidebar ? await getSidebarData(ctx) : null
 
+const hasCustomRight = Astro.slots.has('right')
 let rightHtml: string | null = null
-if (hasRightSidebar && Astro.slots.has('right')) {
+if (hasCustomRight) {
   rightHtml = await Astro.slots.render('right')
 }
+
+const calendarData = withSidebar && !hasCustomRight ? await getCalendarDataForCurrentMonth(ctx) : null
+const calendarIndex = withSidebar && !hasCustomRight ? await getCalendarIndex(ctx) : null
 ---
 
 <Base title={title} description={description} noindex={noindex}>
   <div class="page-shell">
     <Header />
     <Banner />
-    <div class="page-body">
-      <main class="page-main">
-        {withSidebar ? (
-          <MainLayout sidebarData={sidebarData || undefined} hasRightSidebar={!!rightHtml}>
+    <div id="swup" class="transition-main">
+      <div class="page-body transition-leaving">
+        <main class="page-main">
+          {withSidebar ? (
+            <MainLayout sidebarData={sidebarData || undefined}>
+              <slot />
+              <Fragment slot="right">
+                <MusicCard />
+                {rightHtml ? (
+                  <div class="right-sticky-zone">
+                    <Fragment set:html={rightHtml} />
+                  </div>
+                ) : (
+                  calendarData && calendarIndex && (
+                    <CalendarCard calendarData={calendarData} calendarIndex={calendarIndex} />
+                  )
+                )}
+              </Fragment>
+            </MainLayout>
+          ) : (
             <slot />
-            {rightHtml && (
-              <Fragment slot="right" set:html={rightHtml} />
-            )}
-          </MainLayout>
-        ) : (
-          <slot />
-        )}
-      </main>
-      <Footer />
+          )}
+        </main>
+        <Footer />
+      </div>
     </div>
     <BackToTop />
   </div>
@@ -79,6 +95,13 @@ if (hasRightSidebar && Astro.slots.has('right')) {
   @media (min-width: 768px) {
     .page-main {
       padding-inline: 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .right-sticky-zone {
+      position: sticky;
+      top: 1.5rem;
     }
   }
 </style>

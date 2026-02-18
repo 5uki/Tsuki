@@ -248,6 +248,12 @@ const headingsWithNumber = displayHeadings.map((heading) => {
         activeIds.push(lastAboveId)
       }
 
+      // 页面顶部且无激活标题时，默认高亮第一个标题
+      if (activeIds.length === 0 && window.scrollY < 10 && headingEls.length > 0) {
+        var firstId = headingEls[0].id
+        if (firstId) activeIds.push(firstId)
+      }
+
       tocLinks.forEach(function(link) {
         var id = link.getAttribute('data-heading-id')
         link.classList.toggle('toc-active', id !== null && activeIds.indexOf(id) !== -1)
@@ -316,7 +322,13 @@ const headingsWithNumber = displayHeadings.map((heading) => {
     }
 
     update()
-    requestAnimationFrame(function() { requestAnimationFrame(update) })
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        update()
+        // 延迟重试，处理复杂页面布局延迟完成的情况
+        setTimeout(update, 200)
+      })
+    })
   }
 
   // 立即执行：处理首次加载和 is:inline 重新执行的情况

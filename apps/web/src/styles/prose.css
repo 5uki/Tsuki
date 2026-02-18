@@ -67,10 +67,6 @@
 
 .prose pre {
   margin: var(--tsuki-space-1-5) 0;
-  padding: var(--tsuki-space-1);
-  background: var(--tsuki-surface-muted-light);
-  border-radius: var(--tsuki-radius-md);
-  overflow-x: auto;
 }
 
 .prose code {
@@ -87,6 +83,8 @@
   background: transparent;
   border: 0;
   padding: 0;
+  font-size: inherit;
+  color: inherit;
 }
 
 .prose img {

@@ -2,36 +2,36 @@
 import type { SidebarCountItem } from '@contracts/content'
 
 interface Props {
-  categories: SidebarCountItem[]
+  series: SidebarCountItem[]
 }
 
-const { categories } = Astro.props
+const { series } = Astro.props
 const VISIBLE_COUNT = 3
-const hasMore = categories.length > VISIBLE_COUNT
+const hasMore = series.length > VISIBLE_COUNT
 ---
 
 <div class="tsuki-sidebar-card">
   <h3 class="tsuki-section-title">
-    分类
+    系列
   </h3>
-  <div class="category-list" data-category-list>
-    {categories.length > 0 ? (
-      categories.map((category, index) => (
+  <div class="series-list" data-series-list>
+    {series.length > 0 ? (
+      series.map((item, index) => (
         <a
-          href={`/groups/${category.slug}`}
-          class:list={['category-item', { 'category-hidden': hasMore && index >= VISIBLE_COUNT }]}
+          href={`/series/${item.slug}`}
+          class:list={['series-item', { 'series-hidden': hasMore && index >= VISIBLE_COUNT }]}
         >
-          <span class="category-name">
-            {category.name}
+          <span class="series-name">
+            {item.name}
           </span>
-          <span class="category-count">
-            {category.count}
+          <span class="series-count">
+            {item.count}
           </span>
         </a>
       ))
     ) : (
       <span class="empty-text">
-        暂无分类
+        暂无系列
       </span>
     )}
   </div>
@@ -43,8 +43,8 @@ const hasMore = categories.length > VISIBLE_COUNT
 </div>
 
 <script>
-  function initCategoryToggle() {
-    document.querySelectorAll<HTMLElement>('[data-category-list]').forEach((list) => {
+  function initSeriesToggle() {
+    document.querySelectorAll<HTMLElement>('[data-series-list]').forEach((list) => {
       const card = list.closest('.tsuki-sidebar-card')
       if (!card) return
       const btn = card.querySelector<HTMLButtonElement>('[data-toggle-more]')
@@ -54,25 +54,25 @@ const hasMore = categories.length > VISIBLE_COUNT
         const expanded = btn.getAttribute('aria-expanded') === 'true'
         btn.setAttribute('aria-expanded', String(!expanded))
         btn.textContent = expanded ? '··· 更多' : '收起'
-        list.querySelectorAll<HTMLElement>('.category-hidden').forEach((el) => {
+        list.querySelectorAll<HTMLElement>('.series-hidden').forEach((el) => {
           el.style.display = expanded ? 'none' : 'flex'
         })
       })
     })
   }
 
-  initCategoryToggle()
-  document.addEventListener('astro:page-load', initCategoryToggle)
+  initSeriesToggle()
+  document.addEventListener('astro:page-load', initSeriesToggle)
 </script>
 
 <style>
-  .category-list {
+  .series-list {
     display: flex;
     flex-direction: column;
     gap: var(--tsuki-space-0-5);
   }
 
-  .category-item {
+  .series-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -86,27 +86,27 @@ const hasMore = categories.length > VISIBLE_COUNT
                 border-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
                 transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
-  .category-item:hover {
+  .series-item:hover {
     transform: translateY(var(--tsuki-translate-1px));
     border-color: var(--tsuki-theme-accent);
     background: var(--tsuki-surface-muted-strong);
   }
 
-  .category-hidden {
+  .series-hidden {
     display: none;
   }
 
-  .category-name {
+  .series-name {
     font-size: var(--tsuki-sidebar-body-text-size);
     font-weight: 500;
   }
   @media (min-width: 640px) {
-    .category-name {
+    .series-name {
       font-size: var(--tsuki-sidebar-body-text-size-desktop);
     }
   }
 
-  .category-count {
+  .series-count {
     border-radius: var(--tsuki-radius-sm-2);
     background: var(--tsuki-theme-secondary);
     padding: var(--tsuki-space-0-125) var(--tsuki-space-0-5);
@@ -114,7 +114,7 @@ const hasMore = categories.length > VISIBLE_COUNT
     color: var(--tsuki-fg);
   }
   @media (min-width: 640px) {
-    .category-count {
+    .series-count {
       font-size: var(--tsuki-text-2xs);
     }
   }

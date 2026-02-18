@@ -6,13 +6,15 @@ interface Props {
 }
 
 const { tags } = Astro.props
+const SHOW_MORE_THRESHOLD = 8
+const hasMore = tags.length > SHOW_MORE_THRESHOLD
 ---
 
 <div class="tsuki-sidebar-card">
   <h3 class="tsuki-section-title">
     标签
   </h3>
-  <div class="tag-list">
+  <div class:list={['tag-list', { 'tag-list-collapsed': hasMore }]} data-tag-list>
     {tags.length > 0 ? (
       tags.map((tag) => (
         <a href={`/tags/${tag.slug}`} class="tsuki-tag-pill">
@@ -25,7 +27,71 @@ const { tags } = Astro.props
       </span>
     )}
   </div>
+  {hasMore && (
+    <button class="toggle-more-btn" data-tag-toggle aria-expanded="false">
+      ··· 更多
+    </button>
+  )}
 </div>
+
+<script>
+  function initTagToggle() {
+    document.querySelectorAll<HTMLElement>('[data-tag-list]').forEach((list) => {
+      const card = list.closest('.tsuki-sidebar-card')
+      if (!card) return
+      const btn = card.querySelector<HTMLButtonElement>('[data-tag-toggle]')
+      if (!btn) return
+
+      const pills = list.children
+      if (pills.length === 0) return
+
+      // 展开以测量真实布局
+      list.classList.remove('tag-list-collapsed')
+      list.style.maxHeight = 'none'
+
+      const listRect = list.getBoundingClientRect()
+      const rowTops: number[] = []
+      let prevTop = -1
+
+      for (let i = 0; i < pills.length; i++) {
+        const top = Math.round((pills[i] as HTMLElement).getBoundingClientRect().top - listRect.top)
+        if (top !== prevTop) {
+          rowTops.push(top)
+          prevTop = top
+        }
+      }
+
+      const MAX_ROWS = 3
+      if (rowTops.length <= MAX_ROWS) {
+        list.style.maxHeight = ''
+        btn.style.display = 'none'
+        return
+      }
+
+      // 精确截断到第 4 行顶部（= 第 3 行底部边界）
+      const collapsedHeight = rowTops[MAX_ROWS]
+      list.style.maxHeight = collapsedHeight + 'px'
+      list.classList.add('tag-list-collapsed')
+
+      let expanded = false
+      btn.addEventListener('click', () => {
+        expanded = !expanded
+        btn.setAttribute('aria-expanded', String(expanded))
+        btn.textContent = expanded ? '收起' : '··· 更多'
+        if (expanded) {
+          list.style.maxHeight = 'none'
+          list.classList.remove('tag-list-collapsed')
+        } else {
+          list.style.maxHeight = collapsedHeight + 'px'
+          list.classList.add('tag-list-collapsed')
+        }
+      })
+    })
+  }
+
+  initTagToggle()
+  document.addEventListener('astro:page-load', initTagToggle)
+</script>
 
 <style>
   .tag-list {
@@ -34,8 +100,30 @@ const { tags } = Astro.props
     gap: var(--tsuki-space-0-5);
   }
 
+  .tag-list-collapsed {
+    overflow: hidden;
+  }
+
   .empty-text {
     font-size: var(--tsuki-sidebar-body-text-size);
     color: var(--tsuki-post-muted-fg);
+  }
+
+  .toggle-more-btn {
+    display: block;
+    width: 100%;
+    margin-top: var(--tsuki-space-0-5);
+    padding: var(--tsuki-space-0-3) 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--tsuki-sidebar-body-text-size);
+    font-weight: 500;
+    color: var(--tsuki-theme-accent);
+    text-align: center;
+    transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .toggle-more-btn:hover {
+    opacity: 0.8;
   }
 </style>
