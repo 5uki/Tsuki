@@ -5,7 +5,6 @@ publishedAt: "2026-02-08"
 category: "工程实践"
 series: "前端工程化实战"
 tags: ["TypeScript", "工程化"]
-words: 1530
 ---
 
 ## 类型建模

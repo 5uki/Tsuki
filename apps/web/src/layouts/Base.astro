@@ -57,7 +57,9 @@ const VALID_THEMES = ['mauve']
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
     <link rel="icon" href={faviconHref} type={faviconType} />
     <link rel="apple-touch-icon" href={faviconHref} />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+    {topBgImageHref && <link rel="preload" href={topBgImageHref} as="image" fetchpriority="high" />}
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" /></noscript>
     <title>{title}</title>
     <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
       // 主题初始化：内联脚本确保在渲染前执行

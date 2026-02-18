@@ -5,7 +5,6 @@ publishedAt: "2026-02-15"
 category: "前端开发"
 series: "前端工程化实战"
 tags: ["架构", "TypeScript", "性能优化", "组件化"]
-words: 2450
 ---
 
 ## 组件化设计原则

@@ -11,7 +11,7 @@ export default defineConfig({
     titleHtml: '<span style="letter-spacing: -0.02em;">Tsuki</span>',
     subtitleHtml: '<span>一个认真写字的地方</span>',
     backgroundImage: {
-      href: '/background.png',
+      href: '/background.webp',
       positionY: 25,
     },
   },
@@ -21,7 +21,7 @@ export default defineConfig({
     { label: '动态', href: '/moments', icon: navIcons.moments },
   ],
   profile: {
-    avatar: '/avatar.png',
+    avatar: '/avatar.webp',
     avatarLink: '/about',
     name: 'Suki',
     bio: '热爱技术，喜欢分享',

@@ -61,7 +61,7 @@ const siteTitle = tsukiConfig.site.title
         </div>
       </div>
 
-      <a href="/login" class="login-btn">
+      <a href="/login" class="login-btn" aria-label="登录">
         <span class="login-icon" set:html={uiIcons.githubLogin} />
         <span class="login-text">登录</span>
       </a>
@@ -381,7 +381,7 @@ const siteTitle = tsukiConfig.site.title
   .logo-text {
     font-size: 1.375rem;
     font-weight: 700;
-    color: var(--tsuki-theme-accent);
+    color: var(--tsuki-accent-text);
     transition: color 150ms;
   }
 

@@ -1,5 +1,6 @@
 import { getCollection, getEntry, render } from 'astro:content'
 import type { PostEntry, PostContent, MomentEntry, MomentContent } from '@contracts/content'
+import { countWords } from '@atoms/word-count'
 
 export interface ContentAdapter {
   getPostEntries(): Promise<PostEntry[]>
@@ -15,6 +16,7 @@ export function createContentAdapter(): ContentAdapter {
       return entries.map(entry => ({
         slug: entry.id,
         frontmatter: entry.data,
+        words: countWords(entry.body ?? ''),
       }))
     },
 
@@ -25,6 +27,7 @@ export function createContentAdapter(): ContentAdapter {
       return {
         slug: entry.id,
         frontmatter: entry.data,
+        words: countWords(entry.body ?? ''),
         Content: rendered.Content,
         headings: rendered.headings,
       }

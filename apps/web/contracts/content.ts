@@ -7,7 +7,6 @@ export interface PostFrontmatter {
   category?: string
   series?: string
   tags: string[]
-  words: number
   cover?: string
   pinned?: boolean
 }
@@ -25,6 +24,7 @@ export interface MomentFrontmatter {
 export interface PostEntry {
   slug: string
   frontmatter: PostFrontmatter
+  words: number
 }
 
 /** 文章详情（含渲染后的内容和标题树） */

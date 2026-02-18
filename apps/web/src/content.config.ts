@@ -10,7 +10,6 @@ const posts = defineCollection({
     category: z.string().optional(),
     series: z.string().optional(),
     tags: z.array(z.string()),
-    words: z.number(),
     cover: z.string().optional(),
     pinned: z.boolean().optional(),
   }),

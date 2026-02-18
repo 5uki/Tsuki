@@ -110,6 +110,7 @@
 
   /* ── 基础色 ── */
   --tsuki-fg: #0b0b0b;
+  --tsuki-accent-text: var(--tsuki-theme-accent);
   --tsuki-color-on-primary: #ffffff;
   --tsuki-banner-mask-ink: #000;
   --tsuki-banner-mask-soft: rgba(0, 0, 0, 0.6);
@@ -278,10 +279,10 @@
   --tsuki-post-card-min-height: 12.8rem;
 
   /* Post 派生色 */
-  --tsuki-post-meta-fg: color-mix(in srgb, var(--tsuki-fg) 58%, transparent);
-  --tsuki-post-muted-fg: color-mix(in srgb, var(--tsuki-fg) 74%, transparent);
-  --tsuki-post-date-fg: color-mix(in srgb, var(--tsuki-fg) 60%, transparent);
-  --tsuki-post-title-fg: color-mix(in srgb, var(--tsuki-fg) 90%, transparent);
+  --tsuki-post-meta-fg: color-mix(in srgb, var(--tsuki-fg) 68%, white);
+  --tsuki-post-muted-fg: color-mix(in srgb, var(--tsuki-fg) 74%, white);
+  --tsuki-post-date-fg: color-mix(in srgb, var(--tsuki-fg) 68%, white);
+  --tsuki-post-title-fg: color-mix(in srgb, var(--tsuki-fg) 90%, white);
   --tsuki-post-pinned-bg: color-mix(in srgb, var(--tsuki-theme-accent) 20%, var(--tsuki-sidebar-card-bg));
 
   /* ── Surface 派生色 ── */
@@ -294,8 +295,8 @@
   --tsuki-surface-border-strong: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
   --tsuki-surface-divider: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   --tsuki-surface-divider-soft: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
-  --tsuki-surface-accent-soft: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
-  --tsuki-surface-accent-strong: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
+  --tsuki-surface-accent-soft: color-mix(in srgb, var(--tsuki-theme-accent) 8%, white);
+  --tsuki-surface-accent-strong: color-mix(in srgb, var(--tsuki-theme-accent) 10%, white);
 
   /* Prose 代码色 */
   --tsuki-prose-code-fg: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);

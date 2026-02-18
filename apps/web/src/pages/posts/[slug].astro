@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 const ctx = createAppContext()
 const post = await getPostDetail(ctx, slug)
-const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) : 0
+const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
 ---
 
 <Default title={post ? post.frontmatter.title : `文章: ${slug}`} description="文章详情">
@@ -57,7 +57,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.frontmatter.words / 300)) 
             <span class="tsuki-meta-icon-badge">
               <Icon name="material-symbols:article-outline-rounded" class="tsuki-meta-icon" />
             </span>
-            <span class="tsuki-meta-text">{post.frontmatter.words} 字</span>
+            <span class="tsuki-meta-text">{post.words} 字</span>
           </span>
 
           <span class="tsuki-meta-row">

@@ -5,9 +5,8 @@ publishedAt: "2026-02-01"
 category: "博客指南"
 series: "Firefly 建站教程"
 tags: ["Firefly", "博客", "Markdown", "使用指南"]
-words: 667
 pinned: true
-cover: "/background.png"
+cover: "/background.webp"
 ---
 
 ## 快速开始
@@ -24,7 +23,7 @@ export function hello(name: string) {
 
 你可以直接在文章里引用图片：
 
-![站点横幅](/background.png)
+![站点横幅](/background.webp)
 
 > 轻量但有章法，才是可维护的体验。
 

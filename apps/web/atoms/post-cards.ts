@@ -26,7 +26,7 @@ export function toPostCardItems(posts: PostEntry[]): PostCardItem[] {
       publishedAt: post.frontmatter.publishedAt,
       category: post.frontmatter.category,
       series: post.frontmatter.series,
-      words: post.frontmatter.words,
+      words: post.words,
       tags: post.frontmatter.tags,
       pinned: post.frontmatter.pinned,
       cover: post.frontmatter.cover,
