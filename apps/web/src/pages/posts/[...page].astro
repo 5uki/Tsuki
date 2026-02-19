@@ -1,17 +1,15 @@
 ---
 import type { GetStaticPathsOptions } from 'astro'
 import Default from '@/layouts/Default.astro'
-import PostCard from '@/components/PostCard.astro'
-import Pagination from '@/components/Pagination.astro'
-import { toPostCardItems } from '@atoms/post-cards'
-import { createAppContext } from '@entry/index'
-import { getPostEntries } from '@usecases/content'
+import PostCard from '@/components/content/PostCard.astro'
+import Pagination from '@/components/content/Pagination.astro'
+import { toPostCardItems } from '@/lib/utils/post-cards'
+import { getPostEntries } from '@/lib/content'
 
 export const prerender = true
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const ctx = createAppContext()
-  const posts = await getPostEntries(ctx)
+  const posts = await getPostEntries()
   const sorted = toPostCardItems(posts)
   return paginate(sorted, { pageSize: 10 })
 }
@@ -104,15 +102,15 @@ const { page } = Astro.props
 
 <style>
   .page-section {
-    margin-bottom: var(--tsuki-space-2);
+    margin-bottom: var(--tsuki-space-3xl);
   }
 
   .filter-bar {
     display: none;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--tsuki-space-1);
-    padding: var(--tsuki-space-0-6) var(--tsuki-space-1);
+    margin-bottom: var(--tsuki-space-lg);
+    padding: var(--tsuki-space-sm) var(--tsuki-space-lg);
     border-radius: var(--tsuki-radius-md);
     border: 1px solid var(--tsuki-theme-accent);
     background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
@@ -131,7 +129,7 @@ const { page } = Astro.props
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--tsuki-post-muted-fg);
+    color: var(--tsuki-muted-fg);
     text-decoration: none;
     transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }

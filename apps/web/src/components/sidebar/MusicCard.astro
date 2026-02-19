@@ -1,0 +1,185 @@
+---
+// MusicCard - 音乐播放器占位卡片（静态展示）
+---
+
+<div class="tsuki-sidebar-card music-card">
+  <h3 class="tsuki-section-title">
+    音乐
+  </h3>
+
+  <div class="music-info">
+    <div class="album-art">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="album-placeholder-icon">
+        <circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="1" opacity="0.3" />
+        <circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="1" opacity="0.3" />
+        <circle cx="24" cy="24" r="2" fill="currentColor" opacity="0.4" />
+      </svg>
+    </div>
+    <div class="music-meta">
+      <span class="song-title">九张机</span>
+      <span class="song-artist">叶炫清</span>
+    </div>
+  </div>
+
+  <div class="music-progress">
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="progress-time">
+      <span>0:00</span>
+      <span>0:00</span>
+    </div>
+  </div>
+
+  <div class="music-controls">
+    <button class="control-btn" aria-label="随机播放" disabled>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+        <path d="M2 5h4l3 5-3 5H2" /><path d="M18 5h-4l-3 5 3 5h4" /><path d="M15 2l3 3-3 3" /><path d="M15 12l3 3-3 3" />
+      </svg>
+    </button>
+    <button class="control-btn" aria-label="上一首" disabled>
+      <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+        <path d="M4 4h2v12H4V4zm4 6l8-6v12l-8-6z" />
+      </svg>
+    </button>
+    <button class="control-btn play-btn" aria-label="播放" disabled>
+      <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+        <path d="M6 4l10 6-10 6V4z" />
+      </svg>
+    </button>
+    <button class="control-btn" aria-label="下一首" disabled>
+      <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+        <path d="M14 4h2v12h-2V4zm-4 6L2 4v12l8-6z" />
+      </svg>
+    </button>
+    <button class="control-btn" aria-label="播放列表" disabled>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" width="16" height="16">
+        <path d="M3 4h10M3 8h10M3 12h7M14 10l4 3-4 3v-6z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .music-card {
+    padding: var(--tsuki-sidebar-card-padding) var(--tsuki-sidebar-card-padding-inline);
+  }
+  @media (min-width: 640px) {
+    .music-card {
+      padding: var(--tsuki-sidebar-card-padding-compact) var(--tsuki-sidebar-card-padding-inline-compact);
+    }
+  }
+
+  .music-info {
+    display: flex;
+    align-items: center;
+    gap: var(--tsuki-space-md);
+    margin-bottom: var(--tsuki-space-md);
+  }
+
+  .album-art {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--tsuki-surface-muted-soft);
+    border: 1px solid var(--tsuki-surface-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tsuki-muted-fg);
+  }
+
+  .album-placeholder-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .music-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-space-3xs);
+    min-width: 0;
+  }
+
+  .song-title {
+    font-size: var(--tsuki-sidebar-body-text-size);
+    font-weight: 600;
+    color: var(--tsuki-fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (min-width: 640px) {
+    .song-title {
+      font-size: var(--tsuki-sidebar-body-text-size-desktop);
+    }
+  }
+
+  .song-artist {
+    font-size: var(--tsuki-text-xs);
+    color: var(--tsuki-muted-fg);
+  }
+  @media (min-width: 640px) {
+    .song-artist {
+      font-size: var(--tsuki-text-2xs);
+    }
+  }
+
+  .music-progress {
+    margin-bottom: var(--tsuki-space-sm);
+  }
+
+  .progress-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--tsuki-surface-muted-strong);
+    overflow: hidden;
+    margin-bottom: var(--tsuki-space-2xs);
+  }
+
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--tsuki-theme-accent);
+  }
+
+  .progress-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--tsuki-text-xs);
+    color: var(--tsuki-muted-fg);
+  }
+
+  .music-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--tsuki-space-sm);
+  }
+
+  .control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: default;
+    color: var(--tsuki-muted-fg);
+    transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+
+  .play-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--tsuki-surface-muted-soft);
+    border: 1px solid var(--tsuki-surface-border);
+    color: var(--tsuki-theme-accent);
+  }
+</style>

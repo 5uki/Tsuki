@@ -12,8 +12,8 @@
 .prose h2,
 .prose h3,
 .prose h4 {
-  margin-top: var(--tsuki-space-2);
-  margin-bottom: var(--tsuki-space-1);
+  margin-top: var(--tsuki-space-3xl);
+  margin-bottom: var(--tsuki-space-lg);
   font-weight: 600;
   line-height: var(--tsuki-line-height-heading);
 }
@@ -35,22 +35,22 @@
 }
 
 .prose p {
-  margin-bottom: var(--tsuki-space-1-25);
+  margin-bottom: var(--tsuki-space-xl);
 }
 
 .prose ul,
 .prose ol {
-  padding-left: var(--tsuki-space-1-5);
-  margin-bottom: var(--tsuki-space-1-25);
+  padding-left: var(--tsuki-space-2xl);
+  margin-bottom: var(--tsuki-space-xl);
 }
 
 .prose li {
-  margin-bottom: var(--tsuki-space-0-5);
+  margin-bottom: var(--tsuki-space-sm);
 }
 
 .prose blockquote {
-  margin: var(--tsuki-space-1) 0;
-  padding: var(--tsuki-space-0-5) var(--tsuki-space-1);
+  margin: var(--tsuki-space-lg) 0;
+  padding: var(--tsuki-space-sm) var(--tsuki-space-lg);
   border-left: 4px solid var(--tsuki-theme-accent);
   background: var(--tsuki-surface-muted);
   color: var(--tsuki-fg);
@@ -62,11 +62,11 @@
 }
 
 .prose blockquote p + p {
-  margin-top: var(--tsuki-space-0-5);
+  margin-top: var(--tsuki-space-sm);
 }
 
 .prose pre {
-  margin: var(--tsuki-space-1-5) 0;
+  margin: var(--tsuki-space-2xl) 0;
 }
 
 .prose code {
@@ -89,24 +89,24 @@
 
 .prose img {
   border-radius: var(--tsuki-radius-md);
-  margin: var(--tsuki-space-1-5) 0;
+  margin: var(--tsuki-space-2xl) 0;
 }
 
 .prose hr {
-  margin: var(--tsuki-space-2) 0;
+  margin: var(--tsuki-space-3xl) 0;
   border: none;
-  border-top: 1px solid var(--tsuki-surface-divider);
+  border-top: 1px solid var(--tsuki-surface-border);
 }
 
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: var(--tsuki-space-1-5) 0;
+  margin: var(--tsuki-space-2xl) 0;
 }
 
 .prose th,
 .prose td {
-  padding: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
+  padding: var(--tsuki-space-sm) var(--tsuki-space-md);
   text-align: left;
   border-bottom: 1px solid color-mix(in srgb, var(--tsuki-fg) 22%, transparent);
 }

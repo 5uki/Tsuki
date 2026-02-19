@@ -5,25 +5,13 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@entry/*": ["./entry/*"],
-      "@api/*": ["./api/*"],
-      "@usecases/*": ["./usecases/*"],
-      "@atoms/*": ["./atoms/*"],
-      "@contracts/*": ["./contracts/*"],
-      "@adapters/*": ["./adapters/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.astro",
-    "entry/**/*.ts",
-    "api/**/*.ts",
-    "usecases/**/*.ts",
-    "atoms/**/*.ts",
-    "contracts/**/*.ts",
-    "adapters/**/*.ts"
+    "src/**/*.astro"
   ],
   "exclude": ["node_modules", "dist"]
 }

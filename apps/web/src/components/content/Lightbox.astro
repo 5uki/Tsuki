@@ -1,0 +1,225 @@
+---
+/**
+ * Lightbox - 全屏图片预览组件（渐进增强）
+ *
+ * 无 JS 时：图片正常显示在网格中
+ * 有 JS 时：点击 [data-lightbox] 图片触发全屏预览
+ *
+ * 功能：
+ * - 点击图片打开全屏覆盖层
+ * - 左右箭头切换图片（键盘 <- -> 支持）
+ * - Esc 或点击背景关闭
+ * - 显示当前图片序号 1 / N
+ */
+---
+
+<div class="lightbox-overlay" id="tsuki-lightbox" aria-hidden="true" role="dialog" aria-label="图片预览">
+  <div class="lightbox-backdrop"></div>
+  <div class="lightbox-content">
+    <img class="lightbox-image" src="" alt="" />
+  </div>
+  <div class="lightbox-controls">
+    <button class="lightbox-btn lightbox-prev" aria-label="上一张" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+    </button>
+    <span class="lightbox-counter"></span>
+    <button class="lightbox-btn lightbox-next" aria-label="下一张" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+    </button>
+  </div>
+  <button class="lightbox-btn lightbox-close" aria-label="关闭" type="button">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 6 6 18M6 6l12 12"></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--tsuki-motion-medium) var(--tsuki-motion-ease-out),
+      visibility var(--tsuki-motion-medium);
+  }
+  .lightbox-overlay[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--tsuki-fg) 85%, transparent);
+  }
+
+  .lightbox-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+
+  .lightbox-image {
+    display: block;
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--tsuki-radius-md);
+    user-select: none;
+  }
+
+  .lightbox-controls {
+    position: absolute;
+    bottom: var(--tsuki-space-3xl);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--tsuki-space-2xl);
+  }
+
+  .lightbox-counter {
+    font-size: var(--tsuki-text-sm);
+    font-weight: 500;
+    color: var(--tsuki-color-on-primary);
+    user-select: none;
+  }
+
+  .lightbox-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: var(--tsuki-radius-md);
+    background: color-mix(in srgb, var(--tsuki-color-on-primary) 15%, transparent);
+    color: var(--tsuki-color-on-primary);
+    cursor: pointer;
+    transition: background var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .lightbox-btn:hover {
+    background: color-mix(in srgb, var(--tsuki-color-on-primary) 25%, transparent);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: var(--tsuki-space-lg);
+    right: var(--tsuki-space-lg);
+  }
+</style>
+
+<script>
+  interface TsukiLightboxWindow extends Window {
+    __tsukiLightboxCleanup?: () => void
+    __tsukiLightboxBound?: boolean
+  }
+
+  const tsukiWindow = window as TsukiLightboxWindow
+
+  function bindLightbox() {
+    tsukiWindow.__tsukiLightboxCleanup?.()
+
+    const overlay = document.getElementById('tsuki-lightbox')
+    if (!overlay) {
+      tsukiWindow.__tsukiLightboxCleanup = undefined
+      return
+    }
+
+    const image = overlay.querySelector<HTMLImageElement>('.lightbox-image')
+    const counter = overlay.querySelector<HTMLSpanElement>('.lightbox-counter')
+    const prevBtn = overlay.querySelector<HTMLButtonElement>('.lightbox-prev')
+    const nextBtn = overlay.querySelector<HTMLButtonElement>('.lightbox-next')
+    const closeBtn = overlay.querySelector<HTMLButtonElement>('.lightbox-close')
+    const backdrop = overlay.querySelector<HTMLDivElement>('.lightbox-backdrop')
+
+    if (!image || !counter || !prevBtn || !nextBtn || !closeBtn || !backdrop) return
+
+    const controller = new AbortController()
+    const signal = controller.signal
+
+    let allImages: string[] = []
+    let currentIndex = 0
+
+    function open(images: string[], startIndex: number) {
+      allImages = images
+      currentIndex = startIndex
+      show()
+      overlay!.setAttribute('aria-hidden', 'false')
+    }
+
+    function close() {
+      overlay!.setAttribute('aria-hidden', 'true')
+    }
+
+    function show() {
+      if (!allImages.length) return
+      image!.src = allImages[currentIndex] ?? ''
+      counter!.textContent = `${currentIndex + 1} / ${allImages.length}`
+      prevBtn!.style.visibility = allImages.length <= 1 ? 'hidden' : 'visible'
+      nextBtn!.style.visibility = allImages.length <= 1 ? 'hidden' : 'visible'
+    }
+
+    function prev() {
+      if (allImages.length <= 1) return
+      currentIndex = (currentIndex - 1 + allImages.length) % allImages.length
+      show()
+    }
+
+    function next() {
+      if (allImages.length <= 1) return
+      currentIndex = (currentIndex + 1) % allImages.length
+      show()
+    }
+
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement
+      if (!target.hasAttribute('data-lightbox')) return
+
+      e.preventDefault()
+      try {
+        const data = JSON.parse(target.getAttribute('data-lightbox') || '{}')
+        const images: string[] = JSON.parse(data.all || '[]')
+        const index = typeof data.index === 'number' ? data.index : 0
+        open(images, index)
+      } catch {
+        const src = (target as HTMLImageElement).src
+        if (src) open([src], 0)
+      }
+    }, { signal })
+
+    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prev() }, { signal })
+    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); next() }, { signal })
+    closeBtn.addEventListener('click', close, { signal })
+    backdrop.addEventListener('click', close, { signal })
+
+    document.addEventListener('keydown', (e) => {
+      if (overlay!.getAttribute('aria-hidden') !== 'false') return
+      if (e.key === 'Escape') close()
+      else if (e.key === 'ArrowLeft') prev()
+      else if (e.key === 'ArrowRight') next()
+    }, { signal })
+
+    tsukiWindow.__tsukiLightboxCleanup = () => controller.abort()
+  }
+
+  if (!tsukiWindow.__tsukiLightboxBound) {
+    document.addEventListener('astro:page-load', bindLightbox)
+    tsukiWindow.__tsukiLightboxBound = true
+  }
+
+  bindLightbox()
+</script>

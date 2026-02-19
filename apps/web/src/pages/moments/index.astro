@@ -1,16 +1,14 @@
 ---
 import Default from '@/layouts/Default.astro'
-import ImageGrid from '@/components/ImageGrid.astro'
-import Lightbox from '@/components/Lightbox.astro'
+import ImageGrid from '@/components/content/ImageGrid.astro'
+import Lightbox from '@/components/content/Lightbox.astro'
 import { Icon } from 'astro-icon/components'
-import { createAppContext } from '@entry/index'
-import { getMomentEntries } from '@usecases/content'
-import { groupMomentsByDate } from '@atoms/moment-cards'
+import { getMomentEntries } from '@/lib/content'
+import { groupMomentsByDate } from '@/lib/utils/moment-cards'
 
 export const prerender = true
 
-const ctx = createAppContext()
-const moments = await getMomentEntries(ctx)
+const moments = await getMomentEntries()
 
 const bodyMap = new Map<string, string>()
 for (const m of moments) {
@@ -100,7 +98,7 @@ const groups = groupMomentsByDate(moments, bodyMap)
 
 <style>
   .page-section {
-    margin-bottom: var(--tsuki-space-2);
+    margin-bottom: var(--tsuki-space-3xl);
   }
 
   /* ── Timeline ── */
@@ -108,15 +106,15 @@ const groups = groupMomentsByDate(moments, bodyMap)
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--tsuki-space-2);
-    padding-left: var(--tsuki-space-1-5);
+    gap: var(--tsuki-space-3xl);
+    padding-left: var(--tsuki-space-2xl);
   }
   .timeline::before {
     content: '';
     position: absolute;
     top: 0;
     bottom: 0;
-    left: var(--tsuki-space-0-35);
+    left: var(--tsuki-space-xs);
     width: 2px;
     background: var(--tsuki-surface-border);
   }
@@ -124,21 +122,21 @@ const groups = groupMomentsByDate(moments, bodyMap)
   /* ── Date label ── */
   .timeline-date-label {
     position: relative;
-    margin-bottom: var(--tsuki-space-0-5);
-    margin-left: calc(var(--tsuki-space-1-5) * -1);
-    padding-left: var(--tsuki-space-1-75);
+    margin-bottom: var(--tsuki-space-sm);
+    margin-left: calc(var(--tsuki-space-2xl) * -1);
+    padding-left: var(--tsuki-space-2xl);
   }
   .timeline-date-label::before {
     content: '';
     position: absolute;
     top: 50%;
-    left: var(--tsuki-space-0-35);
+    left: var(--tsuki-space-xs);
     transform: translate(-50%, -50%);
     width: 0.625rem;
     height: 0.625rem;
     border-radius: 50%;
     background: var(--tsuki-theme-accent);
-    box-shadow: 0 0 0 3px var(--tsuki-surface-accent-soft);
+    box-shadow: 0 0 0 3px var(--tsuki-surface-accent);
   }
   .date-text {
     font-size: var(--tsuki-text-sm);
@@ -150,7 +148,7 @@ const groups = groupMomentsByDate(moments, bodyMap)
   .timeline-items {
     display: flex;
     flex-direction: column;
-    gap: var(--tsuki-space-1);
+    gap: var(--tsuki-space-lg);
   }
 
   /* ── Single item ── */
@@ -159,13 +157,13 @@ const groups = groupMomentsByDate(moments, bodyMap)
   }
   .timeline-dot {
     position: absolute;
-    top: var(--tsuki-space-0-8);
-    left: calc(var(--tsuki-space-0-35) - var(--tsuki-space-1-5));
+    top: var(--tsuki-space-md);
+    left: calc(var(--tsuki-space-xs) - var(--tsuki-space-2xl));
     transform: translateX(-50%);
     width: 0.375rem;
     height: 0.375rem;
     border-radius: 50%;
-    background: var(--tsuki-surface-border-strong);
+    background: var(--tsuki-surface-border);
   }
 
   /* ── Moment card (matching PostCard style) ── */
@@ -176,9 +174,9 @@ const groups = groupMomentsByDate(moments, bodyMap)
     overflow: hidden;
     box-shadow: var(--tsuki-sidebar-card-shadow);
     transition:
-      transform var(--tsuki-motion-card-transform-duration) var(--tsuki-motion-card-transform-ease),
-      box-shadow var(--tsuki-motion-card-shadow-duration) var(--tsuki-motion-ease-out),
-      border-color var(--tsuki-motion-card-border-duration) var(--tsuki-motion-ease-out);
+      transform var(--tsuki-motion-card) var(--tsuki-motion-card-ease),
+      box-shadow var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
+      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out);
   }
   .moment-card:hover {
     transform: translateY(var(--tsuki-sidebar-card-hover-translate));
@@ -187,11 +185,11 @@ const groups = groupMomentsByDate(moments, bodyMap)
   }
 
   .moment-card-content {
-    padding: var(--tsuki-space-1-5);
+    padding: var(--tsuki-space-2xl);
   }
   @media (min-width: 768px) {
     .moment-card-content {
-      padding: var(--tsuki-space-1-75) var(--tsuki-space-2-25);
+      padding: var(--tsuki-space-2xl) var(--tsuki-space-3xl);
     }
   }
 
@@ -201,7 +199,7 @@ const groups = groupMomentsByDate(moments, bodyMap)
     width: fit-content;
     max-width: 100%;
     align-items: center;
-    margin-bottom: var(--tsuki-space-0-75);
+    margin-bottom: var(--tsuki-space-md);
     font-size: var(--tsuki-text-post-title);
     font-weight: 700;
     line-height: var(--tsuki-line-height-heading);
@@ -220,10 +218,10 @@ const groups = groupMomentsByDate(moments, bodyMap)
     .moment-card-title::before {
       content: '';
       position: absolute;
-      top: var(--tsuki-space-0-35);
-      left: calc(var(--tsuki-space-1-25) * -1);
-      height: var(--tsuki-space-1-25);
-      width: var(--tsuki-space-0-25);
+      top: var(--tsuki-space-xs);
+      left: calc(var(--tsuki-space-xl) * -1);
+      height: var(--tsuki-space-xl);
+      width: var(--tsuki-space-2xs);
       border-radius: var(--tsuki-radius-xs);
       background: var(--tsuki-theme-accent);
     }
@@ -239,10 +237,10 @@ const groups = groupMomentsByDate(moments, bodyMap)
     width: var(--tsuki-post-title-arrow-size);
     align-items: center;
     justify-content: center;
-    margin-left: var(--tsuki-space-0-2);
+    margin-left: var(--tsuki-space-2xs);
     color: var(--tsuki-theme-accent);
     opacity: 0;
-    transform: translateX(var(--tsuki-translate-0-2));
+    transform: translateX(-0.2rem);
     transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
                 transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
@@ -257,8 +255,8 @@ const groups = groupMomentsByDate(moments, bodyMap)
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
-    margin-bottom: var(--tsuki-space-0-5);
+    gap: var(--tsuki-space-sm) var(--tsuki-space-md);
+    margin-bottom: var(--tsuki-space-sm);
   }
 
   .tag-hash-badge {
@@ -270,10 +268,10 @@ const groups = groupMomentsByDate(moments, bodyMap)
   .moment-summary {
     margin-top: 0;
     margin-bottom: 0;
-    padding-right: var(--tsuki-space-1);
+    padding-right: var(--tsuki-space-lg);
     font-size: var(--tsuki-text-post-summary);
     line-height: var(--tsuki-line-height-base);
-    color: var(--tsuki-post-muted-fg);
+    color: var(--tsuki-muted-fg);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -282,11 +280,11 @@ const groups = groupMomentsByDate(moments, bodyMap)
 
   /* ── Media inside card ── */
   .moment-media {
-    padding: 0 var(--tsuki-space-1) var(--tsuki-space-1);
+    padding: 0 var(--tsuki-space-lg) var(--tsuki-space-lg);
   }
   @media (min-width: 768px) {
     .moment-media {
-      padding: 0 var(--tsuki-space-1-5) var(--tsuki-space-1-25);
+      padding: 0 var(--tsuki-space-2xl) var(--tsuki-space-xl);
       max-width: 22rem;
     }
   }

@@ -1,0 +1,119 @@
+---
+import type { SidebarCountItem } from '@/lib/types/content'
+import { toSlug } from '@/lib/utils/post-cards'
+
+interface Props {
+  title: string
+  items: SidebarCountItem[]
+  queryKey: string
+  emptyText?: string
+  visibleCount?: number
+}
+
+const {
+  title,
+  items,
+  queryKey,
+  emptyText = `暂无${title}`,
+  visibleCount = 3,
+} = Astro.props
+
+const hasMore = items.length > visibleCount
+---
+
+<div class="tsuki-sidebar-card">
+  <h3 class="tsuki-section-title">{title}</h3>
+  <div class="sidebar-list" data-sidebar-list>
+    {items.length > 0 ? (
+      items.map((item, i) => (
+        <a
+          href={`/posts?${queryKey}=${toSlug(item.name)}`}
+          class:list={['sidebar-list-item', { 'is-hidden': hasMore && i >= visibleCount }]}
+        >
+          <span class="item-name">{item.name}</span>
+          <span class="item-count">{item.count}</span>
+        </a>
+      ))
+    ) : (
+      <span class="tsuki-sidebar-empty">{emptyText}</span>
+    )}
+  </div>
+  {hasMore && (
+    <button class="tsuki-toggle-btn" data-toggle-more aria-expanded="false">
+      ··· 更多
+    </button>
+  )}
+</div>
+
+<script>
+  function initSidebarListToggle() {
+    document.querySelectorAll<HTMLElement>('[data-sidebar-list]').forEach((list) => {
+      const card = list.closest('.tsuki-sidebar-card')
+      if (!card) return
+      const btn = card.querySelector<HTMLButtonElement>('[data-toggle-more]')
+      if (!btn) return
+      if (btn.dataset.initialized) return
+      btn.dataset.initialized = 'true'
+
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true'
+        btn.setAttribute('aria-expanded', String(!expanded))
+        btn.textContent = expanded ? '··· 更多' : '收起'
+        list.querySelectorAll<HTMLElement>('.is-hidden').forEach((el) => {
+          el.classList.toggle('is-visible')
+        })
+      })
+    })
+  }
+
+  initSidebarListToggle()
+  document.addEventListener('astro:page-load', initSidebarListToggle)
+</script>
+
+<style>
+  .sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tsuki-space-sm);
+  }
+
+  .sidebar-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--tsuki-radius-md);
+    border: 1px solid var(--tsuki-surface-border);
+    background: var(--tsuki-surface-muted-soft);
+    padding: var(--tsuki-space-sm) var(--tsuki-space-md);
+    color: var(--tsuki-fg);
+    text-decoration: none;
+    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                border-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .sidebar-list-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--tsuki-theme-accent);
+    background: var(--tsuki-surface-muted-strong);
+  }
+
+  .is-hidden {
+    display: none;
+  }
+  .is-hidden.is-visible {
+    display: flex;
+  }
+
+  .item-name {
+    font-size: var(--tsuki-sidebar-body-text-size);
+    font-weight: 500;
+  }
+
+  .item-count {
+    border-radius: var(--tsuki-radius-sm);
+    background: var(--tsuki-theme-secondary);
+    padding: var(--tsuki-space-3xs) var(--tsuki-space-sm);
+    font-size: var(--tsuki-text-xs);
+    color: var(--tsuki-fg);
+  }
+</style>

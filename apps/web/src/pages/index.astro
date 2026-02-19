@@ -1,15 +1,13 @@
 ---
 import Default from '@/layouts/Default.astro'
-import PostCard from '@/components/PostCard.astro'
+import PostCard from '@/components/content/PostCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
-import { toPostCardItems } from '@atoms/post-cards'
-import { createAppContext } from '@entry/index'
-import { getPostEntries } from '@usecases/content'
+import { toPostCardItems } from '@/lib/utils/post-cards'
+import { getPostEntries } from '@/lib/content'
 
 export const prerender = true
 
-const ctx = createAppContext()
-const posts = await getPostEntries(ctx)
+const posts = await getPostEntries()
 const recentPosts = toPostCardItems(posts)
 ---
 
@@ -29,6 +27,6 @@ const recentPosts = toPostCardItems(posts)
 
 <style>
   .page-section {
-    margin-bottom: var(--tsuki-space-2);
+    margin-bottom: var(--tsuki-space-3xl);
   }
 </style>

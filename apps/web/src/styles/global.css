@@ -17,11 +17,10 @@
     background: var(--tsuki-sidebar-card-bg);
     padding: var(--tsuki-sidebar-card-title-top-padding) var(--tsuki-sidebar-card-padding-inline) var(--tsuki-sidebar-card-padding);
     box-shadow: var(--tsuki-sidebar-card-shadow);
-    will-change: transform, box-shadow, border-color;
     transition:
-      transform var(--tsuki-motion-card-transform-duration) var(--tsuki-motion-card-transform-ease),
-      box-shadow var(--tsuki-motion-card-shadow-duration) var(--tsuki-motion-ease-out),
-      border-color var(--tsuki-motion-card-border-duration) var(--tsuki-motion-ease-out);
+      transform var(--tsuki-motion-card) var(--tsuki-motion-card-ease),
+      box-shadow var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
+      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out);
   }
   .tsuki-sidebar-card:where(:hover, :focus-visible, :active) {
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
@@ -39,10 +38,10 @@
   /* ── Section Title (h3 with accent marker) ── */
   .tsuki-section-title {
     margin-top: 0;
-    margin-bottom: var(--tsuki-space-0-75);
+    margin-bottom: var(--tsuki-space-md);
     display: flex;
     align-items: center;
-    gap: var(--tsuki-space-0-5);
+    gap: var(--tsuki-space-sm);
     font-size: var(--tsuki-sidebar-section-title-size);
     font-weight: 600;
     color: var(--tsuki-fg);
@@ -51,7 +50,7 @@
     content: '';
     height: var(--tsuki-sidebar-section-marker-height);
     width: var(--tsuki-sidebar-section-marker-width);
-    border-radius: var(--tsuki-radius-2xs);
+    border-radius: var(--tsuki-radius-xs);
     background: var(--tsuki-theme-accent);
   }
   @media (min-width: 640px) {
@@ -64,8 +63,8 @@
   .tsuki-tag-pill {
     display: inline-block;
     border-radius: var(--tsuki-radius-md);
-    background: var(--tsuki-surface-accent-strong);
-    padding: var(--tsuki-space-0-3125) var(--tsuki-space-0-625);
+    background: var(--tsuki-surface-accent);
+    padding: var(--tsuki-space-xs) var(--tsuki-space-sm);
     font-size: var(--tsuki-sidebar-body-text-size);
     font-weight: 500;
     color: var(--tsuki-accent-text);
@@ -74,12 +73,11 @@
                 transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .tsuki-tag-pill:hover {
-    transform: translateY(var(--tsuki-translate-1px));
-    background: var(--tsuki-surface-accent-soft);
+    transform: translateY(-2px);
   }
   @media (min-width: 640px) {
     .tsuki-tag-pill {
-      padding: var(--tsuki-space-0-375) var(--tsuki-space-0-75);
+      padding: var(--tsuki-space-xs) var(--tsuki-space-md);
       font-size: var(--tsuki-sidebar-body-text-size-desktop);
     }
   }
@@ -89,7 +87,7 @@
     display: inline-flex;
     min-width: 0;
     align-items: center;
-    gap: var(--tsuki-space-0-3);
+    gap: var(--tsuki-space-xs);
     line-height: 1;
   }
 
@@ -99,7 +97,7 @@
     height: var(--tsuki-meta-icon-badge-size);
     width: var(--tsuki-meta-icon-badge-size);
     place-items: center;
-    border-radius: var(--tsuki-radius-0-4);
+    border-radius: var(--tsuki-radius-sm);
     background: var(--tsuki-theme-secondary);
   }
 
@@ -116,7 +114,7 @@
     font-size: var(--tsuki-text-meta);
     font-weight: 400;
     line-height: var(--tsuki-line-height-meta);
-    color: var(--tsuki-post-meta-fg);
+    color: var(--tsuki-muted-fg);
   }
   @media (min-width: 640px) {
     .tsuki-meta-text {
@@ -142,18 +140,18 @@
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
-    padding: var(--tsuki-space-1) var(--tsuki-space-1-5) var(--tsuki-space-1-75);
+    padding: var(--tsuki-space-lg) var(--tsuki-space-2xl) var(--tsuki-space-2xl);
     box-shadow: var(--tsuki-sidebar-card-shadow);
   }
   @media (min-width: 768px) {
     .tsuki-content-card {
-      padding-inline: var(--tsuki-space-2-25);
+      padding-inline: var(--tsuki-space-3xl);
     }
   }
 
   /* ── Page Title ── */
   .tsuki-page-title {
-    margin-bottom: var(--tsuki-space-1-5);
+    margin-bottom: var(--tsuki-space-2xl);
     font-size: var(--tsuki-text-page-title);
   }
 
@@ -161,12 +159,37 @@
   .tsuki-card-list {
     display: flex;
     flex-direction: column;
-    gap: var(--tsuki-space-1);
+    gap: var(--tsuki-space-lg);
   }
 
   /* ── Empty State ── */
   .tsuki-empty-state {
     font-style: italic;
     color: var(--tsuki-fg);
+  }
+
+  /* ── Toggle More Button (shared by sidebar lists) ── */
+  .tsuki-toggle-btn {
+    display: block;
+    width: 100%;
+    margin-top: var(--tsuki-space-sm);
+    padding: var(--tsuki-space-xs) 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--tsuki-sidebar-body-text-size);
+    font-weight: 500;
+    color: var(--tsuki-theme-accent);
+    text-align: center;
+    transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+  }
+  .tsuki-toggle-btn:hover {
+    opacity: 0.8;
+  }
+
+  /* ── Sidebar Empty Text ── */
+  .tsuki-sidebar-empty {
+    font-size: var(--tsuki-sidebar-body-text-size);
+    color: var(--tsuki-muted-fg);
   }
 }

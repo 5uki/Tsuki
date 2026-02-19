@@ -1,22 +1,19 @@
 ---
 import Default from '@/layouts/Default.astro'
-import TableOfContents from '@/components/TableOfContents.astro'
+import TableOfContents from '@/components/content/TableOfContents.astro'
 import { Icon } from 'astro-icon/components'
-import { toSlug } from '@atoms/post-cards'
-import { createAppContext } from '@entry/index'
-import { getPostEntries, getPostDetail } from '@usecases/content'
+import { toSlug } from '@/lib/utils/post-cards'
+import { getPostEntries, getPostBySlug } from '@/lib/content'
 
 export const prerender = true
 
 export async function getStaticPaths() {
-  const ctx = createAppContext()
-  const posts = await getPostEntries(ctx)
+  const posts = await getPostEntries()
   return posts.map((post) => ({ params: { slug: post.slug } }))
 }
 
 const { slug } = Astro.params
-const ctx = createAppContext()
-const post = await getPostDetail(ctx, slug)
+const post = await getPostBySlug(slug)
 const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
 ---
 
@@ -101,13 +98,13 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
 
 <style>
   .post-header {
-    margin-bottom: var(--tsuki-space-1-5);
+    margin-bottom: var(--tsuki-space-2xl);
     border-bottom: 1px solid var(--tsuki-surface-border);
-    padding-bottom: var(--tsuki-space-1);
+    padding-bottom: var(--tsuki-space-lg);
   }
 
   .post-detail-title {
-    margin-bottom: var(--tsuki-space-0-75);
+    margin-bottom: var(--tsuki-space-md);
     font-size: var(--tsuki-text-3xl);
     font-weight: 600;
     line-height: var(--tsuki-line-height-heading);
@@ -120,10 +117,10 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
     .post-detail-title::before {
       content: '';
       position: absolute;
-      top: var(--tsuki-space-0-7);
-      left: calc(var(--tsuki-space-1-25) * -1);
-      height: var(--tsuki-space-1-25);
-      width: var(--tsuki-space-0-25);
+      top: var(--tsuki-space-md);
+      left: calc(var(--tsuki-space-xl) * -1);
+      height: var(--tsuki-space-xl);
+      width: var(--tsuki-space-2xs);
       border-radius: var(--tsuki-radius-xs);
       background: var(--tsuki-theme-accent);
     }
@@ -133,8 +130,8 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
-    margin-bottom: var(--tsuki-space-0-5);
+    gap: var(--tsuki-space-sm) var(--tsuki-space-md);
+    margin-bottom: var(--tsuki-space-sm);
   }
 
   .tag-hash-badge {
@@ -147,12 +144,12 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-2);
+    gap: var(--tsuki-space-2xs);
     white-space: normal;
   }
 
   .tag-inline-label {
-    color: var(--tsuki-post-meta-fg);
+    color: var(--tsuki-muted-fg);
     text-decoration: none;
     transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
@@ -162,7 +159,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
 
   .detail-meta-link {
     text-decoration: none;
-    color: var(--tsuki-post-meta-fg);
+    color: var(--tsuki-muted-fg);
     transition: color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .detail-meta-link:hover {
@@ -170,8 +167,8 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
   }
 
   .tag-sep {
-    color: var(--tsuki-post-meta-fg);
-    margin-inline: var(--tsuki-space-0-15);
+    color: var(--tsuki-muted-fg);
+    margin-inline: var(--tsuki-space-3xs);
   }
 
   .not-found-text {

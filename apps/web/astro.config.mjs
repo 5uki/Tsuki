@@ -77,12 +77,6 @@ export default defineConfig({
     resolve: {
       alias: {
         '@': '/src',
-        '@entry': '/entry',
-        '@api': '/api',
-        '@usecases': '/usecases',
-        '@atoms': '/atoms',
-        '@contracts': '/contracts',
-        '@adapters': '/adapters',
       },
     },
   },

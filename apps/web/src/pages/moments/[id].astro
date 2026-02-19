@@ -1,23 +1,20 @@
 ---
 import Default from '@/layouts/Default.astro'
-import ImageGrid from '@/components/ImageGrid.astro'
-import Lightbox from '@/components/Lightbox.astro'
+import ImageGrid from '@/components/content/ImageGrid.astro'
+import Lightbox from '@/components/content/Lightbox.astro'
 import { Icon } from 'astro-icon/components'
-import { createAppContext } from '@entry/index'
-import { getMomentDetail, getMomentEntries } from '@usecases/content'
-import { filterSafeMedia } from '@atoms/moment-cards'
+import { getMomentById, getMomentEntries } from '@/lib/content'
+import { filterSafeMedia } from '@/lib/utils/moment-cards'
 
 export const prerender = true
 
 export async function getStaticPaths() {
-  const ctx = createAppContext()
-  const moments = await getMomentEntries(ctx)
+  const moments = await getMomentEntries()
   return moments.map((moment) => ({ params: { id: moment.id } }))
 }
 
 const { id } = Astro.params
-const ctx = createAppContext()
-const moment = await getMomentDetail(ctx, id)
+const moment = await getMomentById(id)
 const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
 ---
 
@@ -56,7 +53,7 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
         </div>
 
         {moment.frontmatter.tags && moment.frontmatter.tags.length > 0 && (
-          <div class="moment-meta" style="margin-top: var(--tsuki-space-0-5);">
+          <div class="moment-meta" style="margin-top: var(--tsuki-space-sm);">
             <span class="tsuki-meta-row">
               <span class="tsuki-meta-icon-badge">
                 <span class="tag-hash-badge">#</span>
@@ -94,13 +91,13 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
 
 <style>
   .moment-header {
-    margin-bottom: var(--tsuki-space-1-5);
+    margin-bottom: var(--tsuki-space-2xl);
     border-bottom: 1px solid var(--tsuki-surface-border);
-    padding-bottom: var(--tsuki-space-1);
+    padding-bottom: var(--tsuki-space-lg);
   }
 
   .moment-detail-title {
-    margin-bottom: var(--tsuki-space-0-75);
+    margin-bottom: var(--tsuki-space-md);
     font-size: var(--tsuki-text-3xl);
     font-weight: 600;
     line-height: var(--tsuki-line-height-heading);
@@ -113,10 +110,10 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
     .moment-detail-title::before {
       content: '';
       position: absolute;
-      top: var(--tsuki-space-0-7);
-      left: calc(var(--tsuki-space-1-25) * -1);
-      height: var(--tsuki-space-1-25);
-      width: var(--tsuki-space-0-25);
+      top: var(--tsuki-space-md);
+      left: calc(var(--tsuki-space-xl) * -1);
+      height: var(--tsuki-space-xl);
+      width: var(--tsuki-space-2xs);
       border-radius: var(--tsuki-radius-xs);
       background: var(--tsuki-theme-accent);
     }
@@ -126,8 +123,8 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-6) var(--tsuki-space-0-85);
-    margin-bottom: var(--tsuki-space-0-5);
+    gap: var(--tsuki-space-sm) var(--tsuki-space-md);
+    margin-bottom: var(--tsuki-space-sm);
   }
 
   .tag-hash-badge {
@@ -140,7 +137,7 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--tsuki-space-0-2);
+    gap: var(--tsuki-space-2xs);
     white-space: normal;
   }
 
@@ -154,19 +151,19 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
   }
 
   .tag-sep {
-    color: var(--tsuki-post-muted-fg);
-    margin-inline: var(--tsuki-space-0-15);
+    color: var(--tsuki-muted-fg);
+    margin-inline: var(--tsuki-space-3xs);
   }
 
   .moment-images {
-    margin-top: var(--tsuki-space-1-5);
-    padding-top: var(--tsuki-space-1);
+    margin-top: var(--tsuki-space-2xl);
+    padding-top: var(--tsuki-space-lg);
     border-top: 1px solid var(--tsuki-surface-border);
   }
 
   .comment-placeholder {
-    margin-top: var(--tsuki-space-2);
-    padding-top: var(--tsuki-space-1);
+    margin-top: var(--tsuki-space-3xl);
+    padding-top: var(--tsuki-space-lg);
     border-top: 1px solid var(--tsuki-surface-border);
   }
 
