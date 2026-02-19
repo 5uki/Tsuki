@@ -17,6 +17,7 @@
 **/node_modules/
 **/.astro/
 **/.wrangler/
+**/.dev.vars
 
 # ── Root config ─────────────────────────────
 !.gitignore

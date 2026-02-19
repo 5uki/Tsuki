@@ -8,8 +8,9 @@
 import { Hono } from 'hono'
 import type { Env, AppContext } from '@contracts/env'
 import { authRoutes } from './auth'
-import { commentsRoutes } from './comments'
+import { commentsRoutes, adminCommentsRoutes } from './comments'
 import { settingsRoutes } from './settings'
+import { requireAdmin } from './middleware/guards'
 
 export function createRoutes() {
   const api = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -17,6 +18,12 @@ export function createRoutes() {
   api.route('/auth', authRoutes())
   api.route('/comments', commentsRoutes())
   api.route('/settings', settingsRoutes())
+
+  // 管理员路由组
+  const admin = new Hono<{ Bindings: Env; Variables: AppContext }>()
+  admin.use('*', requireAdmin)
+  admin.route('/comments', adminCommentsRoutes())
+  api.route('/admin', admin)
 
   // 健康检查
   api.get('/health', (c) => {

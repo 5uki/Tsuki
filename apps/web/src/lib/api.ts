@@ -12,6 +12,7 @@ import type {
   PaginatedResponse,
 } from '@tsuki/shared/dto'
 import { ApiException, ErrorCodes } from '@tsuki/shared/errors'
+import { getCsrfToken } from './storage'
 
 const API_BASE = import.meta.env.PUBLIC_TSUKI_API_BASE || 'http://localhost:8787/v1'
 const DEFAULT_TIMEOUT = 10000
@@ -21,15 +22,26 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT)
 
+  // 写请求自动附加 CSRF token
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options?.headers as Record<string, string>),
+  }
+
+  const method = options?.method?.toUpperCase()
+  if (method && method !== 'GET' && method !== 'HEAD') {
+    const csrf = getCsrfToken()
+    if (csrf) {
+      headers['X-CSRF-Token'] = csrf
+    }
+  }
+
   try {
     const response = await fetch(url, {
       ...options,
       credentials: 'include',
       signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
+      headers,
     })
 
     if (!response.ok && response.status >= 500) {
@@ -72,13 +84,17 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
 
 export async function getCurrentUser(): Promise<UserDTO | null> {
   try {
-    return await fetchApi<UserDTO>('/auth/me')
+    return await fetchApi<UserDTO | null>('/auth/me')
   } catch (error) {
     if (error instanceof ApiException && error.code === ErrorCodes.AUTH_REQUIRED) {
       return null
     }
     throw error
   }
+}
+
+export async function logout(): Promise<void> {
+  await fetchApi<null>('/auth/logout', { method: 'POST' })
 }
 
 export async function getPublicSettings(): Promise<SettingsPublicDTO> {

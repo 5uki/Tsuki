@@ -2,20 +2,21 @@
  * Worker 环境变量类型
  */
 
-import type { SettingsPort } from './ports'
+import type { SettingsPort, UsersPort, SessionPort, GitHubOAuthPort, CommentsPort } from './ports'
+import type { UserDTO } from './dto'
 
 export interface Env {
   // D1 数据库绑定
   DB: D1Database
 
-  // 环境变量
-  GITHUB_OAUTH_CLIENT_ID?: string
-  GITHUB_OAUTH_CLIENT_SECRET?: string
-  TSUKI_SESSION_SIGNING_SECRET?: string
-  TSUKI_CSRF_SALT?: string
+  // 环境变量（必填）
   TSUKI_PUBLIC_ORIGIN: string
-  TSUKI_ADMIN_GITHUB_IDS?: string
-  TSUKI_SESSION_TTL_MS?: string
+  GITHUB_OAUTH_CLIENT_ID: string
+  GITHUB_OAUTH_CLIENT_SECRET: string
+  TSUKI_SESSION_SIGNING_SECRET: string
+  TSUKI_CSRF_SALT: string
+  TSUKI_ADMIN_GITHUB_IDS: string
+  TSUKI_SESSION_TTL_MS: string
 }
 
 /**
@@ -25,5 +26,10 @@ export interface AppContext {
   requestId: string
   ports: {
     settings: SettingsPort
+    users: UsersPort
+    sessions: SessionPort
+    githubOAuth: GitHubOAuthPort
+    comments: CommentsPort
   }
+  currentUser: UserDTO | null
 }

@@ -11,3 +11,7 @@
  */
 
 export * from './settings'
+export * from './users'
+export * from './sessions'
+export * from './github-oauth'
+export * from './comments'
