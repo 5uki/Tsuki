@@ -17,9 +17,14 @@ export async function getStaticPaths() {
 const { id } = Astro.params
 const moment = await getMomentById(id)
 const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
+
+const momentDescription = moment?.body
+  ? moment.body.replace(/[#*_`>[\]()!~]/g, '').trim().slice(0, 100)
+  : '动态详情'
+const momentOgImage = media.length > 0 ? media[0] : undefined
 ---
 
-<Default title={moment ? moment.frontmatter.title : '动态'} description="动态详情">
+<Default title={moment ? moment.frontmatter.title : '动态'} description={momentDescription} ogImage={momentOgImage}>
   {moment ? (
     <article class="tsuki-content-card">
       <header class="moment-header">

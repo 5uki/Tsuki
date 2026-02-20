@@ -16,13 +16,21 @@ interface Props {
   description?: string
   noindex?: boolean
   withSidebar?: boolean
+  ogType?: string
+  ogImage?: string
+  ogArticle?: {
+    publishedTime?: string
+    modifiedTime?: string
+    author?: string
+    tags?: string[]
+  }
 }
 
 const siteTitle = tsukiConfig.site.title
 const rawTitle = Astro.props.title?.trim()
 const title = rawTitle ? `${rawTitle} - ${siteTitle}` : siteTitle
 const description = Astro.props.description ?? tsukiConfig.site.description
-const { noindex } = Astro.props
+const { noindex, ogType, ogImage, ogArticle } = Astro.props
 
 const withSidebar = Astro.props.withSidebar ?? true
 const sidebarData = withSidebar ? await getSidebarData() : null
@@ -35,7 +43,8 @@ const calendarData = needsCalendar ? await getCalendarDataForCurrentMonth() : nu
 const calendarIndex = needsCalendar ? await getCalendarIndex() : null
 ---
 
-<Base title={title} description={description} noindex={noindex}>
+<Base title={title} description={description} noindex={noindex} ogType={ogType} ogImage={ogImage} ogArticle={ogArticle}>
+  <slot name="head" slot="head" />
   <div class="page-shell">
     <Header />
     <Banner />

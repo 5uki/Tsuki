@@ -5,6 +5,7 @@ import CommentSection from '@/components/comments/CommentSection'
 import { Icon } from 'astro-icon/components'
 import { toSlug } from '@/lib/utils/post-cards'
 import { getPostEntries, getPostBySlug } from '@/lib/content'
+import tsukiConfig from '@/config/tsuki-config'
 
 export const prerender = true
 
@@ -16,9 +17,42 @@ export async function getStaticPaths() {
 const { slug } = Astro.params
 const post = await getPostBySlug(slug)
 const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
+
+const siteUrl = Astro.site?.origin ?? ''
+const canonicalUrl = `${siteUrl}/posts/${slug}`
+const authorName = tsukiConfig.profile?.name ?? 'Suki'
+
+const ogArticle = post
+  ? {
+      publishedTime: new Date(post.frontmatter.publishedAt).toISOString(),
+      tags: post.frontmatter.tags,
+    }
+  : undefined
+
+const jsonLd = post
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.frontmatter.title,
+      description: post.frontmatter.summary,
+      datePublished: new Date(post.frontmatter.publishedAt).toISOString(),
+      author: { '@type': 'Person', name: authorName },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+      ...(post.frontmatter.cover ? { image: post.frontmatter.cover } : {}),
+    })
+  : undefined
 ---
 
-<Default title={post ? post.frontmatter.title : `文章: ${slug}`} description="文章详情">
+<Default
+  title={post ? post.frontmatter.title : `文章: ${slug}`}
+  description={post ? post.frontmatter.summary : '文章详情'}
+  ogType={post ? 'article' : 'website'}
+  ogImage={post?.frontmatter.cover}
+  ogArticle={ogArticle}
+>
+  {jsonLd && (
+    <script is:inline type="application/ld+json" set:html={jsonLd} slot="head" />
+  )}
   {post ? (
     <article class="tsuki-content-card" data-pagefind-body>
       <header class="post-header">

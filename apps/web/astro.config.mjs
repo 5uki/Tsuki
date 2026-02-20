@@ -17,6 +17,7 @@ const workspaceRoot = path.resolve(projectRoot, '..', '..')
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://example.com',
   output: 'server',
   adapter: cloudflare(),
   session: {
