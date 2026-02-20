@@ -151,3 +151,26 @@ export function getLoginUrl(returnTo?: string): string {
   const query = params.toString()
   return `${base}/auth/github/start${query ? `?${query}` : ''}`
 }
+
+// ── Admin API ──
+
+export async function getAdminComments(params?: {
+  status?: string
+  cursor?: string
+  limit?: number
+}): Promise<PaginatedResponse<CommentDTO>> {
+  const searchParams = new URLSearchParams()
+  if (params?.status) searchParams.set('status', params.status)
+  if (params?.cursor) searchParams.set('cursor', params.cursor)
+  if (params?.limit) searchParams.set('limit', String(params.limit))
+  const qs = searchParams.toString()
+  return fetchApi<PaginatedResponse<CommentDTO>>(`/admin/comments${qs ? `?${qs}` : ''}`)
+}
+
+export async function hideComment(commentId: string): Promise<void> {
+  await fetchApi<null>(`/admin/comments/${commentId}/hide`, { method: 'POST' })
+}
+
+export async function unhideComment(commentId: string): Promise<void> {
+  await fetchApi<null>(`/admin/comments/${commentId}/unhide`, { method: 'POST' })
+}
