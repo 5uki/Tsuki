@@ -3,6 +3,7 @@
  */
 
 import type { GitHubOAuthPort } from '@contracts/ports'
+import { AppError } from '@contracts/errors'
 
 export function createGitHubOAuthAdapter(
   clientId: string,
@@ -33,7 +34,7 @@ export function createGitHubOAuthAdapter(
       })
 
       if (!res.ok) {
-        throw new Error(`GitHub token exchange failed: ${res.status}`)
+        throw new AppError('INTERNAL_ERROR', `GitHub token exchange failed: ${res.status}`)
       }
 
       const data = (await res.json()) as {
@@ -43,7 +44,8 @@ export function createGitHubOAuthAdapter(
       }
 
       if (data.error || !data.access_token) {
-        throw new Error(
+        throw new AppError(
+          'FORBIDDEN',
           `GitHub OAuth error: ${data.error_description || data.error || 'no access_token'}`
         )
       }
@@ -61,7 +63,7 @@ export function createGitHubOAuthAdapter(
       })
 
       if (!res.ok) {
-        throw new Error(`GitHub user API failed: ${res.status}`)
+        throw new AppError('INTERNAL_ERROR', `GitHub user API failed: ${res.status}`)
       }
 
       const user = (await res.json()) as {
