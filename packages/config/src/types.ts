@@ -75,6 +75,12 @@ export interface NavLink {
 export interface SiteConfig {
   /** 站点标题，长度 1..32 */
   title: string
+  /**
+   * 站点 URL（用于 RSS、Sitemap、OG 标签等生成绝对链接）
+   * - 示例：https://blog.example.com
+   * - 不含末尾斜杠
+   */
+  url?: string
   /** 站点描述，长度 0..160 */
   description?: string
   /** 默认主题 */

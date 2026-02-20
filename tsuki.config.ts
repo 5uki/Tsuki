@@ -3,6 +3,7 @@ import { defineConfig, navIcons } from '@tsuki/config'
 export default defineConfig({
   site: {
     title: 'Tsuki',
+    url: 'https://tsuki.5uki.cn',
     description: '一个认真写字的地方',
     defaultTheme: 'mauve',
     faviconHref: '/favicon.svg',

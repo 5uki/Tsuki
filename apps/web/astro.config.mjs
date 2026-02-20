@@ -11,13 +11,14 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import tsukiConfig from './src/config/tsuki-config.ts'
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url))
 const workspaceRoot = path.resolve(projectRoot, '..', '..')
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: tsukiConfig.site.url || 'https://example.com',
   output: 'server',
   adapter: cloudflare(),
   session: {
