@@ -1,48 +1,33 @@
 /**
  * Swup 页面过渡动画
- * 灵感来自 Firefly 博客主题
+ *
+ * 仅作用于 .main-content（中间内容区），
+ * 侧边栏和 Footer 等不变区域保持静止。
  */
 
-/* ── 主容器过渡（进入方向：从右下滑入） ── */
+/* ── 进入：从下方淡入滑入 ── */
 .transition-main {
   transition:
-    opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* ── 离开：更快的缓动 ── */
 html.is-leaving .transition-main {
   transition:
     opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
     transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
+/* ── 动画目标状态 ── */
 html.is-animating .transition-main {
   opacity: 0;
-  transform: translateY(1.5rem) translateX(0.5rem);
-}
-
-/* ── 内容包装器（离开方向：往左上滑出） ── */
-.transition-leaving {
-  transition:
-    opacity 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-html.is-leaving .transition-leaving {
-  transition:
-    transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
-    opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
-}
-
-html.is-animating.is-leaving .transition-leaving {
-  transform: translateY(-1rem) translateX(-0.5rem);
-  opacity: 0;
+  transform: translateY(1rem);
 }
 
 /* ── 减弱动画偏好 ── */
 @media (prefers-reduced-motion: reduce) {
-  .transition-main,
-  .transition-leaving {
+  .transition-main {
     transition: none;
     opacity: 1;
     transform: none;

@@ -1,5 +1,5 @@
 // Types
-export type { TsukiConfig, TsukiUserConfig, SiteConfig, NavLink, HeroConfig } from './types'
+export type { TsukiConfig, TsukiUserConfig, SiteConfig, NavLink, HeroConfig, FriendLink } from './types'
 
 // Functions
 export { defineConfig } from './define'

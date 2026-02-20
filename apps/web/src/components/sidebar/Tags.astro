@@ -16,7 +16,7 @@ const hasMore = tags.length > SHOW_MORE_THRESHOLD
   <div class:list={['tag-list', { 'tag-list-collapsed': hasMore }]} data-tag-list>
     {tags.length > 0 ? (
       tags.map((tag) => (
-        <a href={`/posts?tag=${toSlug(tag.name)}`} class="tsuki-tag-pill">
+        <a href={`/archives?tag=${toSlug(tag.name)}`} class="tsuki-tag-pill">
           {tag.name}
         </a>
       ))

@@ -19,6 +19,7 @@ const workspaceRoot = path.resolve(projectRoot, '..', '..')
 // https://astro.build/config
 export default defineConfig({
   site: tsukiConfig.site.url || 'https://example.com',
+  publicDir: path.resolve(workspaceRoot, 'contents'),
   output: 'server',
   adapter: cloudflare(),
   session: {
@@ -50,7 +51,7 @@ export default defineConfig({
     }),
     swup({
       theme: false,
-      containers: ['#swup'],
+      containers: ['#swup', '#swup-right'],
       animationClass: 'transition-',
       cache: true,
       preload: true,

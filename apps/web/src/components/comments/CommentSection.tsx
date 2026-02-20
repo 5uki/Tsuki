@@ -84,9 +84,9 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
     (c) => c.status !== 'deleted_by_user' && c.status !== 'deleted_by_admin'
   ).length
 
-  const loginUrl = `/login?redirect=${encodeURIComponent(
-    typeof window !== 'undefined' ? window.location.pathname : '/'
-  )}`
+  const openLoginModal = () => {
+    window.dispatchEvent(new CustomEvent('tsuki:open-login'))
+  }
 
   return (
     <div className="comment-section">
@@ -103,9 +103,9 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
           />
         ) : (
           <div className="comment-login-prompt">
-            <a className="comment-login-link" href={loginUrl}>
+            <button className="comment-login-link" type="button" onClick={openLoginModal}>
               登录后发表评论
-            </a>
+            </button>
           </div>
         )
       )}

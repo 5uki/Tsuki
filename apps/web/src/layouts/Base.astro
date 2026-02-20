@@ -33,30 +33,36 @@ const ogImageUrl = ogImage
     ? ogImage
     : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`
   : undefined
-const rawFaviconHref = tsukiConfig.site.faviconHref ?? '/favicon.svg'
-const faviconHref =
-  rawFaviconHref.startsWith('http://') ||
-  rawFaviconHref.startsWith('https://') ||
-  rawFaviconHref.startsWith('/')
-    ? rawFaviconHref
-    : `/${rawFaviconHref}`
+const faviconHref = tsukiConfig.site.faviconHref ?? '/favicon.svg'
 const faviconType = faviconHref.endsWith('.svg') ? 'image/svg+xml' : undefined
 
-const rawTopBgImageHref = tsukiConfig.hero?.backgroundImage?.href?.trim()
-const topBgImageHref =
-  rawTopBgImageHref &&
-  (rawTopBgImageHref.startsWith('http://') ||
-  rawTopBgImageHref.startsWith('https://') ||
-  rawTopBgImageHref.startsWith('/')
-    ? rawTopBgImageHref
-    : `/${rawTopBgImageHref}`)
+// defineConfig 已归一化路径，此处直接使用
+const bgImages = (tsukiConfig.hero?.backgroundImages ?? [])
+  .map((img) => ({
+    href: img.href,
+    positionY: Math.max(0, Math.min(100, img.positionY ?? 50)),
+  }))
+  .filter((img) => img.href)
+
+// 单图兼容：没有 backgroundImages 时用 backgroundImage
+if (bgImages.length === 0) {
+  const singleHref = tsukiConfig.hero?.backgroundImage?.href
+  if (singleHref) {
+    bgImages.push({
+      href: singleHref,
+      positionY: Math.max(0, Math.min(100, tsukiConfig.hero?.backgroundImage?.positionY ?? 50)),
+    })
+  }
+}
 
 const isHome = Astro.url.pathname === '/'
-const bgPositionY = tsukiConfig.hero?.backgroundImage?.positionY ?? 50
+const isSingleBg = bgImages.length === 1
 const bodyVars: string[] = []
-if (topBgImageHref) {
-  bodyVars.push(`--tsuki-banner-image: url('${topBgImageHref}');`)
-  bodyVars.push(`--tsuki-banner-image-position-y: ${Math.max(0, Math.min(100, bgPositionY))}%;`)
+
+// 单图：SSR 直接写入 CSS 变量（零 JS，可 preload）
+if (isSingleBg && bgImages[0]) {
+  bodyVars.push(`--tsuki-banner-image: url('${bgImages[0].href}');`)
+  bodyVars.push(`--tsuki-banner-image-position-y: ${bgImages[0].positionY}%;`)
 }
 if (!isHome) {
   bodyVars.push('--tsuki-banner-height: var(--tsuki-banner-height-compact);')
@@ -102,21 +108,21 @@ const VALID_THEMES = ['mauve']
     {ogArticle?.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
     <slot name="head" />
-    {topBgImageHref && <link rel="preload" href={topBgImageHref} as="image" fetchpriority="high" />}
+    {isSingleBg && bgImages[0] && <link rel="preload" href={bgImages[0].href} as="image" fetchpriority="high" />}
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" /></noscript>
     <title>{title}</title>
-    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES }}>
+    <script is:inline define:vars={{ defaultTheme: defaultTheme, validThemes: VALID_THEMES, bannerImages: bgImages }}>
       // 主题初始化：内联脚本确保在渲染前执行
       (function() {
-        const storageKey = 'tsuki.theme'
-        let persisted = null
+        var storageKey = 'tsuki.theme'
+        var persisted = null
         try {
           persisted = localStorage.getItem(storageKey)
         } catch (error) {
           void error
         }
-        let theme = persisted || defaultTheme
+        var theme = persisted || defaultTheme
         if (theme === 'violet') {
           theme = 'mauve'
         }
@@ -124,6 +130,18 @@ const VALID_THEMES = ['mauve']
           theme = defaultTheme
         }
         document.documentElement.setAttribute('data-theme', theme)
+
+        // 多背景图随机选择（window 内存缓存：刷新重选，SPA 导航保留）
+        if (bannerImages.length > 1) {
+          var img = window.__tsukiBannerBg
+          if (!img || !img.href) {
+            var idx = Math.floor(Math.random() * bannerImages.length)
+            img = bannerImages[idx]
+            window.__tsukiBannerBg = img
+          }
+          document.documentElement.style.setProperty('--tsuki-banner-image', "url('" + img.href + "')")
+          document.documentElement.style.setProperty('--tsuki-banner-image-position-y', img.positionY + '%')
+        }
       })()
     </script>
     <script>

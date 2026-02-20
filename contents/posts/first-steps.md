@@ -6,7 +6,7 @@ category: "博客指南"
 series: "Firefly 建站教程"
 tags: ["Firefly", "博客", "Markdown", "使用指南"]
 pinned: true
-cover: "/background.webp"
+cover: "../banners/1.png"
 ---
 
 ## 快速开始
@@ -23,7 +23,7 @@ export function hello(name: string) {
 
 你可以直接在文章里引用图片：
 
-![站点横幅](/background.webp)
+![站点横幅](../banners/1.png)
 
 > 轻量但有章法，才是可维护的体验。
 

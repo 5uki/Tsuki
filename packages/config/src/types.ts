@@ -50,6 +50,20 @@ export interface AnnouncementConfig {
 }
 
 /**
+ * 友情链接配置
+ */
+export interface FriendLink {
+  /** 友链名称 */
+  name: string
+  /** 头像地址 */
+  avatar?: string
+  /** 简介 */
+  description?: string
+  /** 链接地址 */
+  url: string
+}
+
+/**
  * 站点统计配置
  */
 export interface StatsConfig {
@@ -113,15 +127,17 @@ export interface BackgroundImageConfig {
 }
 
 /**
- * 首页 Hero 配置（支持 HTML）
+ * 首页 Hero 配置
  */
 export interface HeroConfig {
-  /** 第一行标题（HTML 字符串） */
-  titleHtml?: string
-  /** 第二行副标题（HTML 字符串） */
-  subtitleHtml?: string
-  /** Hero 背景图（可选） */
+  /** 第一行标题 */
+  title?: string
+  /** 第二行副标题 */
+  subtitle?: string
+  /** Hero 背景图（可选，单张） */
   backgroundImage?: BackgroundImageConfig
+  /** Hero 背景图列表（可选，多张随机展示，优先于 backgroundImage） */
+  backgroundImages?: BackgroundImageConfig[]
 }
 
 /**
@@ -140,6 +156,8 @@ export interface TsukiConfig {
   announcement?: AnnouncementConfig
   /** 站点统计配置 */
   stats?: StatsConfig
+  /** 友情链接列表 */
+  friends?: FriendLink[]
 }
 
 /**
@@ -152,4 +170,5 @@ export interface TsukiUserConfig {
   profile?: Partial<ProfileConfig>
   announcement?: Partial<AnnouncementConfig>
   stats?: Partial<StatsConfig>
+  friends?: FriendLink[]
 }

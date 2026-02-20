@@ -2,19 +2,49 @@
 import Default from '@/layouts/Default.astro'
 import PostCard from '@/components/content/PostCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
-import { toPostCardItems } from '@/lib/utils/post-cards'
+import { toPostCardItems, toSlug } from '@/lib/utils/post-cards'
 import { getPostEntries } from '@/lib/content'
 
 export const prerender = true
 
 const posts = await getPostEntries()
 const recentPosts = toPostCardItems(posts)
+
+// 构建系列列表（名称 + 数量）
+const seriesMap = new Map<string, { name: string; count: number; slug: string }>()
+recentPosts.forEach((post) => {
+  if (post.series) {
+    const slug = toSlug(post.series)
+    const existing = seriesMap.get(slug)
+    if (existing) {
+      existing.count += 1
+    } else {
+      seriesMap.set(slug, { name: post.series, count: 1, slug })
+    }
+  }
+})
+const seriesList = Array.from(seriesMap.values()).sort((a, b) => b.count - a.count)
 ---
 
 <Default description={tsukiConfig.site.description}>
   <section class="page-section">
+    {seriesList.length > 0 && (
+      <div class="series-filter-bar" id="series-filter-bar">
+        <div class="series-filter-indicator" id="series-filter-indicator"></div>
+        <button class="series-filter-home is-active" data-series-filter="" aria-label="全部文章">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </button>
+        {seriesList.map((s) => (
+          <button class="series-filter-item" data-series-filter={s.slug}>
+            {s.name}
+            <span class="series-filter-count">{s.count}</span>
+          </button>
+        ))}
+      </div>
+    )}
+
     {recentPosts.length > 0 ? (
-      <div class="tsuki-card-list">
+      <div class="tsuki-card-list" id="home-post-list">
         {recentPosts.map((post) => (
           <PostCard post={post} />
         ))}
@@ -22,11 +52,227 @@ const recentPosts = toPostCardItems(posts)
     ) : (
       <p class="tsuki-empty-state">暂无文章</p>
     )}
+    <p class="tsuki-empty-state series-filter-empty" id="series-filter-empty">该系列暂无文章</p>
   </section>
 </Default>
+
+<script>
+  interface TsukiSeriesWindow extends Window {
+    __tsukiSeriesCleanup?: () => void
+  }
+
+  const tsukiWin = window as TsukiSeriesWindow
+
+  function initSeriesFilter() {
+    // 清理上一轮事件监听（SPA 导航后重新绑定）
+    tsukiWin.__tsukiSeriesCleanup?.()
+
+    const bar = document.getElementById('series-filter-bar')
+    const list = document.getElementById('home-post-list')
+    const empty = document.getElementById('series-filter-empty')
+    const indicator = document.getElementById('series-filter-indicator')
+    if (!bar || !list) return
+
+    const controller = new AbortController()
+    const signal = controller.signal
+
+    const allButtons = bar.querySelectorAll<HTMLButtonElement>('[data-series-filter]')
+    const cards = list.querySelectorAll<HTMLElement>('.post-card-wrapper')
+
+    function moveIndicator(target: HTMLElement, animate = true) {
+      if (!indicator) return
+      const left = target.offsetLeft
+      const top = target.offsetTop
+      indicator.style.transition = animate
+        ? 'transform 240ms cubic-bezier(0.33, 1, 0.68, 1), width 240ms cubic-bezier(0.33, 1, 0.68, 1), height 240ms cubic-bezier(0.33, 1, 0.68, 1)'
+        : 'none'
+      indicator.style.transform = `translate(${left}px, ${top}px)`
+      indicator.style.width = `${target.offsetWidth}px`
+      indicator.style.height = `${target.offsetHeight}px`
+      indicator.style.opacity = '1'
+    }
+
+    // 初始定位到当前激活项（无动画）
+    const initialActive = bar.querySelector<HTMLElement>('.is-active')
+    if (initialActive) {
+      requestAnimationFrame(() => moveIndicator(initialActive, false))
+    }
+
+    allButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.seriesFilter!
+
+        // 更新 active 状态
+        allButtons.forEach((b) => b.classList.remove('is-active'))
+        btn.classList.add('is-active')
+
+        // 滑动指示器
+        moveIndicator(btn, true)
+
+        // 先淡出整个列表
+        list.classList.add('is-switching')
+
+        // 等淡出完成后切换可见性，再淡入
+        setTimeout(() => {
+          let visibleCount = 0
+          cards.forEach((card) => {
+            if (filter === '') {
+              card.classList.remove('is-hidden')
+              visibleCount++
+            } else {
+              const seriesSlug = card.getAttribute('data-series') || ''
+              if (seriesSlug === filter) {
+                card.classList.remove('is-hidden')
+                visibleCount++
+              } else {
+                card.classList.add('is-hidden')
+              }
+            }
+          })
+
+          if (empty) {
+            empty.classList.toggle('is-visible', visibleCount === 0)
+          }
+
+          // 触发 reflow 后淡入
+          void list.offsetHeight
+          list.classList.remove('is-switching')
+        }, 180)
+      }, { signal })
+    })
+
+    tsukiWin.__tsukiSeriesCleanup = () => controller.abort()
+  }
+
+  initSeriesFilter()
+  document.addEventListener('astro:page-load', initSeriesFilter)
+</script>
 
 <style>
   .page-section {
     margin-bottom: var(--tsuki-space-3xl);
+  }
+
+  /* ── Series Filter Bar ── */
+  .series-filter-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--tsuki-space-xs);
+    padding: var(--tsuki-space-xs);
+    margin-bottom: var(--tsuki-space-xl);
+    background: var(--tsuki-sidebar-card-bg);
+    border: 1px solid var(--tsuki-sidebar-card-border);
+    border-radius: var(--tsuki-sidebar-card-radius);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .series-filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Sliding Indicator ── */
+  .series-filter-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    border-radius: calc(var(--tsuki-sidebar-card-radius) - var(--tsuki-space-xs));
+    background: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 0;
+  }
+
+  /* ── Home Icon Button (Square) ── */
+  .series-filter-home {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.125rem;
+    height: 2.125rem;
+    flex-shrink: 0;
+    padding: 0;
+    background: var(--tsuki-surface-muted-soft);
+    border: 1px solid var(--tsuki-surface-border);
+    border-radius: calc(var(--tsuki-sidebar-card-radius) - var(--tsuki-space-xs));
+    cursor: pointer;
+    color: var(--tsuki-muted-fg);
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease;
+  }
+  .series-filter-home:hover {
+    color: var(--tsuki-fg);
+    border-color: color-mix(in srgb, var(--tsuki-fg) 20%, transparent);
+  }
+  .series-filter-home.is-active {
+    color: var(--tsuki-theme-accent);
+    background: color-mix(in srgb, var(--tsuki-theme-accent) 12%, transparent);
+    border-color: color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
+  }
+  .series-filter-home svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .series-filter-item {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--tsuki-space-2xs);
+    padding: var(--tsuki-space-xs) var(--tsuki-space-md);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: calc(var(--tsuki-sidebar-card-radius) - var(--tsuki-space-xs));
+    cursor: pointer;
+    font-size: var(--tsuki-text-sm);
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--tsuki-muted-fg);
+    white-space: nowrap;
+    transition:
+      color 160ms ease;
+  }
+  .series-filter-item:hover {
+    color: var(--tsuki-fg);
+  }
+  .series-filter-item.is-active {
+    color: var(--tsuki-theme-accent);
+  }
+
+  .series-filter-count {
+    font-size: var(--tsuki-text-xs);
+    font-weight: 600;
+    color: inherit;
+    opacity: 0.7;
+  }
+
+  .series-filter-empty {
+    display: none;
+  }
+  .series-filter-empty.is-visible {
+    display: block;
+  }
+</style>
+
+<style is:global>
+  /* ── Card list transition ── */
+  .tsuki-card-list {
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+  .tsuki-card-list.is-switching {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .tsuki-card-list .post-card-wrapper.is-hidden {
+    display: none;
   }
 </style>

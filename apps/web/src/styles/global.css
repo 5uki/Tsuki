@@ -67,7 +67,7 @@
     padding: var(--tsuki-space-xs) var(--tsuki-space-sm);
     font-size: var(--tsuki-sidebar-body-text-size);
     font-weight: 500;
-    color: var(--tsuki-accent-text);
+    color: var(--tsuki-theme-accent);
     text-decoration: none;
     transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
                 transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);

@@ -19,12 +19,13 @@ const { class: className, sidebarData } = Astro.props
     <Announcement />
     <SidebarList title="分类" items={sidebarData?.categories ?? []} queryKey="category" />
     <Tags tags={sidebarData?.tags ?? []} />
-    <SidebarList title="系列" items={sidebarData?.series ?? []} queryKey="series" />
   </aside>
-  <main class="main-content">
-    <slot />
+  <main class="main-content" id="swup">
+    <div class="transition-main">
+      <slot />
+    </div>
   </main>
-  <aside class="right-sidebar">
+  <aside class="right-sidebar" id="swup-right">
     <slot name="right" />
   </aside>
 </div>

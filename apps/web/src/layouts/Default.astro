@@ -5,6 +5,8 @@ import Banner from '@/components/layout/Banner.astro'
 import Footer from '@/components/layout/Footer.astro'
 import BackToTop from '@/components/layout/BackToTop.astro'
 import SearchModal from '@/components/content/SearchModal.astro'
+import LoginModal from '@/components/layout/LoginModal.astro'
+import SakuraEffect from '@/components/layout/SakuraEffect.astro'
 import MainLayout from '@/components/layout/MainLayout.astro'
 import MusicCard from '@/components/sidebar/MusicCard.astro'
 import CalendarCard from '@/components/sidebar/CalendarCard.astro'
@@ -48,34 +50,39 @@ const calendarIndex = needsCalendar ? await getCalendarIndex() : null
   <div class="page-shell">
     <Header />
     <Banner />
-    <div id="swup" class="transition-main">
-      <div class="page-body transition-leaving">
-        <main class="page-main">
-          {withSidebar ? (
-            <MainLayout sidebarData={sidebarData ?? undefined}>
-              <slot />
-              <Fragment slot="right">
-                <MusicCard />
-                {rightHtml ? (
-                  <div class="right-sticky-zone">
-                    <Fragment set:html={rightHtml} />
-                  </div>
-                ) : (
-                  calendarData && calendarIndex && (
-                    <CalendarCard calendarData={calendarData} calendarIndex={calendarIndex} />
-                  )
-                )}
-              </Fragment>
-            </MainLayout>
-          ) : (
+    <div class="page-body">
+      <main class="page-main">
+        {withSidebar ? (
+          <MainLayout sidebarData={sidebarData ?? undefined}>
             <slot />
-          )}
-        </main>
-        <Footer />
-      </div>
+            <Fragment slot="right">
+              <MusicCard />
+              {rightHtml ? (
+                <div class="right-sticky-zone">
+                  <Fragment set:html={rightHtml} />
+                </div>
+              ) : (
+                calendarData && calendarIndex && (
+                  <CalendarCard calendarData={calendarData} calendarIndex={calendarIndex} />
+                )
+              )}
+            </Fragment>
+          </MainLayout>
+        ) : (
+          <div class="nosidebar-zone">
+            <div id="swup" class="transition-main">
+              <slot />
+            </div>
+            <div id="swup-right" style="display:none"></div>
+          </div>
+        )}
+      </main>
+      <Footer />
     </div>
     <BackToTop />
     <SearchModal />
+    <LoginModal />
+    <SakuraEffect />
   </div>
 </Base>
 

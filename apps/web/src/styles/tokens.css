@@ -66,29 +66,92 @@
   --tsuki-scale-cover-active: 0.95;
 
   /* ── 基础色 ── */
-  --tsuki-fg: #0b0b0b;
+  --tsuki-fg: #1f2937;
   --tsuki-muted-fg: color-mix(in srgb, var(--tsuki-fg) 70%, white);
-  --tsuki-accent-text: var(--tsuki-theme-accent);
   --tsuki-color-on-primary: #ffffff;
-  --tsuki-banner-mask-ink: #000;
-  --tsuki-banner-mask-soft: rgba(0, 0, 0, 0.6);
-  --tsuki-btn-github-bg: #24292f;
-  --tsuki-btn-github-bg-hover: #32383f;
-  --tsuki-btn-github-fg: #ffffff;
 
-  /* ── 阴影 ── */
-  --tsuki-shadow-header: 0 8px 24px rgba(0, 0, 0, 0.08);
+  /* ── 阴影（通用） ── */
   --tsuki-shadow-popover: 0 4px 24px rgba(0, 0, 0, 0.08);
   --tsuki-shadow-theme-preview: 0 2px 8px rgba(0, 0, 0, 0.1);
   --tsuki-shadow-theme-preview-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --tsuki-shadow-banner-title: rgba(0, 0, 0, 0.6) 0 4px 24px;
-  --tsuki-shadow-banner-subtitle: rgba(0, 0, 0, 0.6) 0 2px 16px;
-  --tsuki-shadow-icon: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
+  --tsuki-shadow-icon: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 12%, transparent);
   --tsuki-profile-avatar-overlay: rgba(0, 0, 0, 0.55);
   --tsuki-profile-avatar-overlay-icon: var(--tsuki-color-on-primary);
   --tsuki-profile-avatar-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 
+  /* ── 布局 ── */
+  --tsuki-content-width: 48rem;
+  --tsuki-page-width: 96rem;
+  --tsuki-page-inline-padding: clamp(1.25rem, 3vw, 2.5rem);
+
+  /* Danger / Error */
+  --tsuki-danger: #e53e3e;
+  --tsuki-danger-hover: #c53030;
+
+  /* ── Sidebar ── */
+  --tsuki-sidebar-width-desktop: 20rem;
+  --tsuki-sidebar-width-tablet: 17.5rem;
+  --tsuki-sidebar-gap: 1.25rem;
+  --tsuki-sidebar-gap-compact: 1rem;
+  --tsuki-sidebar-card-radius: 1.25rem;
+  --tsuki-sidebar-card-padding: 1rem;
+  --tsuki-sidebar-card-padding-compact: 0.875rem;
+  --tsuki-sidebar-card-padding-inline: 1.125rem;
+  --tsuki-sidebar-card-padding-inline-compact: 1rem;
+  --tsuki-sidebar-card-title-top-padding: calc(var(--tsuki-sidebar-card-padding) + var(--tsuki-space-3xs));
+  --tsuki-sidebar-card-title-top-padding-compact: calc(var(--tsuki-sidebar-card-padding-compact) + var(--tsuki-space-3xs));
+  --tsuki-sidebar-section-title-size: 1.0625rem;
+  --tsuki-sidebar-section-title-size-desktop: 1.125rem;
+  --tsuki-sidebar-section-marker-height: var(--tsuki-space-lg);
+  --tsuki-sidebar-section-marker-width: var(--tsuki-border-accent-width);
+  --tsuki-sidebar-body-text-size: 0.875rem;
+  --tsuki-sidebar-body-text-size-desktop: 0.9rem;
+
+  /* Sidebar 派生色 */
+  --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%);
+  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
+  --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 12%, transparent);
+  --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
+  --tsuki-sidebar-card-hover-translate: -0.125rem;
+
+  /* Link Icon */
+  --tsuki-link-icon-bg: var(--tsuki-theme-secondary);
+  --tsuki-link-icon-bg-hover: var(--tsuki-theme-secondary);
+
+  /* ── Icon & PostCard ── */
+  --tsuki-icon-button-size: 2.5rem;
+  --tsuki-icon-size-md: 1.25rem;
+  --tsuki-meta-icon-badge-size: 1.85rem;
+  --tsuki-meta-icon-size: 1.18rem;
+  --tsuki-meta-icon-container-size: 1.28rem;
+  --tsuki-post-title-arrow-size: 2rem;
+  --tsuki-post-cover-width: 30%;
+  --tsuki-post-cover-gap: 1.5rem;
+  --tsuki-post-cover-padding: 1rem;
+  --tsuki-post-card-min-height: 12.8rem;
+
+  /* Post 派生色 */
+  --tsuki-post-title-fg: color-mix(in srgb, var(--tsuki-fg) 90%, white);
+  --tsuki-post-pinned-bg: color-mix(in srgb, var(--tsuki-theme-accent) 20%, var(--tsuki-sidebar-card-bg));
+
+  /* ── Surface 派生色 ── */
+  --tsuki-surface-muted: color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%);
+  --tsuki-surface-muted-strong: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
+  --tsuki-surface-muted-soft: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
+  --tsuki-surface-border: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
+  --tsuki-surface-accent: color-mix(in srgb, var(--tsuki-theme-accent) 10%, white);
+
+  /* Prose 代码色 */
+  --tsuki-prose-code-fg: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);
+  --tsuki-prose-inline-code-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 22%, #f2f4f8);
+  --tsuki-prose-inline-code-border: color-mix(in srgb, var(--tsuki-theme-secondary) 48%, #d7dce3);
+
   /* ── Banner ── */
+  --tsuki-banner-mask-ink: #000;
+  --tsuki-banner-mask-soft: rgba(0, 0, 0, 0.6);
+  --tsuki-shadow-banner-title: rgba(0, 0, 0, 0.6) 0 4px 24px;
+  --tsuki-shadow-banner-subtitle: rgba(0, 0, 0, 0.6) 0 2px 16px;
   --tsuki-banner-height: clamp(22rem, 75vh, 42rem);
   --tsuki-banner-wave-height: 10vh;
   --tsuki-banner-wave-height-md: 15vh;
@@ -115,12 +178,8 @@
   --tsuki-banner-title-fg: var(--tsuki-color-on-primary);
   --tsuki-banner-subtitle-fg: color-mix(in srgb, var(--tsuki-color-on-primary) 90%, transparent);
 
-  /* ── 布局 ── */
-  --tsuki-content-width: 48rem;
-  --tsuki-page-width: 96rem;
-  --tsuki-page-inline-padding: clamp(1.25rem, 3vw, 2.5rem);
-
   /* ── Header ── */
+  --tsuki-shadow-header: 0 8px 24px rgba(0, 0, 0, 0.08);
   --tsuki-header-frame-radius: 1.25rem;
   --tsuki-header-frame-side-gap: 20px;
   --tsuki-header-frame-bottom-gap: 20px;
@@ -138,86 +197,17 @@
     var(--tsuki-header-frame-top-gap) +
     var(--tsuki-header-frame-top-overflow)
   );
-
-  /* Header 派生色 */
   --tsuki-header-dropdown-bg: #ffffff;
-  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 88%, transparent);
-  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%) 84%, transparent);
+  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 72%, transparent);
   --tsuki-header-frame-shadow: var(--tsuki-shadow-header);
   --tsuki-header-track-border: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  --tsuki-header-pill-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 92%, transparent);
+  --tsuki-header-pill-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%) 88%, transparent);
   --tsuki-header-action-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
-  --tsuki-header-action-hover-bg: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
+  --tsuki-header-action-hover-bg: color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%);
   --tsuki-header-action-hover-border: var(--tsuki-theme-accent);
   --tsuki-header-dropdown-border: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
   --tsuki-header-dropdown-shadow: var(--tsuki-shadow-popover);
   --tsuki-header-dropdown-border-soft: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 50%, transparent);
   --tsuki-header-dropdown-outline: 0 0 0 1px color-mix(in srgb, var(--tsuki-theme-accent) 5%, transparent);
-
-  /* Login */
-  --tsuki-login-bg: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
-  --tsuki-login-border: color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
-
-  /* Danger / Error */
-  --tsuki-danger: #e53e3e;
-  --tsuki-danger-hover: #c53030;
-
-  /* ── Sidebar ── */
-  --tsuki-sidebar-width-desktop: 20rem;
-  --tsuki-sidebar-width-tablet: 17.5rem;
-  --tsuki-sidebar-gap: 1.25rem;
-  --tsuki-sidebar-gap-compact: 1rem;
-  --tsuki-sidebar-card-radius: 1.25rem;
-  --tsuki-sidebar-card-padding: 1rem;
-  --tsuki-sidebar-card-padding-compact: 0.875rem;
-  --tsuki-sidebar-card-padding-inline: 1.125rem;
-  --tsuki-sidebar-card-padding-inline-compact: 1rem;
-  --tsuki-sidebar-card-title-top-padding: calc(var(--tsuki-sidebar-card-padding) + var(--tsuki-space-3xs));
-  --tsuki-sidebar-card-title-top-padding-compact: calc(var(--tsuki-sidebar-card-padding-compact) + var(--tsuki-space-3xs));
-  --tsuki-sidebar-section-title-size: 1.0625rem;
-  --tsuki-sidebar-section-title-size-desktop: 1.125rem;
-  --tsuki-sidebar-section-marker-height: var(--tsuki-space-lg);
-  --tsuki-sidebar-section-marker-width: var(--tsuki-border-accent-width);
-  --tsuki-sidebar-body-text-size: 0.875rem;
-  --tsuki-sidebar-body-text-size-desktop: 0.9rem;
-
-  /* Sidebar 派生色 */
-  --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
-  --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
-  --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent);
-  --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
-  --tsuki-sidebar-card-hover-translate: -0.125rem;
-
-  /* Link Icon */
-  --tsuki-link-icon-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 82%, var(--tsuki-theme-accent) 18%);
-  --tsuki-link-icon-bg-hover: color-mix(in srgb, color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%) 72%, var(--tsuki-theme-accent) 28%);
-
-  /* ── Icon & PostCard ── */
-  --tsuki-icon-button-size: 2.5rem;
-  --tsuki-icon-size-md: 1.25rem;
-  --tsuki-meta-icon-badge-size: 1.85rem;
-  --tsuki-meta-icon-size: 1.18rem;
-  --tsuki-meta-icon-container-size: 1.28rem;
-  --tsuki-post-title-arrow-size: 2rem;
-  --tsuki-post-cover-width: 30%;
-  --tsuki-post-cover-gap: 1.5rem;
-  --tsuki-post-cover-padding: 1rem;
-  --tsuki-post-card-min-height: 12.8rem;
-
-  /* Post 派生色 */
-  --tsuki-post-title-fg: color-mix(in srgb, var(--tsuki-fg) 90%, white);
-  --tsuki-post-pinned-bg: color-mix(in srgb, var(--tsuki-theme-accent) 20%, var(--tsuki-sidebar-card-bg));
-
-  /* ── Surface 派生色 ── */
-  --tsuki-surface-muted: color-mix(in srgb, #ffffff 72%, var(--tsuki-theme-secondary) 28%);
-  --tsuki-surface-muted-strong: color-mix(in srgb, var(--tsuki-theme-secondary) 60%, #ffffff);
-  --tsuki-surface-muted-soft: color-mix(in srgb, var(--tsuki-theme-secondary) 42%, #ffffff);
-  --tsuki-surface-border: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  --tsuki-surface-accent: color-mix(in srgb, var(--tsuki-theme-accent) 10%, white);
-
-  /* Prose 代码色 */
-  --tsuki-prose-code-fg: color-mix(in srgb, var(--tsuki-theme-accent) 76%, #3b0764);
-  --tsuki-prose-inline-code-bg: color-mix(in srgb, var(--tsuki-theme-secondary) 22%, #f2f4f8);
-  --tsuki-prose-inline-code-border: color-mix(in srgb, var(--tsuki-theme-secondary) 48%, #d7dce3);
 }

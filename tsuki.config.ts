@@ -3,26 +3,29 @@ import { defineConfig, navIcons } from '@tsuki/config'
 export default defineConfig({
   site: {
     title: 'Tsuki',
-    url: 'https://tsuki.5uki.cn',
+    url: 'https://blog.5uki.top',
     description: '一个认真写字的地方',
     defaultTheme: 'mauve',
-    faviconHref: '/favicon.svg',
+    faviconHref: './contents/favicon.svg',
   },
   hero: {
-    titleHtml: '<span style="letter-spacing: -0.02em;">Tsuki</span>',
-    subtitleHtml: '<span>一个认真写字的地方</span>',
-    backgroundImage: {
-      href: '/background.webp',
-      positionY: 25,
-    },
+    title: 'Tsuki',
+    subtitle: '一个认真写字的地方',
+    backgroundImages: [
+      { href: './contents/banners/1.png', positionY: 25 },
+      { href: './contents/banners/2.png', positionY: 25 },
+      { href: './contents/banners/3.png', positionY: 25 },
+    ],
   },
   nav: [
     { label: '首页', href: '/', icon: navIcons.home },
-    { label: '文章', href: '/posts', icon: navIcons.posts },
+    { label: '归档', href: '/archives', icon: navIcons.archive },
     { label: '动态', href: '/moments', icon: navIcons.moments },
+    { label: '关于', href: '/about', icon: navIcons.about },
+    { label: '友链', href: '/friends', icon: navIcons.friends },
   ],
   profile: {
-    avatar: '/avatar.webp',
+    avatar: './contents/avatar.webp',
     avatarLink: '/about',
     name: 'Suki',
     bio: '热爱技术，喜欢分享',
@@ -47,4 +50,12 @@ export default defineConfig({
   stats: {
     enable: true,
   },
+  friends: [
+    {
+      name: '示例博客',
+      avatar: 'https://via.placeholder.com/64',
+      description: '一个有趣的博客',
+      url: 'https://example.com',
+    },
+  ],
 })

@@ -1,0 +1,313 @@
+---
+import { uiIcons } from '@tsuki/shared/icons'
+---
+
+<div id="login-modal" class="login-overlay" role="dialog" aria-modal="true" aria-label="登录">
+  <div class="login-backdrop" data-login-close></div>
+  <div class="login-dialog">
+    <div class="login-dialog-header">
+      <span class="login-dialog-title">登录</span>
+      <button class="login-close-btn" data-login-close aria-label="关闭">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="login-dialog-body">
+      <div id="login-modal-not-logged" class="login-state">
+        <p class="login-desc">使用 GitHub 账号登录以发表评论</p>
+        <a id="login-modal-github-btn" href="#" class="github-login-btn">
+          <span class="github-login-icon" set:html={uiIcons.githubLogin} />
+          <span>使用 GitHub 登录</span>
+        </a>
+      </div>
+      <div id="login-modal-logged" class="login-state" style="display:none;">
+        <div class="login-user-row">
+          <img id="login-modal-avatar" class="login-modal-avatar" src="" alt="" width="48" height="48" />
+          <div class="login-user-info">
+            <span id="login-modal-username" class="login-modal-username"></span>
+            <span class="login-status-badge">已登录</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface TsukiLoginWindow extends Window {
+    __tsukiLoginCleanup?: () => void
+    __tsukiLoginBound?: boolean
+  }
+
+  const tsukiWindow = window as TsukiLoginWindow
+
+  function initLoginModal() {
+    tsukiWindow.__tsukiLoginCleanup?.()
+
+    const overlay = document.getElementById('login-modal')
+    const githubBtn = document.getElementById('login-modal-github-btn') as HTMLAnchorElement | null
+    if (!overlay || !githubBtn) return
+
+    const controller = new AbortController()
+    const signal = controller.signal
+
+    const API_BASE = import.meta.env.PUBLIC_TSUKI_API_BASE || 'http://localhost:8787/v1'
+    const overlayEl = overlay
+    const githubBtnEl = githubBtn
+
+    function lockScroll() {
+      const sw = window.innerWidth - document.documentElement.clientWidth
+      document.body.style.paddingRight = sw + 'px'
+      document.body.style.overflow = 'hidden'
+    }
+
+    function unlockScroll() {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
+    }
+
+    function open() {
+      // 设置 GitHub 登录 URL（return_to 为当前页面）
+      const returnTo = encodeURIComponent(window.location.pathname)
+      githubBtnEl.href = `${API_BASE}/auth/github/start?return_to=${returnTo}`
+
+      // 检查是否已登录
+      const tsukiWin = window as any
+      const user = tsukiWin.__tsukiCurrentUser
+      const loggedEl = document.getElementById('login-modal-logged')
+      const notLoggedEl = document.getElementById('login-modal-not-logged')
+      const avatar = document.getElementById('login-modal-avatar') as HTMLImageElement | null
+      const username = document.getElementById('login-modal-username')
+
+      if (user && loggedEl && notLoggedEl) {
+        notLoggedEl.style.display = 'none'
+        loggedEl.style.display = 'block'
+        if (avatar) { avatar.src = user.avatar_url; avatar.alt = user.login }
+        if (username) username.textContent = user.login
+      } else if (loggedEl && notLoggedEl) {
+        notLoggedEl.style.display = 'block'
+        loggedEl.style.display = 'none'
+      }
+
+      lockScroll()
+      overlayEl.classList.add('open')
+    }
+
+    function close() {
+      overlayEl.classList.remove('open')
+      unlockScroll()
+    }
+
+    // 点击 header 登录按钮
+    document.querySelectorAll('[data-login-open]').forEach(el =>
+      el.addEventListener('click', (e) => { e.preventDefault(); open() }, { signal })
+    )
+
+    // 自定义事件（供 React 评论区调用）
+    window.addEventListener('tsuki:open-login', () => open(), { signal })
+
+    // 关闭按钮 + backdrop
+    overlay.querySelectorAll('[data-login-close]').forEach(el =>
+      el.addEventListener('click', close, { signal })
+    )
+
+    // Escape 关闭
+    overlay.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close()
+    }, { signal })
+
+    tsukiWindow.__tsukiLoginCleanup = () => controller.abort()
+  }
+
+  if (!tsukiWindow.__tsukiLoginBound) {
+    document.addEventListener('astro:page-load', initLoginModal)
+    tsukiWindow.__tsukiLoginBound = true
+  }
+
+  initLoginModal()
+</script>
+
+<style>
+  .login-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: min(22vh, 10rem);
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .login-overlay.open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .login-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 100ms ease;
+  }
+  .login-overlay.open .login-backdrop {
+    opacity: 1;
+  }
+
+  .login-dialog {
+    position: relative;
+    width: min(24rem, calc(100vw - 2rem));
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.875rem;
+    border: 1px solid var(--tsuki-header-dropdown-border);
+    background: var(--tsuki-header-dropdown-bg);
+    box-shadow:
+      var(--tsuki-shadow-popover),
+      0 12px 40px -8px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    transform-origin: top center;
+    transition:
+      opacity 120ms ease,
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .login-overlay.open .login-dialog {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .login-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--tsuki-header-dropdown-border-soft);
+  }
+
+  .login-dialog-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+
+  .login-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: var(--tsuki-muted-fg);
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+  .login-close-btn:hover {
+    color: var(--tsuki-fg);
+  }
+
+  .login-dialog-body {
+    padding: 1.5rem;
+  }
+
+  .login-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .login-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--tsuki-muted-fg);
+    text-align: center;
+  }
+
+  .github-login-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.75rem;
+    background: var(--tsuki-btn-github-bg);
+    color: var(--tsuki-btn-github-fg);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+  .github-login-btn:hover {
+    background: var(--tsuki-btn-github-bg-hover);
+    text-decoration: none;
+    color: var(--tsuki-btn-github-fg);
+  }
+
+  .github-login-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .login-user-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .login-modal-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .login-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .login-modal-username {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+
+  .login-status-badge {
+    font-size: 0.75rem;
+    color: var(--tsuki-theme-accent);
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    .login-overlay { padding-top: 0; }
+    .login-dialog {
+      width: 100%;
+      max-width: none;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+  }
+</style>
+
+<style is:global>
+  :root {
+    /* ── Login / GitHub Button Tokens ── */
+    --tsuki-btn-github-bg: #24292f;
+    --tsuki-btn-github-bg-hover: #32383f;
+    --tsuki-btn-github-fg: #ffffff;
+    --tsuki-login-bg: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
+    --tsuki-login-border: color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
+  }
+</style>

@@ -279,7 +279,7 @@ const articleDays = new Set(articles.map((a) => a.day))
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
-    font-size: var(--tsuki-text-xs);
+    font-size: var(--tsuki-text-sm);
     font-weight: 400;
     color: var(--tsuki-fg);
     border-radius: var(--tsuki-radius-sm);
@@ -289,9 +289,14 @@ const articleDays = new Set(articles.map((a) => a.day))
     visibility: hidden;
   }
 
+  .calendar-card .calendar-day.has-article {
+    font-size: var(--tsuki-text-base);
+    font-weight: 700;
+  }
+
   .calendar-card .calendar-day.is-today {
     font-weight: 700;
-    color: var(--tsuki-accent-text);
+    color: var(--tsuki-theme-accent);
     background: var(--tsuki-surface-accent);
   }
 

@@ -2,8 +2,8 @@
 // 横幅组件 - 首页顶部展示区域,包含标题和波浪动画
 import tsukiConfig from '@/config/tsuki-config'
 
-const titleHtml = tsukiConfig.hero?.titleHtml
-const subtitleHtml = tsukiConfig.hero?.subtitleHtml
+const title = tsukiConfig.hero?.title
+const subtitle = tsukiConfig.hero?.subtitle
 const fallbackTitle = tsukiConfig.site.title
 const fallbackSubtitle = tsukiConfig.site.description
 
@@ -12,17 +12,8 @@ const isHome = Astro.url.pathname === '/'
 
 <section class="tsuki-banner" aria-label="Banner">
   <div class="tsuki-banner-content" data-home={isHome ? '' : undefined}>
-    {titleHtml ? (
-      <h1 class="tsuki-banner-title" set:html={titleHtml}></h1>
-    ) : (
-      <h1 class="tsuki-banner-title">{fallbackTitle}</h1>
-    )}
-
-    {subtitleHtml ? (
-      <p class="tsuki-banner-subtitle" set:html={subtitleHtml}></p>
-    ) : (
-      <p class="tsuki-banner-subtitle">{fallbackSubtitle}</p>
-    )}
+    <h1 class="tsuki-banner-title">{title || fallbackTitle}</h1>
+    <p class="tsuki-banner-subtitle">{subtitle || fallbackSubtitle}</p>
   </div>
 
   <div id="header-waves" class="tsuki-banner-waves waves" aria-hidden="true">

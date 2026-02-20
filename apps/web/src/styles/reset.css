@@ -42,7 +42,7 @@ body {
 }
 
 a {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
   text-decoration: none;
 }
 

@@ -1,0 +1,29 @@
+---
+import Default from '@/layouts/Default.astro'
+
+export const prerender = true
+
+const aboutMd = await import('../../../../contents/about.md')
+const { Content } = aboutMd
+---
+
+<Default title="关于" description="关于我和这个博客">
+  <article class="tsuki-content-card about-page">
+    <h1 class="about-title">关于</h1>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Default>
+
+<style>
+  .about-title {
+    margin-bottom: var(--tsuki-space-2xl);
+    padding-bottom: var(--tsuki-space-lg);
+    border-bottom: 1px solid var(--tsuki-surface-border);
+    font-size: var(--tsuki-text-3xl);
+    font-weight: 600;
+    line-height: var(--tsuki-line-height-heading);
+    color: var(--tsuki-fg);
+  }
+</style>

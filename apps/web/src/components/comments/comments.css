@@ -130,11 +130,15 @@
 }
 
 .comment-login-link {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
   text-decoration: none;
   font-size: var(--tsuki-text-sm);
   font-weight: 500;
   transition: opacity var(--tsuki-motion-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .comment-login-link:hover {
@@ -196,7 +200,7 @@
 }
 
 .comment-author:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .comment-time {
@@ -247,7 +251,7 @@
 }
 
 .comment-action-btn:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .comment-action-btn--danger:hover {
@@ -297,7 +301,7 @@
 
 .comment-error-retry:hover {
   border-color: var(--tsuki-theme-accent);
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .comment-form-error {

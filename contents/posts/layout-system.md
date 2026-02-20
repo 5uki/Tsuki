@@ -5,7 +5,7 @@ publishedAt: "2026-02-03"
 category: "博客指南"
 series: "Firefly 建站教程"
 tags: ["Firefly", "布局", "博客", "使用指南"]
-cover: "/background.webp"
+cover: "../banners/3.png"
 ---
 
 ## 三列布局的核心

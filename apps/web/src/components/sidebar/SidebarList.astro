@@ -27,7 +27,7 @@ const hasMore = items.length > visibleCount
     {items.length > 0 ? (
       items.map((item, i) => (
         <a
-          href={`/posts?${queryKey}=${toSlug(item.name)}`}
+          href={`/archives?${queryKey}=${toSlug(item.name)}`}
           class:list={['sidebar-list-item', { 'is-hidden': hasMore && i >= visibleCount }]}
         >
           <span class="item-name">{item.name}</span>

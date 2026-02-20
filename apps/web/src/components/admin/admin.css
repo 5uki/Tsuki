@@ -58,7 +58,7 @@
 }
 
 .admin-sidebar-link[aria-current="page"] {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
   font-weight: 600;
   background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
 }
@@ -79,7 +79,7 @@
 }
 
 .admin-sidebar-back:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 /* Main content area */
@@ -121,7 +121,7 @@
 }
 
 .admin-topbar-link:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .admin-content {
@@ -330,7 +330,7 @@
 }
 
 .admin-filter-btn.is-active {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
   border-color: var(--tsuki-theme-accent);
   background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
 }
@@ -394,7 +394,7 @@
 }
 
 .admin-table-author-name:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .admin-table-body {
@@ -429,7 +429,7 @@
 
 .admin-status-pill--visible {
   background: color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .admin-status-pill--hidden {
@@ -458,7 +458,7 @@
 }
 
 .admin-action-btn:hover {
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
   border-color: var(--tsuki-theme-accent);
 }
 
@@ -524,7 +524,7 @@
 
 .admin-error-retry:hover {
   border-color: var(--tsuki-theme-accent);
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 /* Pagination */
@@ -550,7 +550,7 @@
 
 .admin-pagination-btn:hover {
   border-color: var(--tsuki-theme-accent);
-  color: var(--tsuki-accent-text);
+  color: var(--tsuki-theme-accent);
 }
 
 .admin-pagination-btn:disabled {

@@ -5,9 +5,6 @@
 :root,
 [data-theme='mauve'] {
   --tsuki-theme-gradient: radial-gradient(ellipse at 50% 60%, #fae8f2 0%, #f3edff 65%);
-  --tsuki-theme-accent: #a78bfa;
-  --tsuki-accent-text: #6d28d9;
+  --tsuki-theme-accent: #6d28d9;
   --tsuki-theme-secondary: #f3edff;
-  --tsuki-fg: #1f2937;
-  --tsuki-color-on-primary: #ffffff;
 }
