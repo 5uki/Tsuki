@@ -7,6 +7,7 @@ import type { Env, AppContext } from '@contracts/env'
 import { AppError } from '@contracts/errors'
 import { startGithubOAuth, handleGithubCallback, logout } from '@usecases/auth'
 import { parseCookie } from './middleware/session'
+import { csrfMiddleware } from './middleware/csrf'
 
 export function authRoutes() {
   const router = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -107,7 +108,7 @@ export function authRoutes() {
   })
 
   // 退出登录
-  router.post('/logout', async (c) => {
+  router.post('/logout', csrfMiddleware, async (c) => {
     const cookieHeader = c.req.header('Cookie')
     const sessionId = parseCookie(cookieHeader, 'tsuki_session')
     const ports = c.get('ports')

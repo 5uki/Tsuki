@@ -7,7 +7,7 @@
 
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
+import { createMiddleware } from 'hono/factory'
 import { createRoutes } from '@api/routes'
 import type { Env, AppContext } from '@contracts/env'
 import { AppError } from '@contracts/errors'
@@ -16,12 +16,33 @@ import { createUsersAdapter } from '@adapters/users'
 import { createSessionsAdapter } from '@adapters/sessions'
 import { createGitHubOAuthAdapter } from '@adapters/github-oauth'
 import { createCommentsAdapter } from '@adapters/comments'
+import { createIdempotencyAdapter } from '@adapters/idempotency'
 import { sessionMiddleware } from '@api/middleware/session'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
 
-// 全局中间件：日志
-app.use('*', logger())
+// ── 结构化日志中间件 ──
+const structuredLogger = createMiddleware<{ Bindings: Env; Variables: AppContext }>(
+  async (c, next) => {
+    const start = Date.now()
+    await next()
+    const duration = Date.now() - start
+    const requestId = c.get('requestId') || '-'
+
+    console.log(
+      JSON.stringify({
+        level: 'info',
+        request_id: requestId,
+        method: c.req.method,
+        path: c.req.path,
+        status: c.res.status,
+        duration_ms: duration,
+        user_agent: c.req.header('User-Agent')?.slice(0, 128) || '-',
+      })
+    )
+  }
+)
+app.use('*', structuredLogger)
 
 // 全局中间件：CORS
 app.use(
@@ -59,6 +80,7 @@ app.use('*', async (c, next) => {
       c.env.GITHUB_OAUTH_CLIENT_SECRET
     ),
     comments: createCommentsAdapter(c.env.DB),
+    idempotency: createIdempotencyAdapter(c.env.DB),
   })
 
   await next()
@@ -75,6 +97,17 @@ app.onError((err, c) => {
   const requestId = c.get('requestId') || 'unknown'
 
   if (err instanceof AppError) {
+    if (err.status >= 500) {
+      console.error(
+        JSON.stringify({
+          level: 'error',
+          request_id: requestId,
+          code: err.code,
+          message: err.message,
+          stack: err.stack?.slice(0, 500),
+        })
+      )
+    }
     return c.json(
       {
         ok: false,
@@ -89,7 +122,14 @@ app.onError((err, c) => {
     )
   }
 
-  console.error(`[${requestId}] Error:`, err)
+  console.error(
+    JSON.stringify({
+      level: 'error',
+      request_id: requestId,
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack?.slice(0, 500) : undefined,
+    })
+  )
 
   return c.json(
     {

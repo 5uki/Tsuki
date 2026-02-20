@@ -3,6 +3,7 @@
  */
 
 import type { UsersPort, UserRecord } from '@contracts/ports'
+import { sanitizeUrl } from '@atoms/validate-url'
 
 export function createUsersAdapter(
   db: D1Database,
@@ -28,6 +29,8 @@ export function createUsersAdapter(
     async upsertByGithubId(input): Promise<UserRecord> {
       const now = Date.now()
       const role = adminGithubIds.includes(input.github_id) ? 'admin' : input.role
+      const avatarUrl = sanitizeUrl(input.avatar_url)
+      const profileUrl = sanitizeUrl(input.profile_url)
 
       const existing = await db
         .prepare('SELECT * FROM users WHERE github_id = ?')
@@ -44,8 +47,8 @@ export function createUsersAdapter(
           )
           .bind(
             input.login,
-            input.avatar_url,
-            input.profile_url,
+            avatarUrl,
+            profileUrl,
             role,
             now,
             now,
@@ -56,8 +59,8 @@ export function createUsersAdapter(
         return {
           ...existing,
           login: input.login,
-          avatar_url: input.avatar_url,
-          profile_url: input.profile_url,
+          avatar_url: avatarUrl,
+          profile_url: profileUrl,
           role,
           updated_at: now,
           last_login_at: now,
@@ -74,8 +77,8 @@ export function createUsersAdapter(
           id,
           input.github_id,
           input.login,
-          input.avatar_url,
-          input.profile_url,
+          avatarUrl,
+          profileUrl,
           role,
           now,
           now,
@@ -87,8 +90,8 @@ export function createUsersAdapter(
         id,
         github_id: input.github_id,
         login: input.login,
-        avatar_url: input.avatar_url,
-        profile_url: input.profile_url,
+        avatar_url: avatarUrl,
+        profile_url: profileUrl,
         role,
         is_banned: 0,
         theme_pref: null,

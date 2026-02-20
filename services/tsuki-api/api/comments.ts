@@ -7,6 +7,8 @@ import type { Env, AppContext } from '@contracts/env'
 import { AppError } from '@contracts/errors'
 import { requireAuth } from './middleware/guards'
 import { csrfMiddleware } from './middleware/csrf'
+import { etagMiddleware } from './middleware/etag'
+import { createIdempotencyMiddleware } from './middleware/idempotency'
 import {
   listPublicComments,
   listAdminComments,
@@ -19,9 +21,10 @@ import {
 
 export function commentsRoutes() {
   const router = new Hono<{ Bindings: Env; Variables: AppContext }>()
+  const idempotencyMiddleware = createIdempotencyMiddleware((c: any) => c.get('ports').idempotency)
 
   // 获取评论列表（公开）
-  router.get('/', async (c) => {
+  router.get('/', etagMiddleware, async (c) => {
     const targetType = c.req.query('target_type')
     const targetId = c.req.query('target_id')
 
@@ -56,8 +59,8 @@ export function commentsRoutes() {
     return c.json({ ok: true, data })
   })
 
-  // 发表评论（需要登录 + CSRF）
-  router.post('/', requireAuth, csrfMiddleware, async (c) => {
+  // 发表评论（需要登录 + CSRF + 可选幂等）
+  router.post('/', requireAuth, csrfMiddleware, idempotencyMiddleware, async (c) => {
     const body = await c.req.json<{
       target_type?: string
       target_id?: string

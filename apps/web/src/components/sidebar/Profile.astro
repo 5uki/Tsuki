@@ -49,6 +49,8 @@ const resolveIcon = (icon: string) => {
         src={safeProfile.avatar}
         alt={safeProfile.name}
         class="avatar-img"
+        loading="lazy"
+        decoding="async"
       />
     </a>
   )}
@@ -91,7 +93,7 @@ const resolveIcon = (icon: string) => {
             aria-label={link.name}
           >
             {icon.type === 'image' ? (
-              <img src={icon.value} alt="" class="link-icon-img" />
+              <img src={icon.value} alt="" class="link-icon-img" loading="lazy" decoding="async" />
             ) : icon.type === 'inline' ? (
               <span class="link-icon-svg" set:html={icon.value}></span>
             ) : (

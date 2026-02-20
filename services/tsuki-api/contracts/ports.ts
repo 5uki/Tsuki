@@ -170,3 +170,28 @@ export interface GitHubOAuthPort {
     profile_url: string
   }>
 }
+
+/**
+ * 幂等键端口
+ */
+export interface IdempotencyPort {
+  /** 查找已缓存的响应 */
+  find(route: string, userId: string | null, idemKey: string): Promise<{
+    response_status: number
+    response_json: string
+  } | null>
+
+  /** 存储响应供后续复用 */
+  store(input: {
+    route: string
+    userId: string | null
+    idemKey: string
+    requestHash: string
+    responseStatus: number
+    responseJson: string
+    ttlMs: number
+  }): Promise<void>
+
+  /** 清理过期条目 */
+  cleanup(): Promise<void>
+}
