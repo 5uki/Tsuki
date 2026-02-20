@@ -1,6 +1,7 @@
 ---
 import Default from '@/layouts/Default.astro'
 import TableOfContents from '@/components/content/TableOfContents.astro'
+import CommentSection from '@/components/comments/CommentSection'
 import { Icon } from 'astro-icon/components'
 import { toSlug } from '@/lib/utils/post-cards'
 import { getPostEntries, getPostBySlug } from '@/lib/content'
@@ -83,6 +84,7 @@ const readingTime = post ? Math.max(1, Math.ceil(post.words / 300)) : 0
       <div class="prose">
         <post.Content />
       </div>
+      <CommentSection client:visible targetType="post" targetId={slug!} />
     </article>
   ) : (
     <div class="tsuki-content-card">

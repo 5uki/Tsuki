@@ -142,10 +142,12 @@ export async function createComment(input: CreateCommentInput): Promise<CommentD
   }
 
   // 2. 验证目标存在（D1-COMMENT-001）
-  const exists = await input.commentsPort.targetExists(input.targetType, input.targetId)
-  if (!exists) {
-    throw new AppError('NOT_FOUND', 'Comment target not found')
-  }
+  // 当前阶段文章/动态由 Astro Content Collections (SSG) 管理，不在 D1 中，
+  // 所以跳过 targetExists 校验。待内容管理迁入 D1 后再启用。
+  // const exists = await input.commentsPort.targetExists(input.targetType, input.targetId)
+  // if (!exists) {
+  //   throw new AppError('NOT_FOUND', 'Comment target not found')
+  // }
 
   // 3. 计算 IP/UA 哈希
   const [ipHash, uaHash] = await Promise.all([

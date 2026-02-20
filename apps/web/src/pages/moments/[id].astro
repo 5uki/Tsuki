@@ -2,6 +2,7 @@
 import Default from '@/layouts/Default.astro'
 import ImageGrid from '@/components/content/ImageGrid.astro'
 import Lightbox from '@/components/content/Lightbox.astro'
+import CommentSection from '@/components/comments/CommentSection'
 import { Icon } from 'astro-icon/components'
 import { getMomentById, getMomentEntries } from '@/lib/content'
 import { filterSafeMedia } from '@/lib/utils/moment-cards'
@@ -77,7 +78,7 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
           <ImageGrid images={media} maxDisplay={99} />
         </div>
       )}
-      <div class="comment-placeholder"><!-- 评论区将在 M4 接入 --></div>
+      <CommentSection client:visible targetType="moment" targetId={id!} />
     </article>
   ) : (
     <div class="tsuki-content-card">
@@ -157,12 +158,6 @@ const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
 
   .moment-images {
     margin-top: var(--tsuki-space-2xl);
-    padding-top: var(--tsuki-space-lg);
-    border-top: 1px solid var(--tsuki-surface-border);
-  }
-
-  .comment-placeholder {
-    margin-top: var(--tsuki-space-3xl);
     padding-top: var(--tsuki-space-lg);
     border-top: 1px solid var(--tsuki-surface-border);
   }

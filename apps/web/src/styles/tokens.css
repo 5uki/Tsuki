@@ -158,6 +158,10 @@
   --tsuki-login-bg: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
   --tsuki-login-border: color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
 
+  /* Danger / Error */
+  --tsuki-danger: #e53e3e;
+  --tsuki-danger-hover: #c53030;
+
   /* ── Sidebar ── */
   --tsuki-sidebar-width-desktop: 20rem;
   --tsuki-sidebar-width-tablet: 17.5rem;

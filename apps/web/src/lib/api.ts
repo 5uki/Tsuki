@@ -110,3 +110,44 @@ export async function getComments(
   searchParams.set('target_id', targetId)
   return fetchApi<PaginatedResponse<CommentDTO>>(`/comments?${searchParams.toString()}`)
 }
+
+export async function createComment(
+  targetType: 'post' | 'moment',
+  targetId: string,
+  bodyMarkdown: string,
+  parentId?: string
+): Promise<CommentDTO> {
+  return fetchApi<CommentDTO>('/comments', {
+    method: 'POST',
+    body: JSON.stringify({
+      target_type: targetType,
+      target_id: targetId,
+      body_markdown: bodyMarkdown,
+      ...(parentId ? { parent_id: parentId } : {}),
+    }),
+  })
+}
+
+export async function editComment(
+  commentId: string,
+  bodyMarkdown: string
+): Promise<CommentDTO> {
+  return fetchApi<CommentDTO>(`/comments/${commentId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ body_markdown: bodyMarkdown }),
+  })
+}
+
+export async function deleteComment(commentId: string): Promise<void> {
+  await fetchApi<null>(`/comments/${commentId}`, { method: 'DELETE' })
+}
+
+export function getLoginUrl(returnTo?: string): string {
+  const base = API_BASE
+  const params = new URLSearchParams()
+  if (returnTo) {
+    params.set('return_to', returnTo)
+  }
+  const query = params.toString()
+  return `${base}/auth/github/start${query ? `?${query}` : ''}`
+}
