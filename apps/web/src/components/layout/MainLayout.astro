@@ -13,22 +13,67 @@ interface Props {
 const { class: className, sidebarData } = Astro.props
 ---
 
-<div class:list={['tsuki-main-grid', className]}>
-  <aside class="left-sidebar">
-    <Profile stats={sidebarData?.stats} />
-    <Announcement />
-    <SidebarList title="分类" items={sidebarData?.categories ?? []} queryKey="category" />
-    <Tags tags={sidebarData?.tags ?? []} />
-  </aside>
+<div class:list={['tsuki-main-grid', className]} data-mobile-sidebar-open="false">
   <main class="main-content" id="swup">
     <div class="transition-main">
       <slot />
     </div>
   </main>
+
+  <button
+    class="mobile-sidebar-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="left-sidebar-panel"
+  >
+    页面信息
+  </button>
+
+  <aside class="left-sidebar" id="left-sidebar-panel">
+    <Profile stats={sidebarData?.stats} />
+    <Announcement />
+    <SidebarList title="分类" items={sidebarData?.categories ?? []} queryKey="category" />
+    <Tags tags={sidebarData?.tags ?? []} />
+  </aside>
+
   <aside class="right-sidebar" id="swup-right">
     <slot name="right" />
   </aside>
 </div>
+
+<script>
+  function initMobileSidebarToggle() {
+    const root = document.querySelector('.tsuki-main-grid') as HTMLDivElement | null
+    const toggleBtn = root?.querySelector('.mobile-sidebar-toggle') as HTMLButtonElement | null
+    if (!root || !toggleBtn) return
+
+    const media = window.matchMedia('(min-width: 768px)')
+
+    const syncDesktop = () => {
+      if (media.matches) {
+        root.setAttribute('data-mobile-sidebar-open', 'true')
+        toggleBtn.setAttribute('aria-expanded', 'true')
+      } else {
+        root.setAttribute('data-mobile-sidebar-open', 'false')
+        toggleBtn.setAttribute('aria-expanded', 'false')
+      }
+    }
+
+    syncDesktop()
+
+    toggleBtn.addEventListener('click', () => {
+      if (media.matches) return
+      const isOpen = root.getAttribute('data-mobile-sidebar-open') === 'true'
+      root.setAttribute('data-mobile-sidebar-open', isOpen ? 'false' : 'true')
+      toggleBtn.setAttribute('aria-expanded', isOpen ? 'false' : 'true')
+    })
+
+    media.addEventListener('change', syncDesktop)
+  }
+
+  document.addEventListener('astro:page-load', initMobileSidebarToggle)
+  initMobileSidebarToggle()
+</script>
 
 <style>
   .tsuki-main-grid {
@@ -38,46 +83,82 @@ const { class: className, sidebarData } = Astro.props
     gap: var(--tsuki-sidebar-gap-compact);
   }
 
-  @media (min-width: 768px) {
-    .tsuki-main-grid {
-      gap: var(--tsuki-sidebar-gap);
-      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
-    }
+  .main-content {
+    min-width: 0;
+    order: 0;
+  }
+
+  .mobile-sidebar-toggle {
+    order: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--tsuki-sidebar-card-border);
+    border-radius: var(--tsuki-radius-md);
+    background: var(--tsuki-sidebar-card-bg);
+    color: var(--tsuki-fg);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
   }
 
   .left-sidebar {
     display: flex;
     flex-direction: column;
     gap: var(--tsuki-sidebar-gap-compact);
-    order: -1;
-  }
-  @media (min-width: 768px) {
-    .left-sidebar {
-      order: 0;
-      grid-column: 2;
-      gap: var(--tsuki-sidebar-gap);
-    }
+    order: 2;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition:
+      max-height 0.25s ease,
+      opacity 0.2s ease;
   }
 
-  .main-content {
-    min-width: 0;
-  }
-  @media (min-width: 768px) {
-    .main-content {
-      grid-column: 3;
-    }
+  .tsuki-main-grid[data-mobile-sidebar-open='true'] .left-sidebar {
+    max-height: 200rem;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .right-sidebar {
     display: flex;
     flex-direction: column;
     gap: var(--tsuki-sidebar-gap-compact);
+    order: 3;
   }
+
   @media (min-width: 768px) {
+    .tsuki-main-grid {
+      gap: var(--tsuki-sidebar-gap);
+      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+    }
+
+    .left-sidebar {
+      order: 0;
+      grid-column: 2;
+      gap: var(--tsuki-sidebar-gap);
+      max-height: none;
+      opacity: 1;
+      overflow: visible;
+      pointer-events: auto;
+    }
+
+    .main-content {
+      order: 0;
+      grid-column: 3;
+    }
+
     .right-sidebar {
+      order: 0;
       grid-column: 4;
       align-self: stretch;
       gap: var(--tsuki-sidebar-gap);
+    }
+
+    .mobile-sidebar-toggle {
+      display: none;
     }
   }
 </style>
