@@ -28,3 +28,6 @@
 !tsconfig.base.json
 !tsconfig.json
 !tsuki.config.ts
+
+# Generated image optimization artifacts
+contents/.tsuki-avif/

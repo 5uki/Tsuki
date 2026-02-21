@@ -1,4 +1,6 @@
 ---
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
+
 /**
  * ImageGrid - 图片网格组件
  *
@@ -17,9 +19,10 @@ interface Props {
 
 const { images, maxDisplay = 4 } = Astro.props
 
-const count = images.length
+const normalizedImages = images.map((src) => toOptimizedImageUrl(src) ?? src)
+const count = normalizedImages.length
 const overflow = count > maxDisplay
-const displayImages = overflow ? images.slice(0, maxDisplay) : images
+const displayImages = overflow ? normalizedImages.slice(0, maxDisplay) : normalizedImages
 const remaining = count - maxDisplay
 
 function layoutClass(total: number): string {
@@ -32,32 +35,36 @@ function layoutClass(total: number): string {
 const gridClass = overflow ? 'grid-four' : layoutClass(count)
 ---
 
-{count > 0 && (
-  <div class:list={['image-grid', gridClass]} data-lightbox-group>
-    {displayImages.map((src, i) => (
-      <div
-        class:list={[
-          'image-grid-cell',
-          { 'cell-overflow': overflow && i === maxDisplay - 1 },
-        ]}
-      >
-        <img
-          src={src}
-          alt=""
-          class="image-grid-img"
-          loading="lazy"
-          decoding="async"
-          data-lightbox={JSON.stringify({ src, index: i, total: count, all: JSON.stringify(images) })}
-        />
-        {overflow && i === maxDisplay - 1 && (
-          <span class="overflow-badge" aria-label={`还有 ${remaining} 张图片`}>
-            +{remaining}
-          </span>
-        )}
-      </div>
-    ))}
-  </div>
-)}
+{
+  count > 0 && (
+    <div class:list={['image-grid', gridClass]} data-lightbox-group>
+      {displayImages.map((src, i) => (
+        <div
+          class:list={['image-grid-cell', { 'cell-overflow': overflow && i === maxDisplay - 1 }]}
+        >
+          <img
+            src={src}
+            alt=""
+            class="image-grid-img"
+            loading="lazy"
+            decoding="async"
+            data-lightbox={JSON.stringify({
+              src,
+              index: i,
+              total: count,
+              all: JSON.stringify(normalizedImages),
+            })}
+          />
+          {overflow && i === maxDisplay - 1 && (
+            <span class="overflow-badge" aria-label={`还有 ${remaining} 张图片`}>
+              +{remaining}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 <style>
   .image-grid {

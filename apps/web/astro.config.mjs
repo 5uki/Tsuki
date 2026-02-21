@@ -12,9 +12,47 @@ import rehypeKatex from 'rehype-katex'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import tsukiConfig from './src/config/tsuki-config.ts'
+import { prepareImageAssets } from './src/lib/build/prepare-image-assets.mjs'
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url))
 const workspaceRoot = path.resolve(projectRoot, '..', '..')
+const imageManifest = await prepareImageAssets({ workspaceRoot, tsukiConfig })
+
+function normalizeLocalPublicPath(raw) {
+  const noQuery = raw.split('#')[0].split('?')[0]
+  const cleaned = noQuery
+    .replace(/^\.\/?/, '')
+    .replace(/^contents\//, '')
+    .replace(/^(\.\.\/)+/, '')
+    .replace(/^\/+/, '')
+  return cleaned ? `/${cleaned}` : raw
+}
+
+function toOptimizedImageUrl(src) {
+  if (!src || /^data:image\//i.test(src)) return src
+  if (imageManifest[src]) return imageManifest[src]
+  if (!/^https?:\/\//i.test(src)) {
+    const normalized = normalizeLocalPublicPath(src)
+    return imageManifest[normalized] || src
+  }
+  return src
+}
+
+function remarkOptimizeImages() {
+  return (tree) => {
+    function visit(node) {
+      if (!node || typeof node !== 'object') return
+      if (node.type === 'image' && typeof node.url === 'string') {
+        node.url = toOptimizedImageUrl(node.url) || node.url
+      }
+      if (Array.isArray(node.children)) {
+        for (const child of node.children) visit(child)
+      }
+    }
+
+    visit(tree)
+  }
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -69,7 +107,7 @@ export default defineConfig({
     icon(),
   ],
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkOptimizeImages],
     rehypePlugins: [rehypeKatex],
   },
   outDir: path.resolve(workspaceRoot, 'dist'),

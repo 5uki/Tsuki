@@ -16,9 +16,11 @@ export interface MomentDateGroup {
   items: MomentCardItem[]
 }
 
-/** 图片 URL 安全校验：仅允许 https:// 或 /media/ 开头 */
+/** 图片 URL 安全校验：允许 http(s)、站内绝对路径与相对路径 */
 export function isSafeImageUrl(url: string): boolean {
-  return url.startsWith('https://') || url.startsWith('/media/')
+  if (/^https?:\/\//i.test(url)) return true
+  if (url.startsWith('/')) return !url.startsWith('//')
+  return /^[.\w-]/.test(url)
 }
 
 /** 过滤并返回安全的图片 URL 列表 */
@@ -39,8 +41,8 @@ export function groupMomentsByDate(
   moments: MomentEntry[],
   bodyMap?: Map<string, string>
 ): MomentDateGroup[] {
-  const sorted = [...moments].sort(
-    (a, b) => b.frontmatter.publishedAt.localeCompare(a.frontmatter.publishedAt)
+  const sorted = [...moments].sort((a, b) =>
+    b.frontmatter.publishedAt.localeCompare(a.frontmatter.publishedAt)
   )
 
   const groupMap = new Map<string, MomentCardItem[]>()

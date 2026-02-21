@@ -2,6 +2,7 @@
 import '@/styles/global.css'
 import tsukiConfig from '@/config/tsuki-config'
 import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 interface Props {
   title: string
@@ -28,18 +29,19 @@ const {
 } = Astro.props
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url
 const siteUrl = Astro.site?.origin ?? ''
-const ogImageUrl = ogImage
-  ? ogImage.startsWith('http://') || ogImage.startsWith('https://')
-    ? ogImage
-    : `${siteUrl}${ogImage.startsWith('/') ? '' : '/'}${ogImage}`
+const optimizedOgImage = toOptimizedImageUrl(ogImage)
+const ogImageUrl = optimizedOgImage
+  ? optimizedOgImage.startsWith('http://') || optimizedOgImage.startsWith('https://')
+    ? optimizedOgImage
+    : `${siteUrl}${optimizedOgImage.startsWith('/') ? '' : '/'}${optimizedOgImage}`
   : undefined
-const faviconHref = tsukiConfig.site.faviconHref ?? '/favicon.svg'
+const faviconHref = toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? '/favicon.svg'
 const faviconType = faviconHref.endsWith('.svg') ? 'image/svg+xml' : undefined
 
 // defineConfig 已归一化路径，此处直接使用
 const bgImages = (tsukiConfig.hero?.backgroundImages ?? [])
   .map((img) => ({
-    href: img.href,
+    href: toOptimizedImageUrl(img.href) ?? img.href,
     positionX: Math.max(0, Math.min(100, img.positionX ?? 50)),
     positionY: Math.max(0, Math.min(100, img.positionY ?? 50)),
   }))
@@ -50,7 +52,7 @@ if (bgImages.length === 0) {
   const singleHref = tsukiConfig.hero?.backgroundImage?.href
   if (singleHref) {
     bgImages.push({
-      href: singleHref,
+      href: toOptimizedImageUrl(singleHref) ?? singleHref,
       positionX: Math.max(0, Math.min(100, tsukiConfig.hero?.backgroundImage?.positionX ?? 50)),
       positionY: Math.max(0, Math.min(100, tsukiConfig.hero?.backgroundImage?.positionY ?? 50)),
     })
