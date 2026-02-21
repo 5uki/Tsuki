@@ -8,7 +8,6 @@ import SearchModal from '@/components/content/SearchModal.astro'
 import LoginModal from '@/components/layout/LoginModal.astro'
 import SakuraEffect from '@/components/layout/SakuraEffect.astro'
 import MainLayout from '@/components/layout/MainLayout.astro'
-import MusicCard from '@/components/sidebar/MusicCard.astro'
 import CalendarCard from '@/components/sidebar/CalendarCard.astro'
 import tsukiConfig from '@/config/tsuki-config'
 import { getSidebarData, getCalendarDataForCurrentMonth, getCalendarIndex } from '@/lib/content'
@@ -45,37 +44,46 @@ const calendarData = needsCalendar ? await getCalendarDataForCurrentMonth() : nu
 const calendarIndex = needsCalendar ? await getCalendarIndex() : null
 ---
 
-<Base title={title} description={description} noindex={noindex} ogType={ogType} ogImage={ogImage} ogArticle={ogArticle}>
+<Base
+  title={title}
+  description={description}
+  noindex={noindex}
+  ogType={ogType}
+  ogImage={ogImage}
+  ogArticle={ogArticle}
+>
   <slot name="head" slot="head" />
   <div class="page-shell">
     <Header />
     <Banner />
     <div class="page-body">
       <main class="page-main">
-        {withSidebar ? (
-          <MainLayout sidebarData={sidebarData ?? undefined}>
-            <slot />
-            <Fragment slot="right">
-              <MusicCard />
-              {rightHtml ? (
-                <div class="right-sticky-zone">
-                  <Fragment set:html={rightHtml} />
-                </div>
-              ) : (
-                calendarData && calendarIndex && (
-                  <CalendarCard calendarData={calendarData} calendarIndex={calendarIndex} />
-                )
-              )}
-            </Fragment>
-          </MainLayout>
-        ) : (
-          <div class="nosidebar-zone">
-            <div id="swup" class="transition-main">
+        {
+          withSidebar ? (
+            <MainLayout sidebarData={sidebarData ?? undefined}>
               <slot />
+              <Fragment slot="right">
+                {rightHtml ? (
+                  <div class="right-sticky-zone">
+                    <Fragment set:html={rightHtml} />
+                  </div>
+                ) : (
+                  calendarData &&
+                  calendarIndex && (
+                    <CalendarCard calendarData={calendarData} calendarIndex={calendarIndex} />
+                  )
+                )}
+              </Fragment>
+            </MainLayout>
+          ) : (
+            <div class="nosidebar-zone">
+              <div id="swup" class="transition-main">
+                <slot />
+              </div>
+              <div id="swup-right" style="display:none" />
             </div>
-            <div id="swup-right" style="display:none"></div>
-          </div>
-        )}
+          )
+        }
       </main>
       <Footer />
     </div>
