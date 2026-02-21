@@ -2,8 +2,13 @@
 
 ---
 
-<div class="floating-actions" data-backtotop-visible="false">
-  <button id="toc-toggle" class="floating-btn toc-toggle" aria-label="目录" title="目录" hidden>
+<div
+  class="floating-actions"
+  data-backtotop-visible="false"
+  data-show-home="false"
+  data-show-toc="false"
+>
+  <button id="toc-toggle" class="floating-btn toc-toggle" aria-label="目录" title="目录">
     <svg
       width="22"
       height="22"
@@ -119,12 +124,14 @@
     const syncPageScopedActions = () => {
       const pathname = window.location.pathname
       const isHome = pathname === '/'
-      homeBtn.hidden = isHome
+      wrapper.setAttribute('data-show-home', isHome ? 'false' : 'true')
 
       const postDetail = isPostDetailPage(pathname)
+      wrapper.setAttribute('data-show-toc', postDetail ? 'true' : 'false')
+
       if (!postDetail) {
         restoreTocCard()
-        if (tocBtn) tocBtn.hidden = true
+        if (tocBtn) tocBtn.classList.remove('is-active')
         if (tocFlyout) {
           tocFlyout.classList.remove('open')
           tocFlyout.hidden = true
@@ -163,6 +170,7 @@
       if (!tocFlyout) return
       tocFlyout.classList.remove('open')
       tocFlyout.hidden = true
+      tocBtn?.classList.remove('is-active')
     }
 
     const setupToc = () => {
@@ -175,23 +183,25 @@
       const movedCard = tsukiWindow.__tsukiMovedTocCard ?? null
       const cardToUse = tocCard ?? movedCard
 
-      if (!postDetail || !isMobile || !cardToUse) {
+      const canShowTocBtn = postDetail && isMobile && Boolean(cardToUse)
+      wrapper.setAttribute('data-show-toc', canShowTocBtn ? 'true' : 'false')
+
+      if (!canShowTocBtn || !cardToUse) {
         restoreTocCard()
-        tocBtn.hidden = true
+        tocBtn.classList.remove('is-active')
         closeToc()
         return
       }
 
-      tocBtn.hidden = false
-
-      if (cardToUse.parentElement !== tocFlyoutInner) {
+      const activeCard = cardToUse
+      if (activeCard.parentElement !== tocFlyoutInner) {
         restoreTocCard()
-        const parent = cardToUse.parentElement
+        const parent = activeCard.parentElement
         if (!parent) return
         const placeholder = document.createComment('tsuki-toc-placeholder')
-        parent.insertBefore(placeholder, cardToUse)
-        tocFlyoutInner.appendChild(cardToUse)
-        tsukiWindow.__tsukiMovedTocCard = cardToUse
+        parent.insertBefore(placeholder, activeCard)
+        tocFlyoutInner.appendChild(activeCard)
+        tsukiWindow.__tsukiMovedTocCard = activeCard
         tsukiWindow.__tsukiMovedTocPlaceholder = placeholder
         tsukiWindow.__tsukiMovedTocParent = parent
       }
@@ -329,6 +339,22 @@
     pointer-events: auto;
   }
 
+  .floating-actions[data-show-home='false'] .home-btn {
+    display: none;
+  }
+
+  .floating-actions[data-show-home='true'] .home-btn {
+    display: inline-flex;
+  }
+
+  .floating-actions[data-show-toc='false'] .toc-toggle {
+    display: none;
+  }
+
+  .floating-actions[data-show-toc='true'] .toc-toggle {
+    display: inline-flex;
+  }
+
   .floating-actions[data-backtotop-visible='false'] .floating-btn:not(.back-to-top) {
     transform: translateY(calc(var(--fab-size) + var(--fab-gap)));
   }
@@ -362,10 +388,6 @@
   .arrow-icon {
     position: relative;
     z-index: 1;
-  }
-
-  .toc-toggle {
-    display: none;
   }
 
   .toc-flyout {
@@ -408,10 +430,6 @@
     .arrow-icon {
       width: 20px;
       height: 20px;
-    }
-
-    .toc-toggle {
-      display: inline-flex;
     }
 
     .toc-flyout {
