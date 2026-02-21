@@ -151,7 +151,8 @@
 
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
       if (docHeight > 0) {
-        const progress = Math.max(0, Math.min(scrollY / docHeight, 1))
+        const distanceToBottom = docHeight - scrollY
+        const progress = distanceToBottom <= 1 ? 1 : Math.max(0, Math.min(scrollY / docHeight, 1))
         progressBar.style.strokeDashoffset = `${perimeter * (1 - progress)}`
       }
     }
@@ -164,6 +165,15 @@
       const contentRight = rect.right - paddingRight
       const rightOffset = document.documentElement.clientWidth - contentRight
       wrapper.style.right = `${Math.max(rightOffset, 16)}px`
+    }
+
+    const positionTocFlyout = () => {
+      if (!tocFlyout || !tocBtn) return
+      const rect = tocBtn.getBoundingClientRect()
+      const gap = 8
+      const bottom = Math.max(window.innerHeight - rect.top + gap, 16)
+      tocFlyout.style.bottom = `${bottom}px`
+      tocFlyout.style.right = `${Math.max(window.innerWidth - rect.right, 16)}px`
     }
 
     const closeToc = () => {
@@ -207,12 +217,20 @@
       }
     }
 
-    window.addEventListener('scroll', update, { passive: true, signal })
+    window.addEventListener(
+      'scroll',
+      () => {
+        update()
+        positionTocFlyout()
+      },
+      { passive: true, signal }
+    )
     window.addEventListener(
       'resize',
       () => {
         alignToContent()
         setupToc()
+        positionTocFlyout()
       },
       { passive: true, signal }
     )
@@ -221,11 +239,13 @@
     update()
     alignToContent()
     setupToc()
+    positionTocFlyout()
 
     tocBtn?.addEventListener(
       'click',
       () => {
         if (!tocFlyout) return
+        positionTocFlyout()
         const willOpen = !tocFlyout.classList.contains('open')
         tocFlyout.hidden = !willOpen
         tocFlyout.classList.toggle('open', willOpen)
@@ -391,9 +411,7 @@
   }
 
   .toc-flyout {
-    position: absolute;
-    right: 0;
-    bottom: calc(100% + 0.5rem);
+    position: fixed;
     width: min(18rem, calc(100vw - 2.5rem));
     max-height: min(58vh, 26rem);
     overflow: auto;
