@@ -17,6 +17,7 @@
     title="展开快捷操作"
   >
     <svg
+      class="fab-icon fab-icon-minus"
       width="22"
       height="22"
       viewBox="0 0 24 24"
@@ -25,6 +26,21 @@
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+    </svg>
+    <svg
+      class="fab-icon fab-icon-plus"
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
     >
       <line x1="4" y1="12" x2="20" y2="12"></line>
       <line x1="12" y1="4" x2="12" y2="20"></line>
@@ -110,26 +126,6 @@
         <polyline points="18 15 12 9 6 15"></polyline>
       </svg>
     </button>
-
-    <button
-      id="fab-close"
-      class="floating-btn fab-toggle"
-      aria-label="收起快捷操作"
-      title="收起快捷操作"
-    >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <line x1="4" y1="12" x2="20" y2="12"></line>
-      </svg>
-    </button>
   </div>
 
   <div id="info-flyout" class="action-flyout" hidden>
@@ -196,7 +192,6 @@
 
     const wrapper = document.querySelector('.floating-actions') as HTMLDivElement | null
     const openBtn = document.getElementById('fab-open') as HTMLButtonElement | null
-    const closeBtn = document.getElementById('fab-close') as HTMLButtonElement | null
     const homeBtn = document.getElementById('go-home') as HTMLAnchorElement | null
     const topBtn = document.getElementById('back-to-top') as HTMLButtonElement | null
     const infoBtn = document.getElementById('info-toggle') as HTMLButtonElement | null
@@ -205,7 +200,7 @@
     const tocBtn = document.getElementById('toc-toggle') as HTMLButtonElement | null
     const tocFlyout = document.getElementById('toc-flyout') as HTMLDivElement | null
     const tocFlyoutInner = document.getElementById('toc-flyout-inner') as HTMLDivElement | null
-    if (!wrapper || !openBtn || !closeBtn || !homeBtn || !topBtn) return
+    if (!wrapper || !openBtn || !homeBtn || !topBtn) return
 
     const controller = new AbortController()
     const signal = controller.signal
@@ -232,12 +227,22 @@
 
     const closeMenu = () => {
       wrapper.setAttribute('data-menu-open', 'false')
+      openBtn.setAttribute('aria-label', '展开快捷操作')
+      openBtn.setAttribute('title', '展开快捷操作')
       closeToc()
       closeInfo()
     }
 
     const openMenu = () => {
       wrapper.setAttribute('data-menu-open', 'true')
+      openBtn.setAttribute('aria-label', '收起快捷操作')
+      openBtn.setAttribute('title', '收起快捷操作')
+    }
+
+    const toggleMenu = () => {
+      const isOpen = wrapper.getAttribute('data-menu-open') === 'true'
+      if (isOpen) closeMenu()
+      else openMenu()
     }
 
     const syncPageScopedActions = () => {
@@ -365,8 +370,7 @@
     positionFlyout(tocFlyout, tocBtn)
     positionFlyout(infoFlyout, infoBtn)
 
-    openBtn.addEventListener('click', openMenu, { signal })
-    closeBtn.addEventListener('click', closeMenu, { signal })
+    openBtn.addEventListener('click', toggleMenu, { signal })
 
     tocBtn?.addEventListener(
       'click',
@@ -505,22 +509,41 @@
   }
 
   #fab-open {
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease,
-      background-color 0.15s ease;
+    overflow: hidden;
+    transition: background-color 0.15s ease;
   }
 
-  .floating-actions[data-menu-open='true'] #fab-open {
+  .fab-icon {
+    position: absolute;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .fab-icon-plus {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .fab-icon-minus {
     opacity: 0;
-    transform: translateY(8px) scale(0.96);
-    pointer-events: none;
+    transform: scale(0.7);
+  }
+
+  .floating-actions[data-menu-open='true'] .fab-icon-plus {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  .floating-actions[data-menu-open='true'] .fab-icon-minus {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .action-group {
     display: flex;
     flex-direction: column;
-    gap: var(--fab-gap);
+    gap: 0;
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -540,6 +563,7 @@
   }
 
   .action-group .floating-btn {
+    margin-top: var(--fab-gap);
     max-height: var(--fab-size);
     opacity: 1;
     overflow: hidden;
@@ -607,8 +631,7 @@
 
   @media (min-width: 768px) {
     .info-toggle,
-    #fab-open,
-    #fab-close {
+    #fab-open {
       display: none !important;
     }
 
