@@ -8,6 +8,7 @@
   data-show-home="false"
   data-show-toc="false"
   data-show-info="false"
+  data-show-top="false"
 >
   <button
     id="fab-open"
@@ -208,6 +209,12 @@
 
     const controller = new AbortController()
     const signal = controller.signal
+    const topThreshold = 450
+
+    const syncTopVisibility = () => {
+      const showTop = window.scrollY > topThreshold
+      wrapper.setAttribute('data-show-top', showTop ? 'true' : 'false')
+    }
 
     const closeToc = () => {
       if (!tocFlyout) return
@@ -330,6 +337,7 @@
     window.addEventListener(
       'scroll',
       () => {
+        syncTopVisibility()
         positionFlyout(tocFlyout, tocBtn)
         positionFlyout(infoFlyout, infoBtn)
       },
@@ -339,6 +347,7 @@
     window.addEventListener(
       'resize',
       () => {
+        syncTopVisibility()
         alignToContent()
         setupToc()
         setupInfo()
@@ -349,6 +358,7 @@
     )
 
     syncPageScopedActions()
+    syncTopVisibility()
     alignToContent()
     setupToc()
     setupInfo()
@@ -522,7 +532,8 @@
 
   .floating-actions[data-show-home='false'] .home-btn,
   .floating-actions[data-show-toc='false'] .toc-toggle,
-  .floating-actions[data-show-info='false'] .info-toggle {
+  .floating-actions[data-show-info='false'] .info-toggle,
+  .floating-actions[data-show-top='false'] .back-to-top {
     display: none;
   }
 
@@ -532,11 +543,12 @@
   }
 
   .action-flyout {
+    --flyout-inner-padding: 0.375rem;
     position: fixed;
     width: min(18rem, calc(100vw - 2.5rem));
     max-height: min(58vh, 26rem);
     overflow: auto;
-    border-radius: 0.75rem;
+    border-radius: calc(var(--tsuki-sidebar-card-radius) + var(--flyout-inner-padding));
     border: 1px solid var(--tsuki-card-border, rgba(0, 0, 0, 0.08));
     background: var(--tsuki-sidebar-card-bg, rgba(255, 255, 255, 0.95));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -545,7 +557,7 @@
   }
 
   .action-flyout-inner {
-    padding: 0.375rem;
+    padding: var(--flyout-inner-padding);
   }
 
   .action-flyout-inner :global(.toc-card) {
