@@ -504,37 +504,62 @@
     transform: translateY(-2px);
   }
 
+  #fab-open {
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      background-color 0.15s ease;
+  }
+
+  .floating-actions[data-menu-open='true'] #fab-open {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    pointer-events: none;
+  }
+
   .action-group {
     display: flex;
     flex-direction: column;
     gap: var(--fab-gap);
+    max-height: 0;
     opacity: 0;
+    overflow: hidden;
     transform: translateY(8px);
     pointer-events: none;
     transition:
+      max-height 0.28s ease,
       opacity 0.2s ease,
       transform 0.2s ease;
   }
 
   .floating-actions[data-menu-open='true'] .action-group {
+    max-height: calc(var(--fab-size) * 6 + var(--fab-gap) * 8);
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  .floating-actions[data-menu-open='true'] #fab-open {
-    display: none;
-  }
-
-  .floating-actions[data-menu-open='false'] .action-group {
-    display: none;
+  .action-group .floating-btn {
+    max-height: var(--fab-size);
+    opacity: 1;
+    overflow: hidden;
+    transform: translateY(0) scale(1);
+    transition:
+      max-height 0.25s ease,
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      margin 0.25s ease;
   }
 
   .floating-actions[data-show-home='false'] .home-btn,
   .floating-actions[data-show-toc='false'] .toc-toggle,
   .floating-actions[data-show-info='false'] .info-toggle,
   .floating-actions[data-show-top='false'] .back-to-top {
-    display: none;
+    max-height: 0;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    pointer-events: none;
   }
 
   .arrow-icon {
@@ -589,8 +614,10 @@
 
     .action-group {
       display: flex;
+      max-height: none;
       opacity: 1;
       transform: none;
+      overflow: visible;
       pointer-events: auto;
     }
   }
