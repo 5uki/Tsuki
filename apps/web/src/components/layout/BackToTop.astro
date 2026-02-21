@@ -149,12 +149,18 @@
         wrapper.setAttribute('data-backtotop-visible', visible ? 'true' : 'false')
       }
 
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      if (docHeight > 0) {
-        const distanceToBottom = docHeight - scrollY
-        const progress = distanceToBottom <= 1 ? 1 : Math.max(0, Math.min(scrollY / docHeight, 1))
-        progressBar.style.strokeDashoffset = `${perimeter * (1 - progress)}`
+      const scrollingEl = document.scrollingElement ?? document.documentElement
+      const maxScrollable = Math.max(scrollingEl.scrollHeight - window.innerHeight, 0)
+
+      if (maxScrollable <= 0) {
+        progressBar.style.strokeDashoffset = '0'
+        return
       }
+
+      const viewportBottom = scrollY + window.innerHeight
+      const reachedBottom = viewportBottom >= scrollingEl.scrollHeight - 2
+      const progress = reachedBottom ? 1 : Math.max(0, Math.min(scrollY / maxScrollable, 1))
+      progressBar.style.strokeDashoffset = `${perimeter * (1 - progress)}`
     }
 
     const alignToContent = () => {
