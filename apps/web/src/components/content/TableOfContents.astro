@@ -20,49 +20,41 @@ const headingsWithNumber = displayHeadings.map((heading) => {
 ---
 
 <div class="tsuki-sidebar-card toc-card">
-  <h3 class="tsuki-section-title">
-    目录
-  </h3>
-  {displayHeadings.length > 0 ? (
-    <div class="toc-wrapper" id="toc-wrapper">
-      <div class="toc-highlight" id="toc-highlight"></div>
-      <ul class="toc-list" id="toc-list">
-        {headingsWithNumber.map((heading) => (
-          <li
-            class:list={[
-              'toc-item',
-              { 'toc-h2': heading.depth === 2 },
-              { 'toc-h3': heading.depth === 3 },
-              { 'toc-h4': heading.depth === 4 },
-            ]}
-          >
-            <a
-              href={`#${heading.slug}`}
-              class="toc-link"
-              data-heading-id={heading.slug}
+  <h3 class="tsuki-section-title">目录</h3>
+  {
+    displayHeadings.length > 0 ? (
+      <div class="toc-wrapper" id="toc-wrapper">
+        <div class="toc-highlight" id="toc-highlight" />
+        <ul class="toc-list" id="toc-list">
+          {headingsWithNumber.map((heading) => (
+            <li
+              class:list={[
+                'toc-item',
+                { 'toc-h2': heading.depth === 2 },
+                { 'toc-h3': heading.depth === 3 },
+                { 'toc-h4': heading.depth === 4 },
+              ]}
             >
-              {heading.depth === 2 && heading.number && (
-                <span class="toc-number">
-                  {heading.number}
-                </span>
-              )}
-              <span class="toc-text">
-                {heading.text}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ) : (
-    <p class="toc-empty">
-      暂无目录
-    </p>
-  )}
+              <a href={`#${heading.slug}`} class="toc-link" data-heading-id={heading.slug}>
+                {heading.depth === 2 && heading.number && (
+                  <span class="toc-number">{heading.number}</span>
+                )}
+                <span class="toc-text">{heading.text}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <p class="toc-empty">暂无目录</p>
+    )
+  }
 </div>
 
 <style>
-  .toc-card:hover { transform: none; }
+  .toc-card:hover {
+    transform: none;
+  }
 
   .toc-empty {
     margin: 0;
@@ -97,9 +89,10 @@ const headingsWithNumber = displayHeadings.map((heading) => {
     background-color: var(--tsuki-surface-accent);
     pointer-events: none;
     opacity: 0;
-    transition: top 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                height 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                opacity 180ms ease;
+    transition:
+      top 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      height 220ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity 180ms ease;
     z-index: 0;
   }
 
@@ -178,11 +171,17 @@ const headingsWithNumber = displayHeadings.map((heading) => {
   .toc-h4 .toc-link.toc-active {
     color: color-mix(in srgb, var(--tsuki-fg) 38%, transparent);
   }
+
+  @media (max-width: 767px) {
+    .toc-card {
+      display: none;
+    }
+  }
 </style>
 
 <script is:inline>
   // TOC 初始化函数：定义为全局函数以便 astro:page-load 也能调用
-  window.__tsukiInitTOC = function() {
+  window.__tsukiInitTOC = function () {
     // 清理上一次 SPA 导航留下的 scroll listener
     if (window.__tsukiTocCleanup) {
       window.__tsukiTocCleanup()
@@ -227,7 +226,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
       var activeIds = []
       var lastAboveId = null
 
-      headingEls.forEach(function(el) {
+      headingEls.forEach(function (el) {
         var top = el.getBoundingClientRect().top
         if (top < topOffset) {
           lastAboveId = el.id
@@ -246,7 +245,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
         if (firstId) activeIds.push(firstId)
       }
 
-      tocLinks.forEach(function(link) {
+      tocLinks.forEach(function (link) {
         var id = link.getAttribute('data-heading-id')
         link.classList.toggle('toc-active', id !== null && activeIds.indexOf(id) !== -1)
       })
@@ -261,7 +260,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
       var firstEl = null
       var lastEl = null
 
-      items.forEach(function(item) {
+      items.forEach(function (item) {
         var link = item.querySelector('.toc-link')
         if (!link) return
         var id = link.getAttribute('data-heading-id')
@@ -308,14 +307,14 @@ const headingsWithNumber = displayHeadings.map((heading) => {
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.__tsukiTocCleanup = function() {
+    window.__tsukiTocCleanup = function () {
       window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(scrollRaf)
     }
 
     update()
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
         update()
         // 延迟重试，处理复杂页面布局延迟完成的情况
         setTimeout(update, 200)
@@ -329,7 +328,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
   // 注册全局 astro:page-load 监听器（仅一次），确保每次 SPA 导航都能初始化
   if (!window.__tsukiTocPageLoadBound) {
     window.__tsukiTocPageLoadBound = true
-    document.addEventListener('astro:page-load', function() {
+    document.addEventListener('astro:page-load', function () {
       if (window.__tsukiInitTOC) window.__tsukiInitTOC()
     })
   }

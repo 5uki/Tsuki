@@ -124,6 +124,14 @@ export interface BackgroundImageConfig {
    * - 100 = 显示图片底部
    */
   positionY?: number
+
+  /**
+   * 水平焦点位置（0-100）
+   * - 0 = 显示图片最左侧
+   * - 50 = 居中（默认）
+   * - 100 = 显示图片最右侧
+   */
+  positionX?: number
 }
 
 /**
