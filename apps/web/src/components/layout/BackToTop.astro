@@ -544,10 +544,11 @@
 
   .action-flyout {
     --flyout-inner-padding: 0.375rem;
+    --flyout-max-height: min(58vh, 26rem);
     position: fixed;
     width: min(18rem, calc(100vw - 2.5rem));
-    max-height: min(58vh, 26rem);
-    overflow: auto;
+    max-height: var(--flyout-max-height);
+    overflow: hidden;
     border-radius: calc(var(--tsuki-sidebar-card-radius) + var(--flyout-inner-padding));
     border: 1px solid var(--tsuki-card-border, rgba(0, 0, 0, 0.08));
     background: var(--tsuki-sidebar-card-bg, rgba(255, 255, 255, 0.95));
@@ -557,6 +558,8 @@
   }
 
   .action-flyout-inner {
+    max-height: calc(var(--flyout-max-height) - var(--flyout-inner-padding) * 2);
+    overflow: auto;
     padding: var(--flyout-inner-padding);
   }
 
@@ -604,8 +607,9 @@
     }
 
     .action-flyout {
+      --flyout-max-height: min(52vh, 22rem);
       width: min(16rem, calc(100vw - 1.25rem));
-      max-height: min(52vh, 22rem);
+      max-height: var(--flyout-max-height);
     }
   }
 </style>
