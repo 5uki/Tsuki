@@ -1,8 +1,8 @@
 ---
-const isHome = Astro.url.pathname === '/'
+
 ---
 
-<div class="floating-actions" data-home={isHome ? '' : undefined} data-backtotop-visible="false">
+<div class="floating-actions" data-backtotop-visible="false">
   <button id="toc-toggle" class="floating-btn toc-toggle" aria-label="目录" title="目录" hidden>
     <svg
       width="22"
@@ -23,25 +23,21 @@ const isHome = Astro.url.pathname === '/'
     </svg>
   </button>
 
-  {
-    !isHome && (
-      <a class="floating-btn home-btn" href="/" aria-label="返回首页" title="返回首页">
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M3 10.5 12 3l9 7.5" />
-          <path d="M5 9.5V21h14V9.5" />
-        </svg>
-      </a>
-    )
-  }
+  <a id="go-home" class="floating-btn home-btn" href="/" aria-label="返回首页" title="返回首页">
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M3 10.5 12 3l9 7.5"></path>
+      <path d="M5 9.5V21h14V9.5"></path>
+    </svg>
+  </a>
 
   <button id="back-to-top" class="floating-btn back-to-top" aria-label="返回顶部" title="返回顶部">
     <svg class="progress-ring" viewBox="0 0 52 52" fill="none">
@@ -79,6 +75,10 @@ const isHome = Astro.url.pathname === '/'
 
   const tsukiWindow = window as TsukiBackToTopWindow
 
+  function isPostDetailPage(pathname: string) {
+    return /^\/posts\/[^/]+\/?$/.test(pathname)
+  }
+
   function restoreTocCard() {
     const card = tsukiWindow.__tsukiMovedTocCard
     const placeholder = tsukiWindow.__tsukiMovedTocPlaceholder
@@ -96,11 +96,12 @@ const isHome = Astro.url.pathname === '/'
     tsukiWindow.__tsukiBackToTopCleanup?.()
 
     const wrapper = document.querySelector('.floating-actions') as HTMLDivElement | null
+    const homeBtn = document.getElementById('go-home') as HTMLAnchorElement | null
     const btn = document.getElementById('back-to-top') as HTMLButtonElement | null
     const tocBtn = document.getElementById('toc-toggle') as HTMLButtonElement | null
     const tocFlyout = document.getElementById('toc-flyout') as HTMLDivElement | null
     const tocFlyoutInner = document.getElementById('toc-flyout-inner') as HTMLDivElement | null
-    if (!wrapper || !btn) return
+    if (!wrapper || !btn || !homeBtn) return
 
     const progressBar = btn.querySelector('.progress-bar') as SVGRectElement | null
     if (!progressBar) return
@@ -114,6 +115,22 @@ const isHome = Astro.url.pathname === '/'
 
     let visible = false
     const threshold = 450
+
+    const syncPageScopedActions = () => {
+      const pathname = window.location.pathname
+      const isHome = pathname === '/'
+      homeBtn.hidden = isHome
+
+      const postDetail = isPostDetailPage(pathname)
+      if (!postDetail) {
+        restoreTocCard()
+        if (tocBtn) tocBtn.hidden = true
+        if (tocFlyout) {
+          tocFlyout.classList.remove('open')
+          tocFlyout.hidden = true
+        }
+      }
+    }
 
     const update = () => {
       const scrollY = window.scrollY
@@ -151,18 +168,14 @@ const isHome = Astro.url.pathname === '/'
     const setupToc = () => {
       if (!tocBtn || !tocFlyout || !tocFlyoutInner) return
 
-      const tocCard = document.querySelector('.right-sidebar .toc-card') as HTMLElement | null
+      const pathname = window.location.pathname
+      const postDetail = isPostDetailPage(pathname)
       const isMobile = window.matchMedia('(max-width: 767px)').matches
-      const canUseToc = Boolean(tocCard)
+      const tocCard = document.querySelector('.right-sidebar .toc-card') as HTMLElement | null
+      const movedCard = tsukiWindow.__tsukiMovedTocCard ?? null
+      const cardToUse = tocCard ?? movedCard
 
-      if (!canUseToc) {
-        restoreTocCard()
-        tocBtn.hidden = true
-        closeToc()
-        return
-      }
-
-      if (!isMobile) {
+      if (!postDetail || !isMobile || !cardToUse) {
         restoreTocCard()
         tocBtn.hidden = true
         closeToc()
@@ -171,14 +184,14 @@ const isHome = Astro.url.pathname === '/'
 
       tocBtn.hidden = false
 
-      if (tocCard && tocCard.parentElement !== tocFlyoutInner) {
+      if (cardToUse.parentElement !== tocFlyoutInner) {
         restoreTocCard()
-        const parent = tocCard.parentElement
+        const parent = cardToUse.parentElement
         if (!parent) return
         const placeholder = document.createComment('tsuki-toc-placeholder')
-        parent.insertBefore(placeholder, tocCard)
-        tocFlyoutInner.appendChild(tocCard)
-        tsukiWindow.__tsukiMovedTocCard = tocCard
+        parent.insertBefore(placeholder, cardToUse)
+        tocFlyoutInner.appendChild(cardToUse)
+        tsukiWindow.__tsukiMovedTocCard = cardToUse
         tsukiWindow.__tsukiMovedTocPlaceholder = placeholder
         tsukiWindow.__tsukiMovedTocParent = parent
       }
@@ -194,6 +207,7 @@ const isHome = Astro.url.pathname === '/'
       { passive: true, signal }
     )
 
+    syncPageScopedActions()
     update()
     alignToContent()
     setupToc()
@@ -358,8 +372,8 @@ const isHome = Astro.url.pathname === '/'
     position: absolute;
     right: 0;
     bottom: calc(100% + 0.5rem);
-    width: min(22rem, calc(100vw - 2rem));
-    max-height: min(70vh, 34rem);
+    width: min(18rem, calc(100vw - 2.5rem));
+    max-height: min(58vh, 26rem);
     overflow: auto;
     border-radius: 0.75rem;
     border: 1px solid var(--tsuki-card-border, rgba(0, 0, 0, 0.08));
@@ -370,7 +384,7 @@ const isHome = Astro.url.pathname === '/'
   }
 
   .toc-flyout-inner {
-    padding: 0.5rem;
+    padding: 0.375rem;
   }
 
   .toc-flyout-inner :global(.toc-card) {
@@ -378,6 +392,11 @@ const isHome = Astro.url.pathname === '/'
     border: none;
     box-shadow: none;
     background: transparent;
+  }
+
+  .toc-flyout-inner :global(.toc-link) {
+    padding: 0.42rem 0.52rem;
+    font-size: 0.82rem;
   }
 
   @media (max-width: 767px) {
@@ -393,6 +412,11 @@ const isHome = Astro.url.pathname === '/'
 
     .toc-toggle {
       display: inline-flex;
+    }
+
+    .toc-flyout {
+      width: min(16rem, calc(100vw - 1.25rem));
+      max-height: min(52vh, 22rem);
     }
   }
 </style>
