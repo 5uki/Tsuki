@@ -21,7 +21,9 @@ export default defineConfig({
   site: tsukiConfig.site.url || 'https://example.com',
   publicDir: path.resolve(workspaceRoot, 'contents'),
   output: 'server',
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: 'passthrough',
+  }),
   session: {
     driver: 'memory',
   },
