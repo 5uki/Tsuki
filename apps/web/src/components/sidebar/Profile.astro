@@ -9,12 +9,13 @@ interface Props {
 }
 
 const { profile, stats } = tsukiConfig
-const safeProfile = profile
-  ? {
-      ...profile,
-      avatar: toOptimizedImageUrl(profile.avatar) ?? profile.avatar,
-    }
-  : { name: '', links: [] }
+const safeProfile = {
+  name: profile?.name ?? '',
+  avatar: profile?.avatar ? (toOptimizedImageUrl(profile.avatar) ?? profile.avatar) : undefined,
+  avatarLink: profile?.avatarLink,
+  bio: profile?.bio,
+  links: profile?.links ?? [],
+}
 const { stats: statsData } = Astro.props
 
 const overlayIcon = uiIcons.idCard

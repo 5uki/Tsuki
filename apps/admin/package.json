@@ -1,0 +1,14 @@
+{
+  "name": "@tsuki/admin",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 5174",
+    "build": "mkdir -p dist && cp index.html dist/index.html",
+    "preview": "python -m http.server 4174 --directory dist",
+    "lint": "echo 'admin shell lint skipped'",
+    "typecheck": "echo 'admin shell typecheck skipped'",
+    "test": "echo 'No tests for admin shell yet'"
+  }
+}

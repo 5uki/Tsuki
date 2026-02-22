@@ -116,7 +116,7 @@ const calendarIndex = needsCalendar ? await getCalendarIndex() : null
   }
   @media (min-width: 768px) {
     .page-main {
-      padding-inline: 0;
+      padding-inline: clamp(10px, 1.4vw, 24px);
     }
   }
 

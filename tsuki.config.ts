@@ -3,14 +3,14 @@ import { defineConfig, navIcons } from '@tsuki/config'
 export default defineConfig({
   site: {
     title: 'Tsuki',
-    url: 'https://blog.5uki.top',
-    description: '一个认真写字的地方',
+    url: 'https://example.com',
+    description: '在这里记录你的思考与创作。',
     defaultTheme: 'mauve',
     faviconHref: './contents/favicon.svg',
   },
   hero: {
-    title: 'Tsuki',
-    subtitle: '一个认真写字的地方',
+    title: '欢迎来到我的博客',
+    subtitle: '这是一个可快速定制的博客模板。',
     backgroundImages: [
       { href: './contents/banners/1.png', positionX: 32, positionY: 25 },
       { href: './contents/banners/2.png', positionX: 32, positionY: 25 },
@@ -28,34 +28,27 @@ export default defineConfig({
     avatar: './contents/avatar.webp',
     avatarLink: '/about',
     name: 'Suki',
-    bio: '热爱技术，喜欢分享',
+    bio: '一句简短的自我介绍。',
     links: [
       {
         name: 'GitHub',
         icon: 'fa6-brands:github',
-        url: 'https://github.com/5uki/Tsuki',
+        url: 'https://github.com/yourname',
       },
     ],
   },
   announcement: {
     enable: true,
-    title: '公告',
-    content: '欢迎来到我的博客！这里记录了我的技术学习和生活点滴。',
+    title: '模板公告',
+    content: '你可以在 tsuki.config.ts 中修改这里的文案与链接。',
     link: {
       enable: true,
-      text: '了解更多',
+      text: '查看关于页',
       url: '/about',
     },
   },
   stats: {
     enable: true,
   },
-  friends: [
-    {
-      name: '示例博客',
-      avatar: 'https://via.placeholder.com/64',
-      description: '一个有趣的博客',
-      url: 'https://example.com',
-    },
-  ],
+  friends: [],
 })

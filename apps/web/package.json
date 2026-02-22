@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site ../../dist",
+    "build": "astro build && node ./src/lib/build/prune-non-avif-assets.mjs ../../dist && pagefind --site ../../dist",
     "preview": "astro preview",
     "lint": "eslint . --ext .ts,.tsx,.astro --max-warnings 0",
     "typecheck": "astro check && tsc --noEmit",

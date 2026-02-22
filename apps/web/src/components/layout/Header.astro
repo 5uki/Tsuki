@@ -344,7 +344,7 @@ const siteTitle = tsukiConfig.site.title
     width: 100%;
     margin: 0 auto;
     padding-block: var(--tsuki-header-inner-padding-block);
-    padding-inline: 0;
+    padding-inline: clamp(10px, 1.4vw, 24px);
     position: relative;
   }
 
@@ -360,7 +360,7 @@ const siteTitle = tsukiConfig.site.title
         var(--tsuki-header-frame-top-overflow)
       )
     );
-    margin-inline: calc((100% + 3 * var(--tsuki-sidebar-gap)) / 7);
+    margin-inline: 0;
     padding: calc(
       var(--tsuki-header-frame-top-gap) +
       var(--tsuki-header-frame-top-overflow)
@@ -373,6 +373,12 @@ const siteTitle = tsukiConfig.site.title
       background-color 160ms ease-out,
       border-color 160ms ease-out,
       box-shadow 160ms ease-out;
+  }
+
+  @media (min-width: 1600px) {
+    .header-track {
+      margin-inline: calc((100% + 3 * var(--tsuki-sidebar-gap)) / 7);
+    }
   }
 
   .header.scrolled .header-track {
