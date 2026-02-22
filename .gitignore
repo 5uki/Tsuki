@@ -28,6 +28,8 @@
 !tsconfig.base.json
 !tsconfig.json
 !tsuki.config.ts
+!README.md
+!README.zh-CN.md
 
 # Generated image optimization artifacts
 contents/.tsuki-avif/
