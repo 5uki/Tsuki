@@ -6,6 +6,7 @@ import CommentSection from '@/components/comments/CommentSection'
 import { Icon } from 'astro-icon/components'
 import { getMomentById, getMomentEntries } from '@/lib/content'
 import { filterSafeMedia } from '@/lib/utils/moment-cards'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 export const prerender = true
 
@@ -16,82 +17,100 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params
 const moment = await getMomentById(id)
-const media = moment ? filterSafeMedia(moment.frontmatter.media) : []
+const media = moment
+  ? filterSafeMedia(moment.frontmatter.media).map((src) => toOptimizedImageUrl(src) ?? src)
+  : []
 
 const momentDescription = moment?.body
-  ? moment.body.replace(/[#*_`>[\]()!~]/g, '').trim().slice(0, 100)
+  ? moment.body
+      .replace(/[#*_`>[\]()!~]/g, '')
+      .trim()
+      .slice(0, 100)
   : '动态详情'
 const momentOgImage = media.length > 0 ? media[0] : undefined
 ---
 
-<Default title={moment ? moment.frontmatter.title : '动态'} description={momentDescription} ogImage={momentOgImage}>
-  {moment ? (
-    <article class="tsuki-content-card">
-      <header class="moment-header">
-        <h1 class="moment-detail-title">
-          {moment.frontmatter.title}
-        </h1>
-        <div class="moment-meta">
-          <span class="tsuki-meta-row">
-            <span class="tsuki-meta-icon-badge">
-              <Icon name="material-symbols:calendar-today-outline-rounded" class="tsuki-meta-icon" />
-            </span>
-            <time datetime={moment.frontmatter.publishedAt} class="tsuki-meta-text">{moment.frontmatter.publishedAt}</time>
-          </span>
-
-          {moment.frontmatter.category && (
+<Default
+  title={moment ? moment.frontmatter.title : '动态'}
+  description={momentDescription}
+  ogImage={momentOgImage}
+>
+  {
+    moment ? (
+      <article class="tsuki-content-card">
+        <header class="moment-header">
+          <h1 class="moment-detail-title">{moment.frontmatter.title}</h1>
+          <div class="moment-meta">
             <span class="tsuki-meta-row">
               <span class="tsuki-meta-icon-badge">
-                <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+                <Icon
+                  name="material-symbols:calendar-today-outline-rounded"
+                  class="tsuki-meta-icon"
+                />
               </span>
-              <span class="tsuki-meta-text">{moment.frontmatter.category}</span>
+              <time datetime={moment.frontmatter.publishedAt} class="tsuki-meta-text">
+                {moment.frontmatter.publishedAt}
+              </time>
             </span>
-          )}
 
-          {moment.frontmatter.series && (
-            <span class="tsuki-meta-row">
-              <span class="tsuki-meta-icon-badge">
-                <Icon name="material-symbols:collections-bookmark-outline-rounded" class="tsuki-meta-icon" />
+            {moment.frontmatter.category && (
+              <span class="tsuki-meta-row">
+                <span class="tsuki-meta-icon-badge">
+                  <Icon name="material-symbols:book-2-outline-rounded" class="tsuki-meta-icon" />
+                </span>
+                <span class="tsuki-meta-text">{moment.frontmatter.category}</span>
               </span>
-              <span class="tsuki-meta-text">{moment.frontmatter.series}</span>
-            </span>
+            )}
+
+            {moment.frontmatter.series && (
+              <span class="tsuki-meta-row">
+                <span class="tsuki-meta-icon-badge">
+                  <Icon
+                    name="material-symbols:collections-bookmark-outline-rounded"
+                    class="tsuki-meta-icon"
+                  />
+                </span>
+                <span class="tsuki-meta-text">{moment.frontmatter.series}</span>
+              </span>
+            )}
+          </div>
+
+          {moment.frontmatter.tags && moment.frontmatter.tags.length > 0 && (
+            <div class="moment-meta" style="margin-top: var(--tsuki-space-sm);">
+              <span class="tsuki-meta-row">
+                <span class="tsuki-meta-icon-badge">
+                  <span class="tag-hash-badge">#</span>
+                </span>
+                <span class="tsuki-meta-text tag-inline-text">
+                  {moment.frontmatter.tags.map((tag, i) => (
+                    <>
+                      <span class="tag-inline-label">{tag}</span>
+                      {i < (moment.frontmatter.tags?.length ?? 0) - 1 && (
+                        <span class="tag-sep">/</span>
+                      )}
+                    </>
+                  ))}
+                </span>
+              </span>
+            </div>
           )}
+        </header>
+        <div class="prose">
+          <moment.Content />
         </div>
-
-        {moment.frontmatter.tags && moment.frontmatter.tags.length > 0 && (
-          <div class="moment-meta" style="margin-top: var(--tsuki-space-sm);">
-            <span class="tsuki-meta-row">
-              <span class="tsuki-meta-icon-badge">
-                <span class="tag-hash-badge">#</span>
-              </span>
-              <span class="tsuki-meta-text tag-inline-text">
-                {moment.frontmatter.tags.map((tag, i) => (
-                  <>
-                    <span class="tag-inline-label">{tag}</span>{i < (moment.frontmatter.tags?.length ?? 0) - 1 && <span class="tag-sep">/</span>}
-                  </>
-                ))}
-              </span>
-            </span>
+        {media.length > 0 && (
+          <div class="moment-images">
+            <ImageGrid images={media} maxDisplay={99} />
           </div>
         )}
-      </header>
-      <div class="prose">
-        <moment.Content />
+        <CommentSection client:visible targetType="moment" targetId={id!} />
+      </article>
+    ) : (
+      <div class="tsuki-content-card">
+        <p class="not-found-text">未找到动态 {id}</p>
       </div>
-      {media.length > 0 && (
-        <div class="moment-images">
-          <ImageGrid images={media} maxDisplay={99} />
-        </div>
-      )}
-      <CommentSection client:visible targetType="moment" targetId={id!} />
-    </article>
-  ) : (
-    <div class="tsuki-content-card">
-      <p class="not-found-text">
-        未找到动态 {id}
-      </p>
-    </div>
-  )}
+    )
+  }
   <Lightbox />
 </Default>
 

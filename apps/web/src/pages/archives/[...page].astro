@@ -41,61 +41,79 @@ function fmtDate(dateStr: string): string {
 }
 ---
 
-<Default title={page.currentPage > 1 ? `归档 - 第 ${page.currentPage} 页` : '归档'} description="文章归档">
+<Default
+  title={page.currentPage > 1 ? `归档 - 第 ${page.currentPage} 页` : '归档'}
+  description="文章归档"
+>
   <section class="archive-section">
     <div class="filter-bar" id="filter-bar">
       <span class="filter-label" id="filter-label"></span>
       <a href="/archives" class="filter-clear" id="filter-clear">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+        >
       </a>
     </div>
 
-    {groups.length > 0 ? (
-      <div class="archive-card" id="post-list">
-        <div class="timeline">
-          {groups.map((group) => (
-            <div class="timeline-group" data-group>
-              <div class="timeline-year-header">
-                <span class="timeline-year">{group.year}</span>
-                <span class="timeline-year-marker"></span>
-                <span class="timeline-year-count">{group.items.length} 篇文章</span>
+    {
+      groups.length > 0 ? (
+        <div class="archive-card" id="post-list">
+          <div class="timeline">
+            {groups.map((group) => (
+              <div class="timeline-group" data-group>
+                <div class="timeline-year-header">
+                  <span class="timeline-year">{group.year}</span>
+                  <span class="timeline-year-marker" />
+                  <span class="timeline-year-count">{group.items.length} 篇文章</span>
+                </div>
+                <div class="timeline-items">
+                  {group.items.map((post) => (
+                    <a
+                      href={`/posts/${post.slug}`}
+                      class="timeline-item"
+                      data-tags={post.tags.map((t) => toSlug(t)).join(',')}
+                      data-category={post.category ? toSlug(post.category) : ''}
+                      data-series={post.series ? toSlug(post.series) : ''}
+                    >
+                      <span class="timeline-item-date">{fmtDate(post.publishedAt)}</span>
+                      <span class="timeline-item-marker" />
+                      <span class="timeline-item-title">{post.title}</span>
+                      {post.tags.length > 0 && (
+                        <span class="timeline-item-tags">
+                          {post.tags.map((t) => `#${t}`).join(' ')}
+                        </span>
+                      )}
+                    </a>
+                  ))}
+                </div>
               </div>
-              <div class="timeline-items">
-                {group.items.map((post) => (
-                  <a
-                    href={`/posts/${post.slug}`}
-                    class="timeline-item"
-                    data-tags={post.tags.map(t => toSlug(t)).join(',')}
-                    data-category={post.category ? toSlug(post.category) : ''}
-                    data-series={post.series ? toSlug(post.series) : ''}
-                  >
-                    <span class="timeline-item-date">{fmtDate(post.publishedAt)}</span>
-                    <span class="timeline-item-marker"></span>
-                    <span class="timeline-item-title">{post.title}</span>
-                    {post.tags.length > 0 && (
-                      <span class="timeline-item-tags">{post.tags.map(t => `#${t}`).join(' ')}</span>
-                    )}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    ) : (
-      <p class="tsuki-empty-state">暂无文章</p>
-    )}
+      ) : (
+        <p class="tsuki-empty-state">暂无文章</p>
+      )
+    }
 
     <p class="tsuki-empty-state filter-empty" id="filter-empty">无匹配文章</p>
 
     <div id="pagination-wrap">
-      {page.lastPage > 1 && (
-        <Pagination
-          currentPage={page.currentPage}
-          totalPages={page.lastPage}
-          baseUrl="/archives"
-        />
-      )}
+      {
+        page.lastPage > 1 && (
+          <Pagination
+            currentPage={page.currentPage}
+            totalPages={page.lastPage}
+            baseUrl="/archives"
+          />
+        )
+      }
     </div>
   </section>
 </Default>
@@ -136,7 +154,7 @@ function fmtDate(dateStr: string): string {
     items.forEach((item) => {
       const attr = item.getAttribute(`data-${filterKey === 'tag' ? 'tags' : filterKey}`) || ''
       const values = attr.split(',').filter(Boolean)
-      const match = values.some(v => v === filterValue)
+      const match = values.some((v) => v === filterValue)
       if (!match) {
         item.style.display = 'none'
       } else {
@@ -146,7 +164,9 @@ function fmtDate(dateStr: string): string {
 
     // 隐藏空的年份组
     postList.querySelectorAll<HTMLElement>('[data-group]').forEach((group) => {
-      const visibleItems = group.querySelectorAll<HTMLElement>('.timeline-item:not([style*="display: none"])')
+      const visibleItems = group.querySelectorAll<HTMLElement>(
+        '.timeline-item:not([style*="display: none"])'
+      )
       if (visibleItems.length === 0) {
         group.style.display = 'none'
       }
@@ -387,7 +407,23 @@ function fmtDate(dateStr: string): string {
 
   @media (max-width: 480px) {
     .timeline {
-      --tl-date-w: 2.75rem;
+      --tl-date-w: 3.2rem;
+      --tl-marker-w: 1.1rem;
+      --tl-gap: 0.6rem;
+    }
+
+    .timeline-year {
+      font-size: var(--tsuki-text-xl);
+      letter-spacing: -0.01em;
+    }
+
+    .timeline-year-marker {
+      width: 0.75rem;
+      height: 0.75rem;
+    }
+
+    .timeline-year-count {
+      font-size: 0.95rem;
     }
 
     .timeline-item-date {

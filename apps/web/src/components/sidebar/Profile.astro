@@ -2,13 +2,19 @@
 import tsukiConfig from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
 import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 interface Props {
   stats?: SidebarStats
 }
 
 const { profile, stats } = tsukiConfig
-const safeProfile = profile ?? { name: '', links: [] }
+const safeProfile = profile
+  ? {
+      ...profile,
+      avatar: toOptimizedImageUrl(profile.avatar) ?? profile.avatar,
+    }
+  : { name: '', links: [] }
 const { stats: statsData } = Astro.props
 
 const overlayIcon = uiIcons.idCard
@@ -29,81 +35,85 @@ const resolveIcon = (icon: string) => {
     return { type: 'inline', value: icon }
   }
   if (isImageIcon(icon)) {
-    return { type: 'image', value: icon }
+    return { type: 'image', value: toOptimizedImageUrl(icon) ?? icon }
   }
   return { type: 'text', value: icon.slice(0, 1).toUpperCase() }
 }
 ---
 
 <div class="tsuki-sidebar-card profile-card">
-  {safeProfile.avatar && (
-    <a
-      href={safeProfile.avatarLink || '#'}
-      class="avatar-link"
-      aria-label="查看个人资料"
-    >
-      <span class="avatar-overlay" aria-hidden="true">
-        <span class="overlay-icon" set:html={overlayIcon}></span>
-      </span>
-      <img
-        src={safeProfile.avatar}
-        alt={safeProfile.name}
-        class="avatar-img"
-        loading="lazy"
-        decoding="async"
-      />
-    </a>
-  )}
+  {
+    safeProfile.avatar && (
+      <a href={safeProfile.avatarLink || '#'} class="avatar-link" aria-label="查看个人资料">
+        <span class="avatar-overlay" aria-hidden="true">
+          <span class="overlay-icon" set:html={overlayIcon} />
+        </span>
+        <img
+          src={safeProfile.avatar}
+          alt={safeProfile.name}
+          class="avatar-img"
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+    )
+  }
   <h2 class="profile-name">
     {safeProfile.name}
   </h2>
-  {safeProfile.bio && (
-    <p class="profile-bio">
-      {safeProfile.bio}
-    </p>
-  )}
+  {safeProfile.bio && <p class="profile-bio">{safeProfile.bio}</p>}
 
-  {stats?.enable && statsData && (
-    <div class="profile-stats" aria-label="站点统计">
-      <div class="profile-stat-cell">
-        <span class="profile-stat-label">文章</span>
-        <span class="profile-stat-value">{statsData.posts.toLocaleString()}</span>
+  {
+    stats?.enable && statsData && (
+      <div class="profile-stats" aria-label="站点统计">
+        <div class="profile-stat-cell">
+          <span class="profile-stat-label">文章</span>
+          <span class="profile-stat-value">{statsData.posts.toLocaleString()}</span>
+        </div>
+        <div class="profile-stat-cell profile-stat-divider">
+          <span class="profile-stat-label">标签</span>
+          <span class="profile-stat-value">{statsData.tags.toLocaleString()}</span>
+        </div>
+        <div class="profile-stat-cell profile-stat-divider">
+          <span class="profile-stat-label">分组</span>
+          <span class="profile-stat-value">{statsData.groups.toLocaleString()}</span>
+        </div>
       </div>
-      <div class="profile-stat-cell profile-stat-divider">
-        <span class="profile-stat-label">标签</span>
-        <span class="profile-stat-value">{statsData.tags.toLocaleString()}</span>
-      </div>
-      <div class="profile-stat-cell profile-stat-divider">
-        <span class="profile-stat-label">分组</span>
-        <span class="profile-stat-value">{statsData.groups.toLocaleString()}</span>
-      </div>
-    </div>
-  )}
+    )
+  }
 
-  {safeProfile.links && safeProfile.links.length > 0 && (
-    <div class="profile-links">
-      {safeProfile.links.map((link) => {
-        const icon = resolveIcon(link.icon)
-        return (
-          <a
-            href={link.url}
-            target={isExternalLink(link.url) ? '_blank' : undefined}
-            rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
-            class="link-icon-btn"
-            aria-label={link.name}
-          >
-            {icon.type === 'image' ? (
-              <img src={icon.value} alt="" class="link-icon-img" loading="lazy" decoding="async" />
-            ) : icon.type === 'inline' ? (
-              <span class="link-icon-svg" set:html={icon.value}></span>
-            ) : (
-              <span class="link-icon-text">{icon.value}</span>
-            )}
-          </a>
-        )
-      })}
-    </div>
-  )}
+  {
+    safeProfile.links && safeProfile.links.length > 0 && (
+      <div class="profile-links">
+        {safeProfile.links.map((link) => {
+          const icon = resolveIcon(link.icon)
+          return (
+            <a
+              href={link.url}
+              target={isExternalLink(link.url) ? '_blank' : undefined}
+              rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
+              class="link-icon-btn"
+              aria-label={link.name}
+            >
+              {icon.type === 'image' ? (
+                <img
+                  src={icon.value}
+                  alt=""
+                  class="link-icon-img"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : icon.type === 'inline' ? (
+                <span class="link-icon-svg" set:html={icon.value} />
+              ) : (
+                <span class="link-icon-text">{icon.value}</span>
+              )}
+            </a>
+          )
+        })}
+      </div>
+    )
+  }
 </div>
 
 <style>
@@ -113,7 +123,8 @@ const resolveIcon = (icon: string) => {
   }
   @media (min-width: 640px) {
     .profile-card {
-      padding: var(--tsuki-sidebar-card-padding-compact) var(--tsuki-sidebar-card-padding-inline-compact);
+      padding: var(--tsuki-sidebar-card-padding-compact)
+        var(--tsuki-sidebar-card-padding-inline-compact);
     }
   }
 
@@ -128,7 +139,9 @@ const resolveIcon = (icon: string) => {
   }
   .avatar-link:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--tsuki-theme-accent), 0 0 0 calc(2px + var(--tsuki-space-sm)) var(--tsuki-sidebar-card-bg);
+    box-shadow:
+      0 0 0 2px var(--tsuki-theme-accent),
+      0 0 0 calc(2px + var(--tsuki-space-sm)) var(--tsuki-sidebar-card-bg);
   }
 
   .avatar-overlay {
@@ -149,8 +162,9 @@ const resolveIcon = (icon: string) => {
     transform: scale(var(--tsuki-scale-overlay-initial));
     color: var(--tsuki-profile-avatar-overlay-icon);
     filter: drop-shadow(var(--tsuki-profile-avatar-shadow));
-    transition: opacity var(--tsuki-motion-medium) var(--tsuki-motion-ease-out),
-                transform var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+    transition:
+      opacity var(--tsuki-motion-medium) var(--tsuki-motion-ease-out),
+      transform var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
   }
   .avatar-link:hover .overlay-icon,
   .avatar-link:focus-visible .overlay-icon {
@@ -252,8 +266,9 @@ const resolveIcon = (icon: string) => {
     color: var(--tsuki-fg);
     box-shadow: var(--tsuki-shadow-icon);
     text-decoration: none;
-    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+    transition:
+      background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .link-icon-btn:hover {
     transform: translateY(-2px);

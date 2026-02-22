@@ -1,51 +1,50 @@
 ---
 import Default from '@/layouts/Default.astro'
 import tsukiConfig from '@/config/tsuki-config'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 export const prerender = true
 
-const friends = tsukiConfig.friends ?? []
+const friends = (tsukiConfig.friends ?? []).map((friend) => ({
+  ...friend,
+  avatar: toOptimizedImageUrl(friend.avatar) ?? friend.avatar,
+}))
 ---
 
 <Default title="友链" description="我的朋友们">
   <div class="tsuki-content-card friends-page">
     <h1 class="friends-title">友链</h1>
-    {friends.length > 0 ? (
-      <div class="friends-grid">
-        {friends.map((friend) => (
-          <a
-            href={friend.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="friend-card"
-          >
-            <div class="friend-avatar-wrap">
-              {friend.avatar ? (
-                <img
-                  src={friend.avatar}
-                  alt={friend.name}
-                  class="friend-avatar"
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <span class="friend-avatar-fallback">
-                  {friend.name.slice(0, 1).toUpperCase()}
-                </span>
-              )}
-            </div>
-            <div class="friend-info">
-              <span class="friend-name">{friend.name}</span>
-              {friend.description && (
-                <span class="friend-desc">{friend.description}</span>
-              )}
-            </div>
-          </a>
-        ))}
-      </div>
-    ) : (
-      <p class="tsuki-empty-state">暂无友链</p>
-    )}
+    {
+      friends.length > 0 ? (
+        <div class="friends-grid">
+          {friends.map((friend) => (
+            <a href={friend.url} target="_blank" rel="noopener noreferrer" class="friend-card">
+              <div class="friend-avatar-wrap">
+                {friend.avatar ? (
+                  <img
+                    src={friend.avatar}
+                    alt={friend.name}
+                    class="friend-avatar"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <span class="friend-avatar-fallback">
+                    {friend.name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div class="friend-info">
+                <span class="friend-name">{friend.name}</span>
+                {friend.description && <span class="friend-desc">{friend.description}</span>}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="tsuki-empty-state">暂无友链</p>
+      )
+    }
   </div>
 </Default>
 

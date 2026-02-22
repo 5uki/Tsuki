@@ -12,9 +12,9 @@ export default defineConfig({
     title: 'Tsuki',
     subtitle: '一个认真写字的地方',
     backgroundImages: [
-      { href: './contents/banners/1.png', positionY: 25 },
-      { href: './contents/banners/2.png', positionY: 25 },
-      { href: './contents/banners/3.png', positionY: 25 },
+      { href: './contents/banners/1.png', positionX: 32, positionY: 25 },
+      { href: './contents/banners/2.png', positionX: 32, positionY: 25 },
+      { href: './contents/banners/3.png', positionX: 32, positionY: 25 },
     ],
   },
   nav: [

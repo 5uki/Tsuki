@@ -21,7 +21,10 @@ import {
 
 export function commentsRoutes() {
   const router = new Hono<{ Bindings: Env; Variables: AppContext }>()
-  const idempotencyMiddleware = createIdempotencyMiddleware((c: any) => c.get('ports').idempotency)
+  const idempotencyMiddleware = createIdempotencyMiddleware(
+    (c: { get: <K extends keyof AppContext>(key: K) => AppContext[K] }) =>
+      c.get('ports').idempotency
+  )
 
   // 获取评论列表（公开）
   router.get('/', etagMiddleware, async (c) => {
@@ -69,10 +72,14 @@ export function commentsRoutes() {
     }>()
 
     if (!body.target_type || !body.target_id || !body.body_markdown) {
-      throw new AppError('VALIDATION_FAILED', 'target_type, target_id, and body_markdown are required', {
-        field: 'body',
-        reason: 'REQUIRED',
-      })
+      throw new AppError(
+        'VALIDATION_FAILED',
+        'target_type, target_id, and body_markdown are required',
+        {
+          field: 'body',
+          reason: 'REQUIRED',
+        }
+      )
     }
 
     if (body.target_type !== 'post' && body.target_type !== 'moment') {

@@ -15,6 +15,15 @@ export default tseslint.config(
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+      'no-var': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+    },
+  },
+  {
+    files: ['src/lib/types/content.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   }
 )

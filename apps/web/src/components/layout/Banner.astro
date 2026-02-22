@@ -28,34 +28,38 @@ const isHome = Astro.url.pathname === '/'
       <defs>
         <path
           id="gentle-wave"
-          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"
-        ></path>
+          d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v48h-352z"></path>
         <linearGradient id="tsuki-banner-wave-gradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--tsuki-banner-wave-top, var(--tsuki-banner-wave-fill))"></stop>
-          <stop offset="100%" stop-color="var(--tsuki-banner-wave-bottom, var(--tsuki-banner-wave-fill))"></stop>
+          <stop offset="0%" stop-color="var(--tsuki-banner-wave-top, var(--tsuki-banner-wave-fill))"
+          ></stop>
+          <stop
+            offset="100%"
+            stop-color="var(--tsuki-banner-wave-bottom, var(--tsuki-banner-wave-fill))"></stop>
         </linearGradient>
       </defs>
       <g class="parallax">
-        {[
-          { y: 0, opacity: 0.35, dur: '10s', begin: '-2s' },
-          { y: 3, opacity: 0.6, dur: '14s', begin: '-4s' },
-          { y: 5, opacity: 0.78, dur: '20s', begin: '-6s' },
-          { y: 7, opacity: 0.92, dur: '28s', begin: '-8s' },
-        ].map(w => (
-          <use xlink:href="#gentle-wave" x="48" y={w.y} opacity={w.opacity}>
-            <animateTransform
-              attributeName="transform"
-              type="translate"
-              values="-90 0; 90 0; -90 0"
-              dur={w.dur}
-              repeatCount="indefinite"
-              begin={w.begin}
-              calcMode="spline"
-              keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
-              keyTimes="0;0.5;1"
-            />
-          </use>
-        ))}
+        {
+          [
+            { y: 0, opacity: 0.35, dur: '10s', begin: '-2s' },
+            { y: 3, opacity: 0.6, dur: '14s', begin: '-4s' },
+            { y: 5, opacity: 0.78, dur: '20s', begin: '-6s' },
+            { y: 7, opacity: 0.92, dur: '28s', begin: '-8s' },
+          ].map((w) => (
+            <use xlink:href="#gentle-wave" x="48" y={w.y} opacity={w.opacity}>
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values="-90 0; 90 0; -90 0"
+                dur={w.dur}
+                repeatCount="indefinite"
+                begin={w.begin}
+                calcMode="spline"
+                keySplines="0.45 0.05 0.55 0.95; 0.45 0.05 0.55 0.95"
+                keyTimes="0;0.5;1"
+              />
+            </use>
+          ))
+        }
       </g>
     </svg>
   </div>
@@ -68,9 +72,7 @@ const isHome = Astro.url.pathname === '/'
     transition: height var(--tsuki-vt-duration, 380ms) var(--tsuki-vt-ease, ease);
     overflow-anchor: none;
     margin-top: calc(-1 * var(--tsuki-header-overlap-block-size));
-    padding:
-      var(--tsuki-header-overlap-block-size)
-      var(--tsuki-banner-inline-padding)
+    padding: var(--tsuki-header-overlap-block-size) var(--tsuki-banner-inline-padding)
       var(--tsuki-banner-wave-height);
     display: flex;
     align-items: center;
@@ -88,7 +90,8 @@ const isHome = Astro.url.pathname === '/'
     background-image: var(--tsuki-banner-image);
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center var(--tsuki-banner-image-position-y, 50%);
+    background-position: var(--tsuki-banner-image-position-x, 50%)
+      var(--tsuki-banner-image-position-y, 50%);
     opacity: var(--tsuki-banner-image-opacity);
     filter: var(--tsuki-banner-image-filter);
     mask-image: var(--tsuki-banner-image-mask);
@@ -115,7 +118,9 @@ const isHome = Astro.url.pathname === '/'
     color: var(--tsuki-banner-title-fg);
     text-shadow: var(--tsuki-shadow-banner-title);
     letter-spacing: -0.02em;
-    transition: opacity 280ms ease, transform 280ms ease;
+    transition:
+      opacity 280ms ease,
+      transform 280ms ease;
   }
 
   .tsuki-banner-subtitle {
@@ -125,7 +130,9 @@ const isHome = Astro.url.pathname === '/'
     line-height: 1.65;
     color: var(--tsuki-banner-subtitle-fg);
     text-shadow: var(--tsuki-shadow-banner-subtitle);
-    transition: opacity 280ms ease, transform 280ms ease;
+    transition:
+      opacity 280ms ease,
+      transform 280ms ease;
   }
 
   .tsuki-banner-content:not([data-home]) .tsuki-banner-title,
