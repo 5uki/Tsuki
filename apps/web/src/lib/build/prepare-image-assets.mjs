@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import sharp from 'sharp'
+import { Buffer } from 'node:buffer'
 
 const RASTER_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif'])
 const REMOTE_IMAGE_RE = /^https?:\/\/.+\.(png|jpe?g|webp|gif|avif)(\?.*)?$/i
@@ -86,7 +87,7 @@ async function ensureDir(dir) {
 }
 
 async function downloadToBuffer(url) {
-  const resp = await fetch(url)
+  const resp = await globalThis.fetch(url)
   if (!resp.ok) throw new Error(`Failed to fetch ${url}: ${resp.status}`)
   const arr = await resp.arrayBuffer()
   return Buffer.from(arr)

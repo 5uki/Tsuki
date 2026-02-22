@@ -40,10 +40,18 @@ function toOptimizedImageUrl(src) {
 
 function remarkOptimizeImages() {
   return (tree) => {
+    const IMG_TAG_SRC_RE = /(<img\b[^>]*\bsrc=["'])([^"']+)(["'][^>]*>)/gi
+
     function visit(node) {
       if (!node || typeof node !== 'object') return
       if (node.type === 'image' && typeof node.url === 'string') {
         node.url = toOptimizedImageUrl(node.url) || node.url
+      }
+      if (node.type === 'html' && typeof node.value === 'string' && node.value.includes('<img')) {
+        node.value = node.value.replace(IMG_TAG_SRC_RE, (_m, prefix, src, suffix) => {
+          const optimizedSrc = toOptimizedImageUrl(src) || src
+          return `${prefix}${optimizedSrc}${suffix}`
+        })
       }
       if (Array.isArray(node.children)) {
         for (const child of node.children) visit(child)

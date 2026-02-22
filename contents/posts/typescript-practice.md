@@ -1,20 +1,17 @@
 ---
-title: "TypeScript 业务建模笔记"
-summary: "总结 TypeScript 项目中的最佳实践，包括类型设计、错误处理和性能优化技巧。"
-publishedAt: "2026-02-08"
-category: "工程实践"
-series: "前端工程化实战"
-tags: ["TypeScript", "工程化"]
+title: '内容组织教程：文章、动态与侧栏数据'
+summary: '理解内容目录结构，知道在哪里改文章和动态。'
+publishedAt: '2026-01-01'
+category: '使用教程'
+series: '模板入门'
+tags: ['内容管理', 'markdown', '教程']
+cover: './contents/banners/2.png'
 ---
 
-## 类型建模
+模板中的内容主要来自 `contents/`：
 
-为核心领域建立清晰的类型模型可以减少沟通成本。
+- `contents/posts`: 文章
+- `contents/moments`: 动态
+- `contents/about.md`: 关于页
 
-## 错误边界
-
-使用统一的错误码与消息结构，避免直接抛出难以追踪的异常。
-
-## 结语
-
-小步迭代，保持代码和设计语言一致。
+建议按主题拆分文章，并使用统一的标签体系，方便归档和检索。

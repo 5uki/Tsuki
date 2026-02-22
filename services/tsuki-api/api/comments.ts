@@ -22,8 +22,9 @@ import {
 export function commentsRoutes() {
   const router = new Hono<{ Bindings: Env; Variables: AppContext }>()
   const idempotencyMiddleware = createIdempotencyMiddleware(
-    (c: { get: <K extends keyof AppContext>(key: K) => AppContext[K] }) =>
-      c.get('ports').idempotency
+    (c) =>
+      (c as { get: <K extends keyof AppContext>(key: K) => AppContext[K] }).get('ports')
+        .idempotency
   )
 
   // 获取评论列表（公开）

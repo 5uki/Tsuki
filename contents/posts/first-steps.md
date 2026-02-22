@@ -1,38 +1,40 @@
 ---
-title: "站点内容系统接入实战"
-summary: "如何使用 Firefly 博客模板，快速完成主题配置、内容发布与基础样式调整。"
-publishedAt: "2026-02-01"
-category: "博客指南"
-series: "Firefly 建站教程"
-tags: ["Firefly", "博客", "Markdown", "使用指南"]
+title: '从 0 到 1：如何使用 Tsuki 模板'
+summary: '5 分钟完成本地启动、基础配置与首次发布。'
+publishedAt: '2026-01-01'
+category: '使用教程'
+series: '模板入门'
+tags: ['教程', '部署', '入门']
+cover: './contents/banners/1.png'
 pinned: true
-cover: "../banners/1.png"
 ---
 
-## 快速开始
+这篇文章会带你快速上手模板：
 
-先从最基本的目录结构开始：文章放到 `contents/posts`，动态放到 `contents/moments`。下面是一个最简单的代码片段：
+## 1. 安装依赖
 
-```ts
-export function hello(name: string) {
-  return `你好，${name}`
-}
+```bash
+pnpm install
 ```
 
-## 插图与引用
+## 2. 启动开发环境
 
-你可以直接在文章里引用图片：
+```bash
+pnpm dev
+```
 
-![站点横幅](../banners/1.png)
+## 3. 修改站点配置
 
-> 轻量但有章法，才是可维护的体验。
+编辑 `tsuki.config.ts`，完成站点名、简介、导航等信息的替换。
 
-## 数学公式
+## 4. 写第一篇文章
 
-行内公式示例：$a^2 + b^2 = c^2$。
+在 `contents/posts` 下新增一个 markdown 文件即可自动被收录。
 
-块级公式示例：
+## 5. 构建与部署
 
-$$
-E = mc^2
-$$
+```bash
+pnpm build
+```
+
+将 `dist` 部署到你的静态托管平台。

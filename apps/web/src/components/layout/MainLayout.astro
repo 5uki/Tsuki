@@ -38,50 +38,57 @@ const { class: className, sidebarData } = Astro.props
     width: 100%;
     align-items: start;
     gap: var(--tsuki-sidebar-gap-compact);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'main'
+      'right';
   }
 
   .main-content {
     min-width: 0;
-    order: 0;
+    grid-area: main;
   }
 
   .left-sidebar {
     display: none;
     flex-direction: column;
     gap: var(--tsuki-sidebar-gap-compact);
-    order: 2;
+    grid-area: left;
   }
 
   .right-sidebar {
     display: flex;
     flex-direction: column;
     gap: var(--tsuki-sidebar-gap-compact);
-    order: 3;
+    grid-area: right;
   }
 
   @media (min-width: 768px) {
     .tsuki-main-grid {
       gap: var(--tsuki-sidebar-gap);
-      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+      grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr) minmax(12rem, 1fr);
+      grid-template-areas: 'left main right';
     }
 
     .left-sidebar {
       display: flex;
-      order: 0;
-      grid-column: 2;
       gap: var(--tsuki-sidebar-gap);
     }
 
     .main-content {
-      order: 0;
-      grid-column: 3;
+      min-width: 0;
     }
 
     .right-sidebar {
-      order: 0;
-      grid-column: 4;
       align-self: stretch;
       gap: var(--tsuki-sidebar-gap);
+    }
+  }
+
+  @media (min-width: 1600px) {
+    .tsuki-main-grid {
+      grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+      grid-template-areas: '. left main right .';
     }
   }
 </style>

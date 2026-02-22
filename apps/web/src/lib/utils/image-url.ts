@@ -1,7 +1,8 @@
 import { imageManifest } from '@/generated/image-manifest'
 
 function normalizeLocalPublicPath(raw: string): string {
-  const noQuery = raw.split('#')[0].split('?')[0]
+  const noHash = raw.split('#')[0] ?? ''
+  const noQuery = noHash.split('?')[0] ?? ''
   const cleaned = noQuery
     .replace(/^\.\/?/, '')
     .replace(/^contents\//, '')

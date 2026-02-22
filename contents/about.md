@@ -1,19 +1,19 @@
-你好，欢迎来到我的博客！
+---
+title: 关于这个模板
+---
 
-## 简介
+这是一个用于快速搭建个人博客的模板项目。
 
-我是 Suki，一个热爱技术的开发者。这个博客记录了我在技术学习和日常生活中的点滴。
+## 你可以做什么
 
-## 关于本站
+- 修改主题样式与布局
+- 编写文章和动态
+- 配置导航、友链和个人信息
 
-本站基于 [Tsuki](https://github.com/5uki/Tsuki) 构建，一个现代化的全栈博客框架。
+## 推荐的改造顺序
 
-- **前端**: Astro + TypeScript
-- **后端**: Cloudflare Workers + Hono
-- **数据库**: Cloudflare D1
+1. 先改 `tsuki.config.ts`
+2. 再改 `contents/about.md`
+3. 最后批量替换 `contents/posts/*`
 
-## 联系方式
-
-欢迎通过以下方式与我交流：
-
-- GitHub: [5uki/Tsuki](https://github.com/5uki/Tsuki)
+祝你写作顺利。
