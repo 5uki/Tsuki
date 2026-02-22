@@ -2,7 +2,7 @@ import { defineConfig, navIcons } from '@tsuki/config'
 
 export default defineConfig({
   site: {
-    title: '你的博客名',
+    title: 'Tsuki',
     url: 'https://example.com',
     description: '在这里记录你的思考与创作。',
     defaultTheme: 'mauve',
@@ -27,7 +27,7 @@ export default defineConfig({
   profile: {
     avatar: './contents/avatar.webp',
     avatarLink: '/about',
-    name: '你的名字',
+    name: 'Suki',
     bio: '一句简短的自我介绍。',
     links: [
       {
