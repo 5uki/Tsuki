@@ -482,6 +482,7 @@
   }
 
   .floating-btn {
+    --fab-radius: 0.75rem;
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -489,8 +490,10 @@
     width: var(--fab-size);
     height: var(--fab-size);
     border: none;
-    border-radius: 0.75rem;
+    border-radius: var(--fab-radius);
     overflow: hidden;
+    clip-path: inset(0 round var(--fab-radius));
+    isolation: isolate;
     background: var(--tsuki-sidebar-card-bg, rgba(255, 255, 255, 0.85));
     background-clip: padding-box;
     color: var(--tsuki-fg);
@@ -568,6 +571,7 @@
   }
 
   .action-group .floating-btn {
+    clip-path: inset(0 round var(--fab-radius));
     margin-top: var(--fab-gap);
     max-height: var(--fab-size);
     opacity: 1;
