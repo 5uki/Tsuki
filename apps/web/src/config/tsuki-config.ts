@@ -1,5 +1,18 @@
-import type { TsukiConfig } from '@tsuki/config'
+import { defineConfig, navIcons } from '@tsuki/config'
+import configJson from '../../../../tsuki.config.json'
 
-import userConfig from '../../../../tsuki.config'
+const navIconMap: Record<string, string> = {
+  '/': navIcons.home,
+  '/archives': navIcons.archive,
+  '/moments': navIcons.moments,
+  '/about': navIcons.about,
+  '/friends': navIcons.friends,
+}
 
-export default userConfig as TsukiConfig
+export default defineConfig({
+  ...configJson,
+  nav: (configJson.nav ?? []).map((link) => ({
+    ...link,
+    icon: navIconMap[link.href] ?? undefined,
+  })),
+})

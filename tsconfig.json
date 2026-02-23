@@ -9,6 +9,6 @@
       "@tsuki/shared/*": ["packages/shared/src/*"]
     }
   },
-  "include": ["tsuki.config.ts"],
+  "include": ["tsuki.config.json"],
   "exclude": ["node_modules", "apps", "services", "packages"]
 }
