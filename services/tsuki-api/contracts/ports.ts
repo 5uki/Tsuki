@@ -6,6 +6,7 @@
 import type {
   SettingsPublicDTO,
   PaginatedResponse,
+  AdminFileChange,
 } from './dto'
 
 /**
@@ -28,6 +29,7 @@ export interface CommentRecord {
   body_markdown: string
   body_html: string
   status: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
+  pinned: number
   created_at: number
   updated_at: number
   deleted_at: number | null
@@ -109,6 +111,12 @@ export interface CommentsPort {
       status?: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
     }
   ): Promise<PaginatedResponse<CommentWithAuthorRecord>>
+
+  /** 管理员：置顶评论 */
+  pin(id: string): Promise<void>
+
+  /** 管理员：取消置顶评论 */
+  unpin(id: string): Promise<void>
 }
 
 /**
@@ -194,4 +202,26 @@ export interface IdempotencyPort {
 
   /** 清理过期条目 */
   cleanup(): Promise<void>
+}
+
+/**
+ * GitHub Repo 端口（管理后台内容操作）
+ */
+export interface GitHubRepoPort {
+  /** 读取文件内容 + SHA */
+  getFile(path: string): Promise<{ content: string; sha: string }>
+
+  /** 列出目录文件 */
+  listDirectory(path: string): Promise<Array<{ name: string; path: string; type: 'file' | 'dir'; sha: string }>>
+
+  /** 批量提交（通过 Git Trees API 创建单次提交） */
+  batchCommit(changes: AdminFileChange[], message: string): Promise<{ sha: string; url: string }>
+}
+
+/**
+ * Cloudflare Turnstile 验证端口
+ */
+export interface TurnstilePort {
+  /** 验证 Turnstile token */
+  verify(token: string, remoteIp: string): Promise<boolean>
 }

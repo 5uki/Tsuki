@@ -10,6 +10,7 @@ import type { Env, AppContext } from '@contracts/env'
 import { authRoutes } from './auth'
 import { commentsRoutes, adminCommentsRoutes } from './comments'
 import { settingsRoutes } from './settings'
+import { adminContentRoutes } from './admin-content'
 import { requireAdmin } from './middleware/guards'
 
 export function createRoutes() {
@@ -23,6 +24,7 @@ export function createRoutes() {
   const admin = new Hono<{ Bindings: Env; Variables: AppContext }>()
   admin.use('*', requireAdmin)
   admin.route('/comments', adminCommentsRoutes())
+  admin.route('/', adminContentRoutes())
   api.route('/admin', admin)
 
   // 健康检查
@@ -36,3 +38,4 @@ export function createRoutes() {
 export * from './auth'
 export * from './comments'
 export * from './settings'
+export * from './admin-content'

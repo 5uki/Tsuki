@@ -2,7 +2,7 @@
  * Worker 环境变量类型
  */
 
-import type { SettingsPort, UsersPort, SessionPort, GitHubOAuthPort, CommentsPort, IdempotencyPort } from './ports'
+import type { SettingsPort, UsersPort, SessionPort, GitHubOAuthPort, CommentsPort, IdempotencyPort, GitHubRepoPort, TurnstilePort } from './ports'
 import type { UserDTO } from './dto'
 
 export interface Env {
@@ -17,6 +17,12 @@ export interface Env {
   TSUKI_CSRF_SALT: string
   TSUKI_ADMIN_GITHUB_IDS: string
   TSUKI_SESSION_TTL_MS: string
+
+  // 环境变量（可选 - Admin 功能）
+  GITHUB_TOKEN?: string
+  GITHUB_REPO_OWNER?: string
+  GITHUB_REPO_NAME?: string
+  CF_TURNSTILE_SECRET_KEY?: string
 }
 
 /**
@@ -31,6 +37,8 @@ export interface AppContext {
     githubOAuth: GitHubOAuthPort
     comments: CommentsPort
     idempotency: IdempotencyPort
+    githubRepo: GitHubRepoPort | null
+    turnstile: TurnstilePort | null
   }
   currentUser: UserDTO | null
 }

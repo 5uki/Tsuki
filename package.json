@@ -6,7 +6,7 @@
   "description": "A full-stack blogging framework built on Cloudflare + GitHub",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && cp -r apps/admin/dist/* apps/web/dist/admin/ 2>/dev/null || true",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",

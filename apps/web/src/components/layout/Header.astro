@@ -36,9 +36,25 @@ const siteTitle = tsukiConfig.site.title
         </a>
       </div>
 
-      <button class="action-btn search-btn" data-search-open aria-label="搜索">
-        <span set:html={uiIcons.search} />
-      </button>
+      <div class="search-area">
+        <button class="action-btn search-btn" id="search-toggle" aria-label="搜索">
+          <span set:html={uiIcons.search} />
+        </button>
+        <div id="search-dropdown" class="search-dropdown">
+          <div class="search-dd-header">
+            <svg class="search-dd-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input
+              type="search"
+              id="search-dd-input"
+              class="search-dd-input"
+              placeholder="搜索文章..."
+              autocomplete="off"
+            />
+            <span class="search-dd-spinner" id="search-dd-spinner"></span>
+          </div>
+          <div id="search-dd-body" class="search-dd-body"></div>
+        </div>
+      </div>
 
       <div class="theme-switcher">
         <button id="theme-toggle" class="action-btn" aria-label="切换主题" aria-haspopup="true">
@@ -62,7 +78,7 @@ const siteTitle = tsukiConfig.site.title
       </div>
 
       <div class="user-area" id="user-area">
-        <button class="login-btn" id="header-login-btn" data-login-open aria-label="登录">
+        <button class="login-btn" id="header-login-btn" aria-label="登录">
           <span class="login-icon" set:html={uiIcons.githubLogin} />
           <span class="login-text">登录</span>
         </button>
@@ -70,8 +86,24 @@ const siteTitle = tsukiConfig.site.title
           <button class="user-avatar-btn" id="user-avatar-btn" aria-label="用户菜单" aria-haspopup="true">
             <img id="header-user-avatar" class="user-avatar" src="" alt="" width="32" height="32" />
           </button>
-          <div class="user-dropdown" id="user-dropdown" role="menu">
-            <button id="header-logout-btn" class="user-dropdown-item" role="menuitem">
+        </div>
+        <div class="login-dropdown" id="login-dropdown" role="menu">
+          <div id="login-dd-not-logged" class="login-dd-state">
+            <p class="login-dd-desc">使用 GitHub 账号登录以发表评论</p>
+            <a id="login-dd-github-btn" href="#" class="login-dd-github-btn">
+              <span class="login-dd-gh-icon" set:html={uiIcons.githubLogin} />
+              <span>使用 GitHub 登录</span>
+            </a>
+          </div>
+          <div id="login-dd-logged" class="login-dd-state" style="display:none;">
+            <div class="login-dd-user-row">
+              <img id="login-dd-avatar" class="login-dd-avatar" src="" alt="" width="36" height="36" />
+              <div class="login-dd-user-info">
+                <span id="login-dd-username" class="login-dd-username"></span>
+                <span class="login-dd-badge">已登录</span>
+              </div>
+            </div>
+            <button id="login-dd-logout-btn" class="login-dd-logout" role="menuitem">
               退出登录
             </button>
           </div>
@@ -97,7 +129,7 @@ const siteTitle = tsukiConfig.site.title
 </header>
 
 <script>
-  // 主题切换功能
+  // 主题切换 + 搜索下拉 + 登录下拉
   import { THEMES, DEFAULT_THEME, type Theme } from '@tsuki/shared/theme'
   import { setTheme as storageSetTheme } from '@/lib/storage'
 
@@ -120,6 +152,18 @@ const siteTitle = tsukiConfig.site.title
     const mobileMenuBtn = document.getElementById('mobile-menu-btn')
     const mobileNav = document.getElementById('mobile-nav')
 
+    // Search dropdown elements
+    const searchToggle = document.getElementById('search-toggle')
+    const searchDropdown = document.getElementById('search-dropdown')
+    const searchInput = document.getElementById('search-dd-input') as HTMLInputElement | null
+    const searchBody = document.getElementById('search-dd-body')
+    const searchSpinner = document.getElementById('search-dd-spinner')
+
+    // Login dropdown elements
+    const loginBtn = document.getElementById('header-login-btn')
+    const loginDropdown = document.getElementById('login-dropdown')
+    const userAvatarBtn = document.getElementById('user-avatar-btn')
+
     if (!header || !headerTrack) {
       return () => {}
     }
@@ -128,6 +172,67 @@ const siteTitle = tsukiConfig.site.title
     const controller = new AbortController()
     const signal = controller.signal
 
+    // ── Pagefind ──
+    let pf: any = null
+    let searchTimer: ReturnType<typeof setTimeout>
+    let searchIdx = -1
+    let searchItems: HTMLAnchorElement[] = []
+
+    function resetSearchResults() {
+      searchIdx = -1
+      searchItems = []
+    }
+
+    function highlightSearch() {
+      searchItems.forEach((el, i) => el.classList.toggle('is-active', i === searchIdx))
+      if (searchIdx >= 0 && searchItems[searchIdx]) searchItems[searchIdx]!.scrollIntoView({ block: 'nearest' })
+    }
+
+    async function doSearch(q: string) {
+      if (!searchBody || !searchSpinner) return
+      try {
+        if (!pf) {
+          const load = new Function("return import('/pagefind/pagefind.js')")
+          pf = await load()
+          await pf.init()
+        }
+        const res = await pf.search(q)
+        searchSpinner.classList.remove('on')
+
+        if (!res.results.length) {
+          searchBody.innerHTML = '<div class="search-dd-nil">无匹配结果</div>'
+          resetSearchResults()
+          return
+        }
+
+        const data = await Promise.all(
+          res.results.slice(0, 8).map((r: any) => r.data())
+        )
+
+        searchBody.innerHTML = data.map((d: any) =>
+          `<a href="${d.url}" class="sr-item" data-sr>` +
+            `<span class="sr-title">${d.meta?.title || '无标题'}</span>` +
+            (d.excerpt ? `<span class="sr-excerpt">${d.excerpt}</span>` : '') +
+          `</a>`
+        ).join('')
+
+        searchItems = Array.from(searchBody.querySelectorAll('[data-sr]'))
+        searchIdx = -1
+
+        searchItems.forEach((el, i) => {
+          el.addEventListener('click', () => closeAllDropdowns())
+          el.addEventListener('mouseenter', () => { searchIdx = i; highlightSearch() })
+        })
+      } catch {
+        if (searchSpinner) searchSpinner.classList.remove('on')
+        if (searchBody) {
+          searchBody.innerHTML = '<div class="search-dd-nil">索引加载失败，请刷新重试</div>'
+          resetSearchResults()
+        }
+      }
+    }
+
+    // ── Theme ──
     function getCurrentTheme(): Theme {
       const theme = document.documentElement.getAttribute('data-theme')
       return THEMES.includes(theme as Theme) ? (theme as Theme) : DEFAULT_THEME
@@ -147,9 +252,12 @@ const siteTitle = tsukiConfig.site.title
       })
     }
 
-    function closeAllMenus() {
+    // ── Close all dropdowns ──
+    function closeAllDropdowns() {
       dropdown?.classList.remove('open')
       mobileNav?.classList.remove('open')
+      searchDropdown?.classList.remove('open')
+      loginDropdown?.classList.remove('open')
     }
 
     function updateHeaderState() {
@@ -159,23 +267,22 @@ const siteTitle = tsukiConfig.site.title
 
       if (!banner) return
 
-      // 与 Firefly 一致：用绝对滚动位置判断，不用 getBoundingClientRect
-      // threshold = banner 高度 - 88px（navbar 高度余量）
       const threshold = banner.offsetHeight - 88
-
       const inMain = scrollTop >= threshold
       const inMainApproach = scrollTop >= threshold - 40
       headerEl.classList.toggle('in-main-approach', inMainApproach)
       headerEl.classList.toggle('in-main', inMain)
       if (inMainApproach) {
-        closeAllMenus()
+        closeAllDropdowns()
       }
     }
 
+    // ── Theme toggle ──
     toggle?.addEventListener('click', (e) => {
       e.stopPropagation()
-      mobileNav?.classList.remove('open')
-      dropdown?.classList.toggle('open')
+      const wasOpen = dropdown?.classList.contains('open')
+      closeAllDropdowns()
+      if (!wasOpen) dropdown?.classList.add('open')
     }, { signal })
 
     themeOptions.forEach(option => {
@@ -188,23 +295,151 @@ const siteTitle = tsukiConfig.site.title
       }, { signal })
     })
 
+    // ── Mobile menu ──
     mobileMenuBtn?.addEventListener('click', (e) => {
       e.stopPropagation()
-      dropdown?.classList.remove('open')
-      mobileNav?.classList.toggle('open')
+      const wasOpen = mobileNav?.classList.contains('open')
+      closeAllDropdowns()
+      if (!wasOpen) mobileNav?.classList.add('open')
     }, { signal })
 
+    // ── Search toggle ──
+    searchToggle?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      const wasOpen = searchDropdown?.classList.contains('open')
+      closeAllDropdowns()
+      if (!wasOpen) {
+        searchDropdown?.classList.add('open')
+        requestAnimationFrame(() => searchInput?.focus())
+      }
+    }, { signal })
+
+    // Search input
+    searchInput?.addEventListener('input', () => {
+      clearTimeout(searchTimer)
+      const q = searchInput.value.trim()
+      if (!q) {
+        searchSpinner?.classList.remove('on')
+        if (searchBody) searchBody.innerHTML = ''
+        resetSearchResults()
+        return
+      }
+      searchSpinner?.classList.add('on')
+      searchTimer = setTimeout(() => doSearch(q), 180)
+    }, { signal })
+
+    // Search keyboard navigation
+    searchDropdown?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeAllDropdowns(); return }
+      if (!searchItems.length) return
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        searchIdx = (searchIdx + 1) % searchItems.length
+        highlightSearch()
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        searchIdx = searchIdx <= 0 ? searchItems.length - 1 : searchIdx - 1
+        highlightSearch()
+      } else if (e.key === 'Enter' && searchIdx >= 0 && searchItems[searchIdx]?.href) {
+        e.preventDefault()
+        closeAllDropdowns()
+        window.location.href = searchItems[searchIdx]!.href
+      }
+    }, { signal })
+
+    // ── Login / User dropdown ──
+    function openLoginDropdown() {
+      const wasOpen = loginDropdown?.classList.contains('open')
+      closeAllDropdowns()
+      if (wasOpen) return
+
+      // Update login state
+      const user = tsukiWindow.__tsukiCurrentUser
+      const loggedEl = document.getElementById('login-dd-logged')
+      const notLoggedEl = document.getElementById('login-dd-not-logged')
+      const avatar = document.getElementById('login-dd-avatar') as HTMLImageElement | null
+      const username = document.getElementById('login-dd-username')
+      const githubBtn = document.getElementById('login-dd-github-btn') as HTMLAnchorElement | null
+
+      if (githubBtn) {
+        const returnTo = encodeURIComponent(window.location.pathname)
+        githubBtn.href = `${AUTH_API_BASE}/auth/github/start?return_to=${returnTo}`
+      }
+
+      if (user && loggedEl && notLoggedEl) {
+        notLoggedEl.style.display = 'none'
+        loggedEl.style.display = 'block'
+        if (avatar) { avatar.src = user.avatar_url; avatar.alt = user.login }
+        if (username) username.textContent = user.login
+      } else if (loggedEl && notLoggedEl) {
+        notLoggedEl.style.display = 'block'
+        loggedEl.style.display = 'none'
+      }
+
+      loginDropdown?.classList.add('open')
+    }
+
+    loginBtn?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      openLoginDropdown()
+    }, { signal })
+
+    userAvatarBtn?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      openLoginDropdown()
+    }, { signal })
+
+    // Custom event for React comment area
+    window.addEventListener('tsuki:open-login', () => openLoginDropdown(), { signal })
+
+    // Logout
+    const logoutBtn = document.getElementById('login-dd-logout-btn')
+    logoutBtn?.addEventListener('click', async () => {
+      try {
+        await fetch(`${AUTH_API_BASE}/auth/logout`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+      } catch {
+        // Ignore
+      }
+      tsukiWindow.__tsukiCurrentUser = null
+      tsukiWindow.__tsukiAuthCheckDone = false
+      loginDropdown?.classList.remove('open')
+      applyAuthState()
+    }, { signal })
+
+    // Ctrl+K / Cmd+K
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        if (searchDropdown?.classList.contains('open')) {
+          closeAllDropdowns()
+        } else {
+          closeAllDropdowns()
+          searchDropdown?.classList.add('open')
+          requestAnimationFrame(() => searchInput?.focus())
+        }
+      }
+    }, { signal })
+
+    // ── Click outside / Escape ──
     document.addEventListener('click', (e) => {
       const target = e.target as Node
-      if (!dropdown?.contains(target) && target !== toggle &&
-          !mobileNav?.contains(target) && target !== mobileMenuBtn) {
-        closeAllMenus()
+      // Check if click is outside all dropdowns
+      const inDropdown =
+        dropdown?.contains(target) || target === toggle ||
+        mobileNav?.contains(target) || target === mobileMenuBtn ||
+        searchDropdown?.contains(target) || target === searchToggle ||
+        loginDropdown?.contains(target) || target === loginBtn || target === userAvatarBtn
+      if (!inDropdown) {
+        closeAllDropdowns()
       }
     }, { signal })
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        closeAllMenus()
+        closeAllDropdowns()
       }
     }, { signal })
 
@@ -252,51 +487,9 @@ const siteTitle = tsukiConfig.site.title
     }
   }
 
-  function bindUserMenuInteractions() {
-    const avatarBtn = document.getElementById('user-avatar-btn')
-    const userDropdown = document.getElementById('user-dropdown')
-    const logoutBtn = document.getElementById('header-logout-btn')
-
-    if (!avatarBtn || !userDropdown) return
-
-    avatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
-      userDropdown.classList.toggle('open')
-    })
-
-    document.addEventListener('click', (e) => {
-      const target = e.target as Node
-      if (!userDropdown.contains(target) && target !== avatarBtn) {
-        userDropdown.classList.remove('open')
-      }
-    })
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        userDropdown.classList.remove('open')
-      }
-    })
-
-    logoutBtn?.addEventListener('click', async () => {
-      try {
-        await fetch(`${AUTH_API_BASE}/auth/logout`, {
-          method: 'POST',
-          credentials: 'include',
-        })
-      } catch {
-        // Ignore
-      }
-      tsukiWindow.__tsukiCurrentUser = null
-      tsukiWindow.__tsukiAuthCheckDone = false
-      userDropdown.classList.remove('open')
-      applyAuthState()
-    })
-  }
-
   async function checkAuthState() {
     if (tsukiWindow.__tsukiAuthCheckDone) {
       applyAuthState()
-      bindUserMenuInteractions()
       return
     }
 
@@ -322,7 +515,6 @@ const siteTitle = tsukiConfig.site.title
 
     tsukiWindow.__tsukiAuthCheckDone = true
     applyAuthState()
-    bindUserMenuInteractions()
   }
 
   checkAuthState()
@@ -433,7 +625,9 @@ const siteTitle = tsukiConfig.site.title
   }
 
   .header.in-main .theme-dropdown,
-  .header.in-main .mobile-nav-dropdown {
+  .header.in-main .mobile-nav-dropdown,
+  .header.in-main .search-dropdown,
+  .header.in-main .login-dropdown {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px) scale(0.96);
@@ -732,11 +926,17 @@ const siteTitle = tsukiConfig.site.title
     object-fit: cover;
   }
 
-  .user-dropdown {
+  /* Search Area */
+  .search-area {
+    position: static;
+  }
+
+  /* ── Search Dropdown ── */
+  .search-dropdown {
     position: absolute;
     top: calc(100% + 0.85rem);
     right: 0;
-    width: min(11rem, calc(100vw - 20px));
+    width: min(28rem, calc(100vw - 20px));
     background: color-mix(in srgb, var(--tsuki-header-dropdown-bg) 85%, transparent);
     backdrop-filter: blur(20px) saturate(1.4);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
@@ -751,17 +951,183 @@ const siteTitle = tsukiConfig.site.title
       opacity 160ms cubic-bezier(0.33, 1, 0.68, 1),
       transform 160ms cubic-bezier(0.33, 1, 0.68, 1),
       visibility 160ms;
-    padding: 0.25rem;
     z-index: 10;
+    overflow: hidden;
   }
 
-  .user-dropdown.open {
+  .search-dropdown.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
   }
 
-  .user-dropdown-item {
+  .search-dd-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  .search-dd-icon {
+    flex-shrink: 0;
+    color: var(--tsuki-muted-fg);
+    opacity: 0.7;
+  }
+
+  .search-dd-input {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    color: var(--tsuki-fg);
+    padding: 0;
+  }
+  .search-dd-input::placeholder { color: var(--tsuki-muted-fg); }
+  .search-dd-input::-webkit-search-cancel-button,
+  .search-dd-input::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+  }
+
+  .search-dd-spinner {
+    display: none;
+    width: 0.875rem;
+    height: 0.875rem;
+    border: 2px solid var(--tsuki-surface-border);
+    border-top-color: var(--tsuki-theme-accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: sp 0.55s linear infinite;
+  }
+  .search-dd-spinner.on { display: block; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+
+  .search-dd-body {
+    border-top: 1px solid var(--tsuki-header-dropdown-border-soft);
+    max-height: min(50vh, 20rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.375rem;
+  }
+  .search-dd-body:empty { display: none; }
+
+  .search-dd-nil {
+    padding: 1.25rem 0.625rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--tsuki-muted-fg);
+  }
+
+  /* ── Login Dropdown ── */
+  .login-dropdown {
+    position: absolute;
+    top: calc(100% + 0.85rem);
+    right: 0;
+    width: min(16rem, calc(100vw - 20px));
+    background: color-mix(in srgb, var(--tsuki-header-dropdown-bg) 85%, transparent);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--tsuki-header-dropdown-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px) scale(0.98);
+    transform-origin: top right;
+    transition:
+      opacity 160ms cubic-bezier(0.33, 1, 0.68, 1),
+      transform 160ms cubic-bezier(0.33, 1, 0.68, 1),
+      visibility 160ms;
+    padding: 0.75rem;
+    z-index: 10;
+  }
+
+  .login-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .login-dd-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .login-dd-desc {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--tsuki-muted-fg);
+    text-align: center;
+  }
+
+  .login-dd-github-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
+    background: var(--tsuki-btn-github-bg, #24292f);
+    color: var(--tsuki-btn-github-fg, #ffffff);
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 150ms;
+  }
+  .login-dd-github-btn:hover {
+    background: var(--tsuki-btn-github-bg-hover, #32383f);
+    text-decoration: none;
+    color: var(--tsuki-btn-github-fg, #ffffff);
+  }
+
+  .login-dd-gh-icon {
+    display: flex;
+    align-items: center;
+  }
+
+  .login-dd-user-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+  }
+
+  .login-dd-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .login-dd-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .login-dd-username {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--tsuki-fg);
+  }
+
+  .login-dd-badge {
+    font-size: 0.6875rem;
+    color: var(--tsuki-theme-accent);
+    font-weight: 500;
+  }
+
+  .login-dd-logout {
     display: flex;
     align-items: center;
     width: 100%;
@@ -772,12 +1138,11 @@ const siteTitle = tsukiConfig.site.title
     cursor: pointer;
     font-size: 0.8125rem;
     color: var(--tsuki-fg);
-    text-decoration: none;
     transition: background-color 80ms ease;
     text-align: left;
+    font-family: inherit;
   }
-
-  .user-dropdown-item:hover {
+  .login-dd-logout:hover {
     background: color-mix(in srgb, var(--tsuki-fg) 6%, transparent);
   }
 
@@ -906,9 +1271,93 @@ const siteTitle = tsukiConfig.site.title
       max-width: calc(100vw - 10px);
     }
 
+    .search-dropdown {
+      left: 0;
+      right: 0;
+      width: auto;
+      max-width: calc(100vw - 10px);
+    }
+
+    .login-dropdown {
+      width: min(16.5rem, calc((100vw - 10px) * 0.66));
+    }
+
     .user-avatar-btn {
       width: 36px;
       height: 36px;
     }
+  }
+</style>
+
+<style is:global>
+  .sr-item {
+    position: relative;
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--tsuki-radius-md);
+    text-decoration: none;
+    color: var(--tsuki-fg);
+  }
+
+  .sr-item::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--tsuki-theme-accent) 14%, transparent),
+      color-mix(in srgb, var(--tsuki-theme-accent) 4%, transparent));
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+  .sr-item:hover::before,
+  .sr-item.is-active::before {
+    opacity: 1;
+  }
+
+  .sr-title {
+    position: relative;
+    z-index: 1;
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--tsuki-fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 150ms ease;
+  }
+  .sr-item:hover .sr-title,
+  .sr-item.is-active .sr-title {
+    color: var(--tsuki-theme-accent);
+  }
+
+  .sr-excerpt {
+    position: relative;
+    z-index: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--tsuki-muted-fg);
+  }
+
+  .sr-excerpt mark {
+    background: none;
+    color: var(--tsuki-theme-accent);
+    font-weight: 600;
+  }
+
+  :root {
+    --tsuki-btn-github-bg: #24292f;
+    --tsuki-btn-github-bg-hover: #32383f;
+    --tsuki-btn-github-fg: #ffffff;
+    --tsuki-login-bg: color-mix(in srgb, var(--tsuki-theme-accent) 10%, transparent);
+    --tsuki-login-border: color-mix(in srgb, var(--tsuki-theme-accent) 30%, transparent);
   }
 </style>

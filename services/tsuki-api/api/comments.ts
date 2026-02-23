@@ -17,6 +17,9 @@ import {
   deleteComment,
   hideComment,
   unhideComment,
+  pinComment,
+  unpinComment,
+  adminDeleteComment,
 } from '@usecases/comments'
 
 export function commentsRoutes() {
@@ -70,6 +73,7 @@ export function commentsRoutes() {
       target_id?: string
       parent_id?: string | null
       body_markdown?: string
+      turnstile_token?: string
     }>()
 
     if (!body.target_type || !body.target_id || !body.body_markdown) {
@@ -88,6 +92,19 @@ export function commentsRoutes() {
         field: 'target_type',
         reason: 'INVALID',
       })
+    }
+
+    // Turnstile verification (if configured)
+    const turnstilePort = c.get('ports').turnstile
+    if (turnstilePort) {
+      if (!body.turnstile_token) {
+        throw new AppError('TURNSTILE_FAILED', 'Turnstile token is required')
+      }
+      const ip = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown'
+      const ok = await turnstilePort.verify(body.turnstile_token, ip)
+      if (!ok) {
+        throw new AppError('TURNSTILE_FAILED', 'Turnstile verification failed')
+      }
     }
 
     const currentUser = c.get('currentUser')
@@ -214,6 +231,45 @@ function _adminCommentsRoutes() {
     const ports = c.get('ports')
 
     await unhideComment({
+      commentId,
+      commentsPort: ports.comments,
+    })
+
+    return c.json({ ok: true, data: null })
+  })
+
+  // 置顶评论
+  router.post('/:id/pin', csrfMiddleware, async (c) => {
+    const commentId = c.req.param('id')
+    const ports = c.get('ports')
+
+    await pinComment({
+      commentId,
+      commentsPort: ports.comments,
+    })
+
+    return c.json({ ok: true, data: null })
+  })
+
+  // 取消置顶
+  router.post('/:id/unpin', csrfMiddleware, async (c) => {
+    const commentId = c.req.param('id')
+    const ports = c.get('ports')
+
+    await unpinComment({
+      commentId,
+      commentsPort: ports.comments,
+    })
+
+    return c.json({ ok: true, data: null })
+  })
+
+  // 管理员删除评论
+  router.delete('/:id', csrfMiddleware, async (c) => {
+    const commentId = c.req.param('id')
+    const ports = c.get('ports')
+
+    await adminDeleteComment({
       commentId,
       commentsPort: ports.comments,
     })

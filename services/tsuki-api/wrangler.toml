@@ -5,13 +5,18 @@ compatibility_flags = ["nodejs_compat"]
 
 # ── 公开配置（可提交到 Git）──────────────────
 [vars]
-# ✏️ 必须修改：你的站点前端地址（用于 CORS Origin 校验）
-TSUKI_PUBLIC_ORIGIN = "http://localhost:4321"
+# ✏️ 必须修改：你的站点前端地址（用于 CORS Origin 校验，多个用逗号分隔）
+TSUKI_PUBLIC_ORIGIN = "http://localhost:4321,http://localhost:5174"
 # ✏️ 必须修改：管理员的 GitHub 用户 ID（逗号分隔）
 TSUKI_ADMIN_GITHUB_IDS = "252399409"
 
 # 会话有效期（毫秒），默认 14 天
 TSUKI_SESSION_TTL_MS = "1209600000"
+
+# GitHub 仓库信息（Admin 内容管理用）
+GITHUB_REPO_OWNER = ""
+GITHUB_REPO_NAME = ""
+# Secrets: GITHUB_TOKEN, CF_TURNSTILE_SECRET_KEY
 
 # ── 秘密配置（请写入 .dev.vars，不要提交到 Git）────
 # 在 services/tsuki-api/.dev.vars 文件中配置以下变量：

@@ -43,6 +43,7 @@ function recordToDTO(record: CommentWithAuthorRecord): CommentDTO {
     body_markdown: isDeleted ? '' : record.body_markdown,
     body_html: isDeleted ? '' : record.body_html,
     status: record.status,
+    pinned: record.pinned === 1,
     created_at: createTimeDTO(record.created_at),
     updated_at: createTimeDTO(record.updated_at),
   }
@@ -59,6 +60,7 @@ function commentRecordToDTO(record: CommentRecord, author: UserDTO): CommentDTO 
     body_markdown: record.body_markdown,
     body_html: record.body_html,
     status: record.status,
+    pinned: record.pinned === 1,
     created_at: createTimeDTO(record.created_at),
     updated_at: createTimeDTO(record.updated_at),
   }
@@ -345,4 +347,52 @@ export async function unhideComment(input: UnhideCommentInput): Promise<void> {
     throw new AppError('NOT_FOUND', 'Comment not found')
   }
   await input.commentsPort.unhide(input.commentId)
+}
+
+// ─── PinComment ───
+
+export interface PinCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function pinComment(input: PinCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  await input.commentsPort.pin(input.commentId)
+}
+
+// ─── UnpinComment ───
+
+export interface UnpinCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function unpinComment(input: UnpinCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  await input.commentsPort.unpin(input.commentId)
+}
+
+// ─── AdminDeleteComment ───
+
+export interface AdminDeleteCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function adminDeleteComment(input: AdminDeleteCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  if (comment.status === 'deleted_by_user' || comment.status === 'deleted_by_admin') {
+    throw new AppError('NOT_FOUND', 'Comment already deleted')
+  }
+  await input.commentsPort.softDelete(input.commentId, 'admin')
 }

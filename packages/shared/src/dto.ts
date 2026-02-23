@@ -93,6 +93,7 @@ export interface CommentDTO {
   body_markdown: string
   body_html: string
   status: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
+  pinned: boolean
   created_at: TimeDTO
   updated_at: TimeDTO
 }
@@ -134,3 +135,39 @@ export interface ApiError {
 }
 
 export type ApiResult<T> = ApiResponse<T> | ApiError
+
+// ─── Admin DTOs ───
+
+// 管理后台文章 DTO
+export interface AdminPostDTO {
+  slug: string
+  title: string
+  summary: string
+  date: string | null
+  tags: string[]
+  categories: string[]
+  cover: string | null
+  status: 'draft' | 'published' | 'unlisted'
+  content_markdown: string
+  sha: string
+}
+
+// 管理后台文件变更
+export interface AdminFileChange {
+  path: string
+  action: 'create' | 'update' | 'delete'
+  content?: string
+  encoding?: 'utf-8' | 'base64'
+}
+
+// 批量提交请求
+export interface AdminCommitRequest {
+  message: string
+  changes: AdminFileChange[]
+}
+
+// 批量提交响应
+export interface AdminCommitResponse {
+  sha: string
+  url: string
+}
