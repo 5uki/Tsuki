@@ -1,9 +1,19 @@
 import { useState } from 'react'
 import type { CommentDTO, UserDTO } from '@tsuki/shared/dto'
 import { formatRelativeTime, formatDateTime } from '@tsuki/shared/time'
+import { EDIT_WINDOW_MS, COMMENT_MAX_DEPTH } from '@tsuki/shared/constants'
 import CommentForm from './CommentForm'
+import type { CommentFormI18n } from './CommentForm'
 
-const EDIT_WINDOW_MS = 15 * 60 * 1000 // 15 minutes
+export interface CommentItemI18n extends CommentFormI18n {
+  deleted: string
+  reply: string
+  edit: string
+  delete: string
+  replyPlaceholder: string
+  confirmDelete: string
+  confirmBtn: string
+}
 
 interface CommentItemProps {
   comment: CommentDTO
@@ -12,6 +22,7 @@ interface CommentItemProps {
   onEdit: (commentId: string, body: string) => Promise<void>
   onDelete: (commentId: string) => Promise<void>
   children?: React.ReactNode
+  i18n?: CommentItemI18n
 }
 
 function isDeleted(status: string): boolean {
@@ -25,15 +36,28 @@ export default function CommentItem({
   onEdit,
   onDelete,
   children,
+  i18n,
 }: CommentItemProps) {
   const [replyOpen, setReplyOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
+  const labels = {
+    deleted: i18n?.deleted ?? '该评论已删除',
+    reply: i18n?.reply ?? '回复',
+    edit: i18n?.edit ?? '编辑',
+    delete: i18n?.delete ?? '删除',
+    save: i18n?.save ?? '保存',
+    replyPlaceholder: i18n?.replyPlaceholder ?? '回复 @{name}...',
+    confirmDelete: i18n?.confirmDelete ?? '确定要删除这条评论吗？',
+    confirmBtn: i18n?.confirmBtn ?? '删除',
+    cancel: i18n?.cancel ?? '取消',
+  }
+
   if (isDeleted(comment.status)) {
     return (
       <li className="comment-item">
-        <div className="comment-deleted">该评论已删除</div>
+        <div className="comment-deleted">{labels.deleted}</div>
         {children}
       </li>
     )
@@ -41,9 +65,9 @@ export default function CommentItem({
 
   const isOwner = currentUser && currentUser.id === comment.author.id
   const isAdmin = currentUser?.role === 'admin'
-  const canEdit = isOwner && (Date.now() - comment.created_at.ts) < EDIT_WINDOW_MS
+  const canEdit = isOwner && Date.now() - comment.created_at.ts < EDIT_WINDOW_MS
   const canDelete = isOwner || isAdmin
-  const canReply = currentUser && comment.depth < 3
+  const canReply = currentUser && comment.depth < COMMENT_MAX_DEPTH
 
   const handleReply = async (body: string) => {
     await onReply(comment.id, body)
@@ -96,32 +120,36 @@ export default function CommentItem({
           initialValue={comment.body_markdown}
           onSubmit={handleEdit}
           onCancel={() => setEditing(false)}
-          submitLabel="保存"
+          submitLabel={labels.save}
           autoFocus
+          i18n={i18n}
         />
       ) : (
         <>
-          <div
-            className="comment-body"
-            dangerouslySetInnerHTML={{ __html: comment.body_html }}
-          />
+          <div className="comment-body" dangerouslySetInnerHTML={{ __html: comment.body_html }} />
           <div className="comment-actions">
             {canReply && (
               <button
                 type="button"
                 className="comment-action-btn"
-                onClick={() => { setReplyOpen(!replyOpen); setEditing(false) }}
+                onClick={() => {
+                  setReplyOpen(!replyOpen)
+                  setEditing(false)
+                }}
               >
-                回复
+                {labels.reply}
               </button>
             )}
             {canEdit && (
               <button
                 type="button"
                 className="comment-action-btn"
-                onClick={() => { setEditing(true); setReplyOpen(false) }}
+                onClick={() => {
+                  setEditing(true)
+                  setReplyOpen(false)
+                }}
               >
-                编辑
+                {labels.edit}
               </button>
             )}
             {canDelete && (
@@ -130,7 +158,7 @@ export default function CommentItem({
                 className="comment-action-btn comment-action-btn--danger"
                 onClick={() => setConfirmDelete(true)}
               >
-                删除
+                {labels.delete}
               </button>
             )}
           </div>
@@ -141,30 +169,41 @@ export default function CommentItem({
         <CommentForm
           onSubmit={handleReply}
           onCancel={() => setReplyOpen(false)}
-          placeholder={`回复 @${comment.author.login}...`}
+          placeholder={labels.replyPlaceholder.replace('{name}', comment.author.login)}
           replyTo={comment.author.login}
           autoFocus
+          i18n={i18n}
         />
       )}
 
       {confirmDelete && (
-        <div className="comment-confirm-overlay" onClick={() => setConfirmDelete(false)} role="presentation">
-          <div className="comment-confirm-dialog" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="确认删除评论">
-            <p className="comment-confirm-text">确定要删除这条评论吗？</p>
+        <div
+          className="comment-confirm-overlay"
+          onClick={() => setConfirmDelete(false)}
+          role="presentation"
+        >
+          <div
+            className="comment-confirm-dialog"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={labels.confirmDelete}
+          >
+            <p className="comment-confirm-text">{labels.confirmDelete}</p>
             <div className="comment-confirm-actions">
               <button
                 type="button"
                 className="comment-form-cancel"
                 onClick={() => setConfirmDelete(false)}
               >
-                取消
+                {labels.cancel}
               </button>
               <button
                 type="button"
                 className="comment-form-submit comment-form-submit--danger"
                 onClick={handleDelete}
               >
-                删除
+                {labels.confirmBtn}
               </button>
             </div>
           </div>

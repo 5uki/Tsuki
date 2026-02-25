@@ -3,7 +3,7 @@
  */
 
 import type { SettingsPort } from '@contracts/ports'
-import type { SettingsPublicDTO } from '@contracts/dto'
+import type { SettingsPublicDTO, NavLink } from '@contracts/dto'
 
 /**
  * 默认配置
@@ -23,12 +23,41 @@ const DEFAULT_SETTINGS: SettingsPublicDTO = {
 /**
  * 创建 Settings 适配器
  */
-export function createSettingsAdapter(_db: D1Database): SettingsPort {
+export function createSettingsAdapter(db: D1Database): SettingsPort {
   return {
     async getPublicSettings(): Promise<SettingsPublicDTO> {
-      // TODO: 从 D1 读取配置
-      // 目前返回默认配置
-      return DEFAULT_SETTINGS
+      try {
+        const { results } = await db
+          .prepare('SELECT key, value_json FROM settings')
+          .all<{ key: string; value_json: string }>()
+
+        const map = new Map<string, unknown>()
+        for (const row of results) {
+          try {
+            const parsed = JSON.parse(row.value_json)
+            map.set(row.key, parsed.value)
+          } catch {
+            // Skip malformed rows
+          }
+        }
+
+        return {
+          site_title: typeof map.get('site_title') === 'string'
+            ? (map.get('site_title') as string)
+            : DEFAULT_SETTINGS.site_title,
+          site_description: typeof map.get('site_description') === 'string'
+            ? (map.get('site_description') as string)
+            : DEFAULT_SETTINGS.site_description,
+          default_theme: typeof map.get('default_theme') === 'string'
+            ? (map.get('default_theme') as string)
+            : DEFAULT_SETTINGS.default_theme,
+          nav_links: Array.isArray(map.get('nav_links'))
+            ? (map.get('nav_links') as NavLink[])
+            : DEFAULT_SETTINGS.nav_links,
+        }
+      } catch {
+        return DEFAULT_SETTINGS
+      }
     },
   }
 }

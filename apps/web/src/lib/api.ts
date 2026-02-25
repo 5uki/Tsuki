@@ -10,6 +10,7 @@ import type {
   CommentDTO,
   UserDTO,
   PaginatedResponse,
+  NotificationDTO,
 } from '@tsuki/shared/dto'
 import { ApiException, ErrorCodes } from '@tsuki/shared/errors'
 import { getCsrfToken } from './storage'
@@ -128,10 +129,7 @@ export async function createComment(
   })
 }
 
-export async function editComment(
-  commentId: string,
-  bodyMarkdown: string
-): Promise<CommentDTO> {
+export async function editComment(commentId: string, bodyMarkdown: string): Promise<CommentDTO> {
   return fetchApi<CommentDTO>(`/comments/${commentId}`, {
     method: 'PATCH',
     body: JSON.stringify({ body_markdown: bodyMarkdown }),
@@ -173,4 +171,27 @@ export async function hideComment(commentId: string): Promise<void> {
 
 export async function unhideComment(commentId: string): Promise<void> {
   await fetchApi<null>(`/admin/comments/${commentId}/unhide`, { method: 'POST' })
+}
+
+// ── Notifications API ──
+
+export async function getNotifications(
+  cursor?: string
+): Promise<PaginatedResponse<NotificationDTO>> {
+  const params = new URLSearchParams()
+  if (cursor) params.set('cursor', cursor)
+  const qs = params.toString()
+  return fetchApi<PaginatedResponse<NotificationDTO>>(`/notifications${qs ? `?${qs}` : ''}`)
+}
+
+export async function getUnreadNotificationCount(): Promise<number> {
+  const result = await fetchApi<{ count: number }>('/notifications/unread-count')
+  return result.count
+}
+
+export async function markNotificationsRead(ids?: string[]): Promise<void> {
+  await fetchApi<null>('/notifications/mark-read', {
+    method: 'POST',
+    body: JSON.stringify(ids ? { ids } : {}),
+  })
 }

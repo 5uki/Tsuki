@@ -1,22 +1,23 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { CommentDTO, UserDTO } from '@tsuki/shared/dto'
-import {
-  getCurrentUser,
-  getComments,
-  createComment,
-  editComment,
-  deleteComment,
-} from '@/lib/api'
+import { getCurrentUser, getComments, createComment, editComment, deleteComment } from '@/lib/api'
 import CommentForm from './CommentForm'
 import CommentList from './CommentList'
+import type { CommentItemI18n } from './CommentItem'
 import './comments.css'
+
+export interface CommentSectionI18n extends CommentItemI18n {
+  count: string
+  loginToComment: string
+}
 
 interface CommentSectionProps {
   targetType: 'post' | 'moment'
   targetId: string
+  i18n?: CommentSectionI18n
 }
 
-export default function CommentSection({ targetType, targetId }: CommentSectionProps) {
+export default function CommentSection({ targetType, targetId, i18n }: CommentSectionProps) {
   const [comments, setComments] = useState<CommentDTO[]>([])
   const [currentUser, setCurrentUser] = useState<UserDTO | null>(null)
   const [loading, setLoading] = useState(true)
@@ -64,9 +65,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
 
   const handleEdit = async (commentId: string, body: string) => {
     const updated = await editComment(commentId, body)
-    setComments((prev) =>
-      prev.map((c) => (c.id === commentId ? updated : c))
-    )
+    setComments((prev) => prev.map((c) => (c.id === commentId ? updated : c)))
   }
 
   const handleDelete = async (commentId: string) => {
@@ -88,39 +87,30 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
     window.dispatchEvent(new CustomEvent('tsuki:open-login'))
   }
 
+  const countLabel = (i18n?.count ?? '{count} 条评论').replace('{count}', String(commentCount))
+
   return (
     <div className="comment-section">
-      <h2 className="comment-section-title">
-        评论
-        {!loading && <span className="comment-count">({commentCount})</span>}
-      </h2>
+      <h2 className="comment-section-title">{countLabel}</h2>
 
-      {userChecked && (
-        currentUser ? (
-          <CommentForm
-            onSubmit={handleCreateComment}
-            placeholder="写下你的评论..."
-          />
+      {userChecked &&
+        (currentUser ? (
+          <CommentForm onSubmit={handleCreateComment} i18n={i18n} />
         ) : (
           <div className="comment-login-prompt">
             <button className="comment-login-link" type="button" onClick={openLoginModal}>
-              登录后发表评论
+              {i18n?.loginToComment ?? '登录后发表评论'}
             </button>
           </div>
-        )
-      )}
+        ))}
 
-      {loading && <div className="comment-loading">加载评论中...</div>}
+      {loading && <div className="comment-loading">...</div>}
 
       {error && (
         <div className="comment-error" role="alert">
           <span>{error}</span>
-          <button
-            type="button"
-            className="comment-error-retry"
-            onClick={loadComments}
-          >
-            重试
+          <button type="button" className="comment-error-retry" onClick={loadComments}>
+            ↻
           </button>
         </div>
       )}
@@ -132,6 +122,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
           onReply={handleReply}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          i18n={i18n}
         />
       )}
     </div>

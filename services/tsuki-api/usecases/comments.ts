@@ -3,22 +3,23 @@
  */
 
 import type { CommentDTO, PaginatedResponse, UserDTO } from '@contracts/dto'
-import type { CommentsPort, CommentWithAuthorRecord, CommentRecord } from '@contracts/ports'
+import type {
+  CommentsPort,
+  CommentWithAuthorRecord,
+  CommentRecord,
+  NotificationsPort,
+} from '@contracts/ports'
 import { AppError } from '@contracts/errors'
 import { sha256 } from '@atoms/hash'
 import { renderCommentMarkdown } from '@atoms/markdown'
 import { createTimeDTO } from '@tsuki/shared/time'
+import { EDIT_WINDOW_MS, COMMENT_MAX_DEPTH } from '@tsuki/shared/constants'
+import { createNotification } from '@usecases/notifications'
 
 /** 限速常量 */
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000 // 10 分钟
 const RATE_LIMIT_USER = 10 // 用户 10 条 / 10 分钟
 const RATE_LIMIT_IP = 20 // IP 20 条 / 10 分钟
-
-/** 编辑窗口 */
-const EDIT_WINDOW_MS = 15 * 60 * 1000 // 15 分钟
-
-/** 最大深度 */
-const MAX_DEPTH = 3
 
 // ─── Helper: CommentWithAuthorRecord -> CommentDTO ───
 
@@ -43,6 +44,7 @@ function recordToDTO(record: CommentWithAuthorRecord): CommentDTO {
     body_markdown: isDeleted ? '' : record.body_markdown,
     body_html: isDeleted ? '' : record.body_html,
     status: record.status,
+    pinned: record.pinned === 1,
     created_at: createTimeDTO(record.created_at),
     updated_at: createTimeDTO(record.updated_at),
   }
@@ -59,6 +61,7 @@ function commentRecordToDTO(record: CommentRecord, author: UserDTO): CommentDTO 
     body_markdown: record.body_markdown,
     body_html: record.body_html,
     status: record.status,
+    pinned: record.pinned === 1,
     created_at: createTimeDTO(record.created_at),
     updated_at: createTimeDTO(record.updated_at),
   }
@@ -129,6 +132,7 @@ export interface CreateCommentInput {
   ua: string
   hashSalt: string
   commentsPort: CommentsPort
+  notificationsPort?: NotificationsPort
 }
 
 export async function createComment(input: CreateCommentInput): Promise<CommentDTO> {
@@ -190,9 +194,9 @@ export async function createComment(input: CreateCommentInput): Promise<CommentD
       })
     }
     depth = parent.depth + 1
-    if (depth > MAX_DEPTH) {
+    if (depth > COMMENT_MAX_DEPTH) {
       throw new AppError('COMMENT_DEPTH_EXCEEDED', 'Comment depth limit exceeded', {
-        max_depth: MAX_DEPTH,
+        max_depth: COMMENT_MAX_DEPTH,
       })
     }
   }
@@ -214,6 +218,22 @@ export async function createComment(input: CreateCommentInput): Promise<CommentD
     ip_hash: ipHash,
     user_agent_hash: uaHash,
   })
+
+  // 8. 回复通知
+  if (input.parentId && input.notificationsPort) {
+    const parent = await input.commentsPort.getById(input.parentId)
+    if (parent && parent.author_user_id !== input.currentUser.id) {
+      await createNotification({
+        userId: parent.author_user_id,
+        type: 'comment_reply',
+        actorId: input.currentUser.id,
+        commentId: id,
+        targetType: input.targetType,
+        targetId: input.targetId,
+        notificationsPort: input.notificationsPort,
+      }).catch(() => {}) // non-critical
+    }
+  }
 
   return commentRecordToDTO(record, input.currentUser)
 }
@@ -345,4 +365,52 @@ export async function unhideComment(input: UnhideCommentInput): Promise<void> {
     throw new AppError('NOT_FOUND', 'Comment not found')
   }
   await input.commentsPort.unhide(input.commentId)
+}
+
+// ─── PinComment ───
+
+export interface PinCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function pinComment(input: PinCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  await input.commentsPort.pin(input.commentId)
+}
+
+// ─── UnpinComment ───
+
+export interface UnpinCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function unpinComment(input: UnpinCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  await input.commentsPort.unpin(input.commentId)
+}
+
+// ─── AdminDeleteComment ───
+
+export interface AdminDeleteCommentInput {
+  commentId: string
+  commentsPort: CommentsPort
+}
+
+export async function adminDeleteComment(input: AdminDeleteCommentInput): Promise<void> {
+  const comment = await input.commentsPort.getById(input.commentId)
+  if (!comment) {
+    throw new AppError('NOT_FOUND', 'Comment not found')
+  }
+  if (comment.status === 'deleted_by_user' || comment.status === 'deleted_by_admin') {
+    throw new AppError('NOT_FOUND', 'Comment already deleted')
+  }
+  await input.commentsPort.softDelete(input.commentId, 'admin')
 }

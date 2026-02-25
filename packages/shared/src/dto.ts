@@ -93,6 +93,7 @@ export interface CommentDTO {
   body_markdown: string
   body_html: string
   status: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
+  pinned: boolean
   created_at: TimeDTO
   updated_at: TimeDTO
 }
@@ -134,3 +135,86 @@ export interface ApiError {
 }
 
 export type ApiResult<T> = ApiResponse<T> | ApiError
+
+// ─── Draft DTOs ───
+
+// 管理后台草稿 DTO
+export interface AdminDraftDTO {
+  id: string
+  slug: string
+  title: string
+  summary: string
+  cover_url: string | null
+  status: 'draft'
+  scheduled_at: number | null
+  updated_at: number
+  created_at: number
+  content_markdown: string
+  reading_time_minutes: number
+}
+
+// 保存草稿请求
+export interface SaveDraftRequest {
+  id?: string
+  slug: string
+  title: string
+  summary?: string
+  cover_url?: string | null
+  content_markdown: string
+  scheduled_at?: number | null
+  tags?: string[]
+  categories?: string[]
+}
+
+// 发布草稿请求
+export interface PublishDraftRequest {
+  message?: string
+}
+
+// ─── Admin DTOs ───
+
+// 管理后台文章 DTO
+export interface AdminPostDTO {
+  slug: string
+  title: string
+  summary: string
+  date: string | null
+  tags: string[]
+  categories: string[]
+  cover: string | null
+  status: 'draft' | 'published' | 'unlisted'
+  content_markdown: string
+  sha: string
+}
+
+// 管理后台文件变更
+export interface AdminFileChange {
+  path: string
+  action: 'create' | 'update' | 'delete'
+  content?: string
+  encoding?: 'utf-8' | 'base64'
+}
+
+// 批量提交请求
+export interface AdminCommitRequest {
+  message: string
+  changes: AdminFileChange[]
+}
+
+// 批量提交响应
+export interface AdminCommitResponse {
+  sha: string
+  url: string
+}
+
+// 通知 DTO
+export interface NotificationDTO {
+  id: string
+  type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+  actor: { login: string; avatar_url: string } | null
+  comment_id: string | null
+  target_type: 'post' | 'moment'
+  target_id: string
+  is_read: boolean
+  created_at: TimeDTO
+}

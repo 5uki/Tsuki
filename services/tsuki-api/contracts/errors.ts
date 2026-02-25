@@ -18,6 +18,9 @@ export const ErrorHttpStatus: Record<ErrorCode, number> = {
   RATE_LIMITED: 429,
   COMMENT_DEPTH_EXCEEDED: 400,
   INTERNAL_ERROR: 500,
+  GITHUB_API_ERROR: 502,
+  TURNSTILE_FAILED: 403,
+  COMMIT_CONFLICT: 409,
 }
 
 /**

@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import type { CommentDTO, UserDTO } from '@tsuki/shared/dto'
 import CommentItem from './CommentItem'
+import type { CommentItemI18n } from './CommentItem'
 
 interface CommentListProps {
   comments: CommentDTO[]
@@ -7,6 +9,7 @@ interface CommentListProps {
   onReply: (parentId: string, body: string) => Promise<void>
   onEdit: (commentId: string, body: string) => Promise<void>
   onDelete: (commentId: string) => Promise<void>
+  i18n?: CommentItemI18n
 }
 
 /** Build a tree from flat comment list using parent_id */
@@ -28,6 +31,7 @@ function CommentTreeNode({
   onReply,
   onEdit,
   onDelete,
+  i18n,
 }: {
   comment: CommentDTO
   tree: Map<string | null, CommentDTO[]>
@@ -35,6 +39,7 @@ function CommentTreeNode({
   onReply: (parentId: string, body: string) => Promise<void>
   onEdit: (commentId: string, body: string) => Promise<void>
   onDelete: (commentId: string) => Promise<void>
+  i18n?: CommentItemI18n
 }) {
   const children = tree.get(comment.id) ?? []
 
@@ -45,6 +50,7 @@ function CommentTreeNode({
       onReply={onReply}
       onEdit={onEdit}
       onDelete={onDelete}
+      i18n={i18n}
     >
       {children.length > 0 && (
         <ul className="comment-list-nested">
@@ -57,6 +63,7 @@ function CommentTreeNode({
               onReply={onReply}
               onEdit={onEdit}
               onDelete={onDelete}
+              i18n={i18n}
             />
           ))}
         </ul>
@@ -71,12 +78,13 @@ export default function CommentList({
   onReply,
   onEdit,
   onDelete,
+  i18n,
 }: CommentListProps) {
-  const tree = buildTree(comments)
+  const tree = useMemo(() => buildTree(comments), [comments])
   const rootComments = tree.get(null) ?? []
 
   if (rootComments.length === 0) {
-    return <div className="comment-empty">还没有评论，来说两句吧</div>
+    return null
   }
 
   return (
@@ -90,6 +98,7 @@ export default function CommentList({
           onReply={onReply}
           onEdit={onEdit}
           onDelete={onDelete}
+          i18n={i18n}
         />
       ))}
     </ul>
