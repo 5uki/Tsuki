@@ -19,6 +19,7 @@ import { createCommentsAdapter } from '@adapters/comments'
 import { createIdempotencyAdapter } from '@adapters/idempotency'
 import { createGitHubRepoAdapter } from '@adapters/github-repo'
 import { createTurnstileAdapter } from '@adapters/turnstile'
+import { createDraftsAdapter } from '@adapters/drafts'
 import { sessionMiddleware } from '@api/middleware/session'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -98,6 +99,7 @@ app.use('*', async (c, next) => {
     idempotency: createIdempotencyAdapter(c.env.DB),
     githubRepo,
     turnstile,
+    drafts: createDraftsAdapter(c.env.DB),
   })
 
   await next()
@@ -179,4 +181,24 @@ app.notFound((c) => {
   )
 })
 
-export default app
+export default {
+  fetch: app.fetch,
+  async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext) {
+    const draftsPort = createDraftsAdapter(env.DB)
+    const githubRepoPort =
+      env.GITHUB_TOKEN && env.GITHUB_REPO_OWNER && env.GITHUB_REPO_NAME
+        ? createGitHubRepoAdapter(env.GITHUB_TOKEN, env.GITHUB_REPO_OWNER, env.GITHUB_REPO_NAME)
+        : null
+
+    if (!githubRepoPort) {
+      console.log(JSON.stringify({ level: 'warn', message: 'Scheduled: GitHub Repo not configured, skipping' }))
+      return
+    }
+
+    const { publishScheduledDrafts } = await import('@usecases/admin-drafts')
+    const count = await publishScheduledDrafts({ draftsPort, githubRepoPort })
+    if (count > 0) {
+      console.log(JSON.stringify({ level: 'info', message: `Scheduled: published ${count} draft(s)` }))
+    }
+  },
+}

@@ -136,6 +136,41 @@ export interface ApiError {
 
 export type ApiResult<T> = ApiResponse<T> | ApiError
 
+// ─── Draft DTOs ───
+
+// 管理后台草稿 DTO
+export interface AdminDraftDTO {
+  id: string
+  slug: string
+  title: string
+  summary: string
+  cover_url: string | null
+  status: 'draft'
+  scheduled_at: number | null
+  updated_at: number
+  created_at: number
+  content_markdown: string
+  reading_time_minutes: number
+}
+
+// 保存草稿请求
+export interface SaveDraftRequest {
+  id?: string
+  slug: string
+  title: string
+  summary?: string
+  cover_url?: string | null
+  content_markdown: string
+  scheduled_at?: number | null
+  tags?: string[]
+  categories?: string[]
+}
+
+// 发布草稿请求
+export interface PublishDraftRequest {
+  message?: string
+}
+
 // ─── Admin DTOs ───
 
 // 管理后台文章 DTO

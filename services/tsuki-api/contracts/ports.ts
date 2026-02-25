@@ -225,3 +225,69 @@ export interface TurnstilePort {
   /** 验证 Turnstile token */
   verify(token: string, remoteIp: string): Promise<boolean>
 }
+
+/**
+ * 草稿数据库记录
+ */
+export interface DraftRecord {
+  id: string
+  slug: string
+  title: string
+  summary: string
+  cover_url: string | null
+  status: 'draft'
+  scheduled_at: number | null
+  updated_at: number
+  created_at: number
+  content_markdown: string
+  content_html: string
+  content_text: string
+  reading_time_minutes: number
+}
+
+/**
+ * 草稿端口
+ */
+export interface DraftsPort {
+  /** 创建草稿 */
+  create(input: {
+    id: string
+    slug: string
+    title: string
+    summary: string
+    cover_url: string | null
+    content_markdown: string
+    content_html: string
+    content_text: string
+    reading_time_minutes: number
+    scheduled_at: number | null
+  }): Promise<DraftRecord>
+
+  /** 更新草稿 */
+  update(id: string, input: {
+    slug?: string
+    title?: string
+    summary?: string
+    cover_url?: string | null
+    content_markdown?: string
+    content_html?: string
+    content_text?: string
+    reading_time_minutes?: number
+    scheduled_at?: number | null
+  }): Promise<DraftRecord>
+
+  /** 按 ID 查询 */
+  getById(id: string): Promise<DraftRecord | null>
+
+  /** 按 slug 查询 */
+  getBySlug(slug: string): Promise<DraftRecord | null>
+
+  /** 列出所有草稿 */
+  list(): Promise<DraftRecord[]>
+
+  /** 删除草稿 */
+  delete(id: string): Promise<void>
+
+  /** 列出到期的定时草稿 */
+  listScheduledDue(nowMs: number): Promise<DraftRecord[]>
+}

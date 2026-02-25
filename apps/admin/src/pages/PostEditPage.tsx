@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { fetchPost } from '@/api/posts'
+import { fetchDraft, saveDraft as saveDraftApi, publishDraft as publishDraftApi } from '@/api/drafts'
 import { usePendingChanges } from '@/stores/pending-changes'
 import TipTapEditor from '@/components/editor/TipTapEditor'
 import type { AdminPostDTO } from '@tsuki/shared'
@@ -27,14 +28,17 @@ function buildFrontmatter(meta: {
 }
 
 export default function PostEditPage() {
-  const { slug } = useParams<{ slug: string }>()
+  const { slug, draftId } = useParams<{ slug?: string; draftId?: string }>()
   const navigate = useNavigate()
   const { addChange } = usePendingChanges()
-  const isNew = !slug
+  const isDraftMode = !!draftId
+  const isNew = !slug && !draftId
 
   const [loading, setLoading] = useState(!isNew)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [currentDraftId, setCurrentDraftId] = useState<string | undefined>(draftId)
   const [title, setTitle] = useState('')
   const [summary, setSummary] = useState('')
   const [date, setDate] = useState('')
@@ -43,23 +47,82 @@ export default function PostEditPage() {
   const [cover, setCover] = useState('')
   const [status, setStatus] = useState('published')
   const [content, setContent] = useState('')
+  const [scheduledAt, setScheduledAt] = useState('')
 
   useEffect(() => {
-    if (!slug) return
-    fetchPost(slug)
-      .then((post: AdminPostDTO) => {
-        setTitle(post.title)
-        setSummary(post.summary)
-        setDate(post.date || '')
-        setTags(post.tags.join(', '))
-        setCategories(post.categories.join(', '))
-        setCover(post.cover || '')
-        setStatus(post.status)
-        setContent(post.content_markdown)
+    if (isDraftMode && draftId) {
+      fetchDraft(draftId)
+        .then((draft) => {
+          setCurrentDraftId(draft.id)
+          setTitle(draft.title)
+          setSummary(draft.summary)
+          setCover(draft.cover_url || '')
+          setContent(draft.content_markdown)
+          if (draft.scheduled_at) {
+            setScheduledAt(new Date(draft.scheduled_at).toISOString().slice(0, 16))
+          }
+        })
+        .catch(err => setError(err.message))
+        .finally(() => setLoading(false))
+    } else if (slug) {
+      fetchPost(slug)
+        .then((post: AdminPostDTO) => {
+          setTitle(post.title)
+          setSummary(post.summary)
+          setDate(post.date || '')
+          setTags(post.tags.join(', '))
+          setCategories(post.categories.join(', '))
+          setCover(post.cover || '')
+          setStatus(post.status)
+          setContent(post.content_markdown)
+        })
+        .catch(err => setError(err.message))
+        .finally(() => setLoading(false))
+    }
+  }, [slug, draftId, isDraftMode])
+
+  const handleSaveDraft = useCallback(async () => {
+    const draftSlug = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    if (!draftSlug || !title) {
+      setError('请输入标题')
+      return
+    }
+    setSaving(true)
+    setError(null)
+    try {
+      const result = await saveDraftApi({
+        id: currentDraftId,
+        slug: draftSlug,
+        title,
+        summary,
+        cover_url: cover || null,
+        content_markdown: content,
+        scheduled_at: scheduledAt ? new Date(scheduledAt).getTime() : null,
       })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [slug])
+      setCurrentDraftId(result.id)
+      if (!isDraftMode) {
+        navigate(`/posts/draft/${result.id}`, { replace: true })
+      }
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }, [currentDraftId, slug, title, summary, cover, content, scheduledAt, isDraftMode, navigate])
+
+  const handlePublishDraft = useCallback(async () => {
+    if (!currentDraftId) return
+    setSaving(true)
+    setError(null)
+    try {
+      await publishDraftApi(currentDraftId)
+      navigate('/posts', { replace: true })
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }, [currentDraftId, navigate])
 
   const handleSave = useCallback(() => {
     const postSlug = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -99,10 +162,28 @@ export default function PostEditPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>{isNew ? '新建文章' : `编辑: ${title}`}</h1>
-        <button className="btn btn-primary" onClick={handleSave}>
-          暂存变更
-        </button>
+        <h1>{isDraftMode ? `编辑草稿: ${title}` : isNew ? '新建文章' : `编辑: ${title}`}</h1>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {isDraftMode ? (
+            <>
+              <button className="btn" onClick={handleSaveDraft} disabled={saving}>
+                {saving ? '保存中...' : '保存草稿'}
+              </button>
+              <button className="btn btn-primary" onClick={handlePublishDraft} disabled={saving}>
+                发布
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn" onClick={handleSaveDraft} disabled={saving}>
+                {saving ? '保存中...' : '保存为草稿'}
+              </button>
+              <button className="btn btn-primary" onClick={handleSave}>
+                暂存变更
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="post-editor-grid">
@@ -119,29 +200,42 @@ export default function PostEditPage() {
             <label>摘要</label>
             <textarea className="input" rows={3} value={summary} onChange={e => setSummary(e.target.value)} />
           </div>
-          <div className="form-group">
-            <label>日期</label>
-            <input className="input" type="date" value={date} onChange={e => setDate(e.target.value)} />
-          </div>
-          <div className="form-group">
-            <label>标签（逗号分隔）</label>
-            <input className="input" value={tags} onChange={e => setTags(e.target.value)} />
-          </div>
-          <div className="form-group">
-            <label>分类（逗号分隔）</label>
-            <input className="input" value={categories} onChange={e => setCategories(e.target.value)} />
-          </div>
+          {!isDraftMode && (
+            <>
+              <div className="form-group">
+                <label>日期</label>
+                <input className="input" type="date" value={date} onChange={e => setDate(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>标签（逗号分隔）</label>
+                <input className="input" value={tags} onChange={e => setTags(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>分类（逗号分隔）</label>
+                <input className="input" value={categories} onChange={e => setCategories(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label>状态</label>
+                <select className="input" value={status} onChange={e => setStatus(e.target.value)}>
+                  <option value="published">已发布</option>
+                  <option value="draft">草稿</option>
+                  <option value="unlisted">未列出</option>
+                </select>
+              </div>
+            </>
+          )}
           <div className="form-group">
             <label>封面图路径</label>
             <input className="input" value={cover} onChange={e => setCover(e.target.value)} placeholder="contents/media/cover.jpg" />
           </div>
           <div className="form-group">
-            <label>状态</label>
-            <select className="input" value={status} onChange={e => setStatus(e.target.value)}>
-              <option value="published">已发布</option>
-              <option value="draft">草稿</option>
-              <option value="unlisted">未列出</option>
-            </select>
+            <label>定时发布</label>
+            <input
+              className="input"
+              type="datetime-local"
+              value={scheduledAt}
+              onChange={e => setScheduledAt(e.target.value)}
+            />
           </div>
         </div>
       </div>

@@ -178,6 +178,18 @@ const siteTitle = tsukiConfig.site.title
     let searchIdx = -1
     let searchItems: HTMLAnchorElement[] = []
 
+    // Idle-time preload: load pagefind index before user searches
+    function preloadPagefind() {
+      if (pf) return
+      const load = new Function("return import('/pagefind/pagefind.js')")
+      load().then((m: any) => { pf = m; pf.init() }).catch(() => {})
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(preloadPagefind, { timeout: 4000 })
+    } else {
+      setTimeout(preloadPagefind, 2000)
+    }
+
     function resetSearchResults() {
       searchIdx = -1
       searchItems = []
@@ -192,10 +204,13 @@ const siteTitle = tsukiConfig.site.title
       if (!searchBody || !searchSpinner) return
       try {
         if (!pf) {
+          // Show loading message while pagefind loads
+          searchBody.innerHTML = '<div class="search-dd-loading"><span class="search-dd-spinner on"></span> 正在加载搜索索引...</div>'
           const load = new Function("return import('/pagefind/pagefind.js')")
           pf = await load()
           await pf.init()
         }
+        pf.preload(q)
         const res = await pf.search(q)
         searchSpinner.classList.remove('on')
 
@@ -1005,6 +1020,16 @@ const siteTitle = tsukiConfig.site.title
   }
   .search-dd-spinner.on { display: block; }
   @keyframes sp { to { transform: rotate(360deg); } }
+
+  .search-dd-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0.75rem;
+    color: var(--tsuki-text-secondary, #888);
+    font-size: 0.8125rem;
+  }
+  .search-dd-loading .search-dd-spinner { display: block; }
 
   .search-dd-body {
     border-top: 1px solid var(--tsuki-header-dropdown-border-soft);

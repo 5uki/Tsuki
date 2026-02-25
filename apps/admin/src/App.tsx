@@ -23,6 +23,7 @@ export default function App() {
                 <Route index element={<DashboardPage />} />
                 <Route path="posts" element={<PostsPage />} />
                 <Route path="posts/new" element={<PostEditPage />} />
+                <Route path="posts/draft/:draftId" element={<PostEditPage />} />
                 <Route path="posts/:slug" element={<PostEditPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="comments" element={<CommentsPage />} />

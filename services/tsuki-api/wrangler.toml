@@ -33,3 +33,7 @@ GITHUB_REPO_NAME = ""
 binding = "DB"
 database_name = "tsuki_db"
 database_id = "placeholder-replace-with-actual-id"
+
+# ── 定时任务（草稿定时发布）────────────────────
+[triggers]
+crons = ["*/15 * * * *"]

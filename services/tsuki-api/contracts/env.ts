@@ -2,7 +2,7 @@
  * Worker 环境变量类型
  */
 
-import type { SettingsPort, UsersPort, SessionPort, GitHubOAuthPort, CommentsPort, IdempotencyPort, GitHubRepoPort, TurnstilePort } from './ports'
+import type { SettingsPort, UsersPort, SessionPort, GitHubOAuthPort, CommentsPort, IdempotencyPort, GitHubRepoPort, TurnstilePort, DraftsPort } from './ports'
 import type { UserDTO } from './dto'
 
 export interface Env {
@@ -39,6 +39,7 @@ export interface AppContext {
     idempotency: IdempotencyPort
     githubRepo: GitHubRepoPort | null
     turnstile: TurnstilePort | null
+    drafts: DraftsPort
   }
   currentUser: UserDTO | null
 }
