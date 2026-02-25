@@ -11,6 +11,7 @@ export const DEFAULT_CONFIG: TsukiConfig = {
     description: 'A blog powered by Tsuki',
     defaultTheme: DEFAULT_THEME,
     faviconHref: '/favicon.svg',
+    locale: 'zh',
   },
   nav: [
     { label: '首页', href: '/' },

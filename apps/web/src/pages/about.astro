@@ -1,5 +1,6 @@
 ---
 import Default from '@/layouts/Default.astro'
+import { t } from '@/config/tsuki-config'
 
 export const prerender = true
 
@@ -7,9 +8,9 @@ const aboutMd = await import('../../../../contents/about.md')
 const { Content } = aboutMd
 ---
 
-<Default title="关于" description="关于我和这个博客">
+<Default title={t('page.about')} description={t('page.aboutDesc')}>
   <article class="tsuki-content-card about-page">
-    <h1 class="about-title">关于</h1>
+    <h1 class="about-title">{t('page.about')}</h1>
     <div class="prose">
       <Content />
     </div>

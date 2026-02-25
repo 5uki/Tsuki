@@ -11,6 +11,7 @@ import { authRoutes } from './auth'
 import { commentsRoutes, adminCommentsRoutes } from './comments'
 import { settingsRoutes } from './settings'
 import { adminContentRoutes } from './admin-content'
+import { notificationsRoutes } from './notifications'
 import { requireAdmin } from './middleware/guards'
 
 export function createRoutes() {
@@ -19,6 +20,7 @@ export function createRoutes() {
   api.route('/auth', authRoutes())
   api.route('/comments', commentsRoutes())
   api.route('/settings', settingsRoutes())
+  api.route('/notifications', notificationsRoutes())
 
   // 管理员路由组
   const admin = new Hono<{ Bindings: Env; Variables: AppContext }>()

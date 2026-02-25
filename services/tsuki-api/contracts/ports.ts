@@ -3,11 +3,47 @@
  * adapters 必须实现这些接口
  */
 
-import type {
-  SettingsPublicDTO,
-  PaginatedResponse,
-  AdminFileChange,
-} from './dto'
+import type { SettingsPublicDTO, PaginatedResponse, AdminFileChange } from './dto'
+
+/**
+ * 通知数据库记录
+ */
+export interface NotificationRecord {
+  id: string
+  user_id: string
+  type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+  actor_id: string | null
+  comment_id: string | null
+  target_type: 'post' | 'moment'
+  target_id: string
+  is_read: number
+  created_at: number
+}
+
+/**
+ * 通知端口
+ */
+export interface NotificationsPort {
+  create(input: {
+    id: string
+    user_id: string
+    type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+    actor_id: string | null
+    comment_id: string | null
+    target_type: 'post' | 'moment'
+    target_id: string
+  }): Promise<void>
+
+  listByUser(
+    userId: string,
+    limit: number,
+    cursor: string | null
+  ): Promise<PaginatedResponse<NotificationRecord>>
+
+  countUnread(userId: string): Promise<number>
+
+  markRead(userId: string, ids?: string[]): Promise<void>
+}
 
 /**
  * 设置端口
@@ -184,7 +220,11 @@ export interface GitHubOAuthPort {
  */
 export interface IdempotencyPort {
   /** 查找已缓存的响应 */
-  find(route: string, userId: string | null, idemKey: string): Promise<{
+  find(
+    route: string,
+    userId: string | null,
+    idemKey: string
+  ): Promise<{
     response_status: number
     response_json: string
   } | null>
@@ -212,7 +252,9 @@ export interface GitHubRepoPort {
   getFile(path: string): Promise<{ content: string; sha: string }>
 
   /** 列出目录文件 */
-  listDirectory(path: string): Promise<Array<{ name: string; path: string; type: 'file' | 'dir'; sha: string }>>
+  listDirectory(
+    path: string
+  ): Promise<Array<{ name: string; path: string; type: 'file' | 'dir'; sha: string }>>
 
   /** 批量提交（通过 Git Trees API 创建单次提交） */
   batchCommit(changes: AdminFileChange[], message: string): Promise<{ sha: string; url: string }>
@@ -264,17 +306,20 @@ export interface DraftsPort {
   }): Promise<DraftRecord>
 
   /** 更新草稿 */
-  update(id: string, input: {
-    slug?: string
-    title?: string
-    summary?: string
-    cover_url?: string | null
-    content_markdown?: string
-    content_html?: string
-    content_text?: string
-    reading_time_minutes?: number
-    scheduled_at?: number | null
-  }): Promise<DraftRecord>
+  update(
+    id: string,
+    input: {
+      slug?: string
+      title?: string
+      summary?: string
+      cover_url?: string | null
+      content_markdown?: string
+      content_html?: string
+      content_text?: string
+      reading_time_minutes?: number
+      scheduled_at?: number | null
+    }
+  ): Promise<DraftRecord>
 
   /** 按 ID 查询 */
   getById(id: string): Promise<DraftRecord | null>

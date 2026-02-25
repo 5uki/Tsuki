@@ -1,32 +1,29 @@
 ---
 import tsukiConfig from '@/config/tsuki-config'
+import { t } from '@/config/tsuki-config'
 
 const { announcement } = tsukiConfig
 const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
 ---
 
-{announcement?.enable && (
-  <div class="tsuki-sidebar-card">
-    {announcement.title && (
-      <h3 class="tsuki-section-title">
-        {announcement.title}
-      </h3>
-    )}
-    {announcement.content && (
-      <div class="announcement-content" set:html={announcement.content} />
-    )}
-    {announcement.link?.enable && announcement.link.url && (
-      <a
-        href={announcement.link.url}
-        target={isExternalLink(announcement.link.url) ? '_blank' : undefined}
-        rel={isExternalLink(announcement.link.url) ? 'noopener noreferrer' : undefined}
-        class="announcement-link"
-      >
-        {announcement.link.text || '查看详情'}
-      </a>
-    )}
-  </div>
-)}
+{
+  announcement?.enable && (
+    <div class="tsuki-sidebar-card">
+      {announcement.title && <h3 class="tsuki-section-title">{announcement.title}</h3>}
+      {announcement.content && <div class="announcement-content" set:html={announcement.content} />}
+      {announcement.link?.enable && announcement.link.url && (
+        <a
+          href={announcement.link.url}
+          target={isExternalLink(announcement.link.url) ? '_blank' : undefined}
+          rel={isExternalLink(announcement.link.url) ? 'noopener noreferrer' : undefined}
+          class="announcement-link"
+        >
+          {announcement.link.text || t('sidebar.viewDetails')}
+        </a>
+      )}
+    </div>
+  )
+}
 
 <style>
   .announcement-content {
@@ -59,8 +56,9 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
     font-weight: 500;
     color: var(--tsuki-fg);
     text-decoration: none;
-    transition: opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+    transition:
+      opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .announcement-link:hover {
     transform: translateY(-2px);

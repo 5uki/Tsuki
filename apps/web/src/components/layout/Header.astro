@@ -2,14 +2,30 @@
 // 顶部导航栏组件
 import { THEME_METAS } from '@tsuki/shared/theme'
 import { uiIcons } from '@tsuki/shared/icons'
-import tsukiConfig from '@/config/tsuki-config'
+import tsukiConfig, { t } from '@/config/tsuki-config'
 import type { NavLink } from '@tsuki/config'
+import NotificationBell from '@/components/notifications/NotificationBell'
 
 const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
+const searchI18nData = JSON.stringify({
+  loading: t('header.searchLoading'),
+  noResults: t('header.searchNoResults'),
+  noTitle: t('header.searchNoTitle'),
+  error: t('header.searchError'),
+})
+const notifI18n = {
+  title: t('notification.title'),
+  empty: t('notification.empty'),
+  markAllRead: t('notification.markAllRead'),
+  commentReply: t('notification.commentReply'),
+  commentPinned: t('notification.commentPinned'),
+  commentHidden: t('notification.commentHidden'),
+  commentDeleted: t('notification.commentDeleted'),
+}
 ---
 
-<header class="header">
+<header class="header" data-search-i18n={searchI18nData}>
   <div class="header-inner">
     <div class="header-track">
       <div class="header-pill header-brand">
@@ -20,109 +36,159 @@ const siteTitle = tsukiConfig.site.title
       </div>
 
       <nav class="header-pill nav">
-        {navLinks.map(link => (
-          <a href={link.href}>
-            {link.icon && <span class="nav-icon" set:html={link.icon} />}
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="header-pill actions">
-      <div class="mobile-left">
-        <a href="/" class="logo mobile-logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
-          <span class="logo-text">{siteTitle}</span>
-        </a>
-      </div>
-
-      <div class="search-area">
-        <button class="action-btn search-btn" id="search-toggle" aria-label="搜索">
-          <span set:html={uiIcons.search} />
-        </button>
-        <div id="search-dropdown" class="search-dropdown">
-          <div class="search-dd-header">
-            <svg class="search-dd-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input
-              type="search"
-              id="search-dd-input"
-              class="search-dd-input"
-              placeholder="搜索文章..."
-              autocomplete="off"
-            />
-            <span class="search-dd-spinner" id="search-dd-spinner"></span>
-          </div>
-          <div id="search-dd-body" class="search-dd-body"></div>
-        </div>
-      </div>
-
-      <div class="theme-switcher">
-        <button id="theme-toggle" class="action-btn" aria-label="切换主题" aria-haspopup="true">
-          <span class="theme-icon" set:html={uiIcons.palette} />
-        </button>
-        <div id="theme-dropdown" class="theme-dropdown" role="menu">
-          <div class="theme-dropdown-header">选择主题</div>
-          {THEME_METAS.map(theme => (
-            <button
-              class="theme-option"
-              data-theme-name={theme.id}
-              style={`--theme-color: ${theme.gradientColor}; --theme-tint: ${theme.accentColor}; --theme-border: color-mix(in srgb, ${theme.accentColor} 45%, transparent);`}
-              role="menuitem"
-            >
-              <span class="theme-preview"></span>
-              <span class="theme-name">{theme.name}</span>
-              <span class="theme-check">✓</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div class="user-area" id="user-area">
-        <button class="login-btn" id="header-login-btn" aria-label="登录">
-          <span class="login-icon" set:html={uiIcons.githubLogin} />
-          <span class="login-text">登录</span>
-        </button>
-        <div class="user-menu" id="header-user-menu" style="display: none;">
-          <button class="user-avatar-btn" id="user-avatar-btn" aria-label="用户菜单" aria-haspopup="true">
-            <img id="header-user-avatar" class="user-avatar" src="" alt="" width="32" height="32" />
-          </button>
-        </div>
-        <div class="login-dropdown" id="login-dropdown" role="menu">
-          <div id="login-dd-not-logged" class="login-dd-state">
-            <p class="login-dd-desc">使用 GitHub 账号登录以发表评论</p>
-            <a id="login-dd-github-btn" href="#" class="login-dd-github-btn">
-              <span class="login-dd-gh-icon" set:html={uiIcons.githubLogin} />
-              <span>使用 GitHub 登录</span>
-            </a>
-          </div>
-          <div id="login-dd-logged" class="login-dd-state" style="display:none;">
-            <div class="login-dd-user-row">
-              <img id="login-dd-avatar" class="login-dd-avatar" src="" alt="" width="36" height="36" />
-              <div class="login-dd-user-info">
-                <span id="login-dd-username" class="login-dd-username"></span>
-                <span class="login-dd-badge">已登录</span>
-              </div>
-            </div>
-            <button id="login-dd-logout-btn" class="login-dd-logout" role="menuitem">
-              退出登录
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mobile-menu-switcher">
-        <button id="mobile-menu-btn" class="action-btn mobile-menu-btn" aria-label="菜单" aria-haspopup="true">
-          <span set:html={uiIcons.menu} />
-        </button>
-        <nav id="mobile-nav" class="mobile-nav-dropdown" role="menu">
-          {navLinks.map(link => (
-            <a href={link.href} class="mobile-nav-link">
+        {
+          navLinks.map((link) => (
+            <a href={link.href}>
               {link.icon && <span class="nav-icon" set:html={link.icon} />}
               {link.label}
             </a>
-          ))}
-        </nav>
-      </div>
+          ))
+        }
+      </nav>
+
+      <div class="header-pill actions">
+        <div class="mobile-left">
+          <a href="/" class="logo mobile-logo">
+            <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
+            <span class="logo-text">{siteTitle}</span>
+          </a>
+        </div>
+
+        <div class="search-area">
+          <button class="action-btn search-btn" id="search-toggle" aria-label={t('header.search')}>
+            <span set:html={uiIcons.search} />
+          </button>
+          <div id="search-dropdown" class="search-dropdown">
+            <div class="search-dd-header">
+              <svg
+                class="search-dd-icon"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg
+              >
+              <input
+                type="search"
+                id="search-dd-input"
+                class="search-dd-input"
+                placeholder={t('header.searchPlaceholder')}
+                autocomplete="off"
+              />
+              <span class="search-dd-spinner" id="search-dd-spinner"></span>
+            </div>
+            <div id="search-dd-body" class="search-dd-body"></div>
+          </div>
+        </div>
+
+        <div class="theme-switcher">
+          <button
+            id="theme-toggle"
+            class="action-btn"
+            aria-label={t('header.toggleTheme')}
+            aria-haspopup="true"
+          >
+            <span class="theme-icon" set:html={uiIcons.palette} />
+          </button>
+          <div id="theme-dropdown" class="theme-dropdown" role="menu">
+            <div class="theme-dropdown-header">{t('header.selectTheme')}</div>
+            {
+              THEME_METAS.map((theme) => (
+                <button
+                  class="theme-option"
+                  data-theme-name={theme.id}
+                  style={`--theme-color: ${theme.gradientColor}; --theme-tint: ${theme.accentColor}; --theme-border: color-mix(in srgb, ${theme.accentColor} 45%, transparent);`}
+                  role="menuitem"
+                >
+                  <span class="theme-preview" />
+                  <span class="theme-name">{theme.name}</span>
+                  <span class="theme-check">✓</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="notif-area" id="notif-area" style="display: none;">
+          <NotificationBell client:idle i18n={notifI18n} />
+        </div>
+
+        <div class="user-area" id="user-area">
+          <button class="login-btn" id="header-login-btn" aria-label={t('header.login')}>
+            <span class="login-icon" set:html={uiIcons.githubLogin} />
+            <span class="login-text">{t('header.login')}</span>
+          </button>
+          <div class="user-menu" id="header-user-menu" style="display: none;">
+            <button
+              class="user-avatar-btn"
+              id="user-avatar-btn"
+              aria-label="用户菜单"
+              aria-haspopup="true"
+            >
+              <img
+                id="header-user-avatar"
+                class="user-avatar"
+                src=""
+                alt=""
+                width="32"
+                height="32"
+              />
+            </button>
+          </div>
+          <div class="login-dropdown" id="login-dropdown" role="menu">
+            <div id="login-dd-not-logged" class="login-dd-state">
+              <p class="login-dd-desc">{t('header.loginDesc')}</p>
+              <a id="login-dd-github-btn" href="#" class="login-dd-github-btn">
+                <span class="login-dd-gh-icon" set:html={uiIcons.githubLogin} />
+                <span>{t('header.loginWithGithub')}</span>
+              </a>
+            </div>
+            <div id="login-dd-logged" class="login-dd-state" style="display:none;">
+              <div class="login-dd-user-row">
+                <img
+                  id="login-dd-avatar"
+                  class="login-dd-avatar"
+                  src=""
+                  alt=""
+                  width="36"
+                  height="36"
+                />
+                <div class="login-dd-user-info">
+                  <span id="login-dd-username" class="login-dd-username"></span>
+                  <span class="login-dd-badge">{t('header.loggedIn')}</span>
+                </div>
+              </div>
+              <button id="login-dd-logout-btn" class="login-dd-logout" role="menuitem">
+                {t('header.logout')}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-menu-switcher">
+          <button
+            id="mobile-menu-btn"
+            class="action-btn mobile-menu-btn"
+            aria-label={t('header.menu')}
+            aria-haspopup="true"
+          >
+            <span set:html={uiIcons.menu} />
+          </button>
+          <nav id="mobile-nav" class="mobile-nav-dropdown" role="menu">
+            {
+              navLinks.map((link) => (
+                <a href={link.href} class="mobile-nav-link">
+                  {link.icon && <span class="nav-icon" set:html={link.icon} />}
+                  {link.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
       </div>
     </div>
   </div>
@@ -146,6 +212,15 @@ const siteTitle = tsukiConfig.site.title
     const header = document.querySelector<HTMLElement>('.header')
     const headerTrack = document.querySelector<HTMLElement>('.header-track')
     const banner = document.querySelector<HTMLElement>('.tsuki-banner')
+
+    // i18n strings for search (injected via data attribute)
+    const searchI18n = JSON.parse(header?.dataset.searchI18n ?? '{}') as {
+      loading: string
+      noResults: string
+      noTitle: string
+      error: string
+    }
+
     const toggle = document.getElementById('theme-toggle')
     const dropdown = document.getElementById('theme-dropdown')
     const themeOptions = document.querySelectorAll<HTMLButtonElement>('.theme-option')
@@ -182,7 +257,12 @@ const siteTitle = tsukiConfig.site.title
     function preloadPagefind() {
       if (pf) return
       const load = new Function("return import('/pagefind/pagefind.js')")
-      load().then((m: any) => { pf = m; pf.init() }).catch(() => {})
+      load()
+        .then((m: any) => {
+          pf = m
+          pf.init()
+        })
+        .catch(() => {})
     }
     if ('requestIdleCallback' in window) {
       requestIdleCallback(preloadPagefind, { timeout: 4000 })
@@ -197,7 +277,8 @@ const siteTitle = tsukiConfig.site.title
 
     function highlightSearch() {
       searchItems.forEach((el, i) => el.classList.toggle('is-active', i === searchIdx))
-      if (searchIdx >= 0 && searchItems[searchIdx]) searchItems[searchIdx]!.scrollIntoView({ block: 'nearest' })
+      if (searchIdx >= 0 && searchItems[searchIdx])
+        searchItems[searchIdx]!.scrollIntoView({ block: 'nearest' })
     }
 
     async function doSearch(q: string) {
@@ -205,7 +286,10 @@ const siteTitle = tsukiConfig.site.title
       try {
         if (!pf) {
           // Show loading message while pagefind loads
-          searchBody.innerHTML = '<div class="search-dd-loading"><span class="search-dd-spinner on"></span> 正在加载搜索索引...</div>'
+          searchBody.innerHTML =
+            '<div class="search-dd-loading"><span class="search-dd-spinner on"></span> ' +
+            searchI18n.loading +
+            '</div>'
           const load = new Function("return import('/pagefind/pagefind.js')")
           pf = await load()
           await pf.init()
@@ -215,33 +299,37 @@ const siteTitle = tsukiConfig.site.title
         searchSpinner.classList.remove('on')
 
         if (!res.results.length) {
-          searchBody.innerHTML = '<div class="search-dd-nil">无匹配结果</div>'
+          searchBody.innerHTML = '<div class="search-dd-nil">' + searchI18n.noResults + '</div>'
           resetSearchResults()
           return
         }
 
-        const data = await Promise.all(
-          res.results.slice(0, 8).map((r: any) => r.data())
-        )
+        const data = await Promise.all(res.results.slice(0, 8).map((r: any) => r.data()))
 
-        searchBody.innerHTML = data.map((d: any) =>
-          `<a href="${d.url}" class="sr-item" data-sr>` +
-            `<span class="sr-title">${d.meta?.title || '无标题'}</span>` +
-            (d.excerpt ? `<span class="sr-excerpt">${d.excerpt}</span>` : '') +
-          `</a>`
-        ).join('')
+        searchBody.innerHTML = data
+          .map(
+            (d: any) =>
+              `<a href="${d.url}" class="sr-item" data-sr>` +
+              `<span class="sr-title">${d.meta?.title || searchI18n.noTitle}</span>` +
+              (d.excerpt ? `<span class="sr-excerpt">${d.excerpt}</span>` : '') +
+              `</a>`
+          )
+          .join('')
 
         searchItems = Array.from(searchBody.querySelectorAll('[data-sr]'))
         searchIdx = -1
 
         searchItems.forEach((el, i) => {
           el.addEventListener('click', () => closeAllDropdowns())
-          el.addEventListener('mouseenter', () => { searchIdx = i; highlightSearch() })
+          el.addEventListener('mouseenter', () => {
+            searchIdx = i
+            highlightSearch()
+          })
         })
       } catch {
         if (searchSpinner) searchSpinner.classList.remove('on')
         if (searchBody) {
-          searchBody.innerHTML = '<div class="search-dd-nil">索引加载失败，请刷新重试</div>'
+          searchBody.innerHTML = '<div class="search-dd-nil">' + searchI18n.error + '</div>'
           resetSearchResults()
         }
       }
@@ -261,7 +349,7 @@ const siteTitle = tsukiConfig.site.title
 
     function updateActiveTheme() {
       const current = getCurrentTheme()
-      themeOptions.forEach(option => {
+      themeOptions.forEach((option) => {
         const isActive = option.getAttribute('data-theme-name') === current
         option.classList.toggle('active', isActive)
       })
@@ -293,74 +381,101 @@ const siteTitle = tsukiConfig.site.title
     }
 
     // ── Theme toggle ──
-    toggle?.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const wasOpen = dropdown?.classList.contains('open')
-      closeAllDropdowns()
-      if (!wasOpen) dropdown?.classList.add('open')
-    }, { signal })
+    toggle?.addEventListener(
+      'click',
+      (e) => {
+        e.stopPropagation()
+        const wasOpen = dropdown?.classList.contains('open')
+        closeAllDropdowns()
+        if (!wasOpen) dropdown?.classList.add('open')
+      },
+      { signal }
+    )
 
-    themeOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        const theme = option.getAttribute('data-theme-name') as Theme
-        if (theme && THEMES.includes(theme)) {
-          setTheme(theme)
-          dropdown?.classList.remove('open')
-        }
-      }, { signal })
+    themeOptions.forEach((option) => {
+      option.addEventListener(
+        'click',
+        () => {
+          const theme = option.getAttribute('data-theme-name') as Theme
+          if (theme && THEMES.includes(theme)) {
+            setTheme(theme)
+            dropdown?.classList.remove('open')
+          }
+        },
+        { signal }
+      )
     })
 
     // ── Mobile menu ──
-    mobileMenuBtn?.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const wasOpen = mobileNav?.classList.contains('open')
-      closeAllDropdowns()
-      if (!wasOpen) mobileNav?.classList.add('open')
-    }, { signal })
+    mobileMenuBtn?.addEventListener(
+      'click',
+      (e) => {
+        e.stopPropagation()
+        const wasOpen = mobileNav?.classList.contains('open')
+        closeAllDropdowns()
+        if (!wasOpen) mobileNav?.classList.add('open')
+      },
+      { signal }
+    )
 
     // ── Search toggle ──
-    searchToggle?.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const wasOpen = searchDropdown?.classList.contains('open')
-      closeAllDropdowns()
-      if (!wasOpen) {
-        searchDropdown?.classList.add('open')
-        requestAnimationFrame(() => searchInput?.focus())
-      }
-    }, { signal })
+    searchToggle?.addEventListener(
+      'click',
+      (e) => {
+        e.stopPropagation()
+        const wasOpen = searchDropdown?.classList.contains('open')
+        closeAllDropdowns()
+        if (!wasOpen) {
+          searchDropdown?.classList.add('open')
+          requestAnimationFrame(() => searchInput?.focus())
+        }
+      },
+      { signal }
+    )
 
     // Search input
-    searchInput?.addEventListener('input', () => {
-      clearTimeout(searchTimer)
-      const q = searchInput.value.trim()
-      if (!q) {
-        searchSpinner?.classList.remove('on')
-        if (searchBody) searchBody.innerHTML = ''
-        resetSearchResults()
-        return
-      }
-      searchSpinner?.classList.add('on')
-      searchTimer = setTimeout(() => doSearch(q), 180)
-    }, { signal })
+    searchInput?.addEventListener(
+      'input',
+      () => {
+        clearTimeout(searchTimer)
+        const q = searchInput.value.trim()
+        if (!q) {
+          searchSpinner?.classList.remove('on')
+          if (searchBody) searchBody.innerHTML = ''
+          resetSearchResults()
+          return
+        }
+        searchSpinner?.classList.add('on')
+        searchTimer = setTimeout(() => doSearch(q), 180)
+      },
+      { signal }
+    )
 
     // Search keyboard navigation
-    searchDropdown?.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { closeAllDropdowns(); return }
-      if (!searchItems.length) return
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        searchIdx = (searchIdx + 1) % searchItems.length
-        highlightSearch()
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        searchIdx = searchIdx <= 0 ? searchItems.length - 1 : searchIdx - 1
-        highlightSearch()
-      } else if (e.key === 'Enter' && searchIdx >= 0 && searchItems[searchIdx]?.href) {
-        e.preventDefault()
-        closeAllDropdowns()
-        window.location.href = searchItems[searchIdx]!.href
-      }
-    }, { signal })
+    searchDropdown?.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape') {
+          closeAllDropdowns()
+          return
+        }
+        if (!searchItems.length) return
+        if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          searchIdx = (searchIdx + 1) % searchItems.length
+          highlightSearch()
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          searchIdx = searchIdx <= 0 ? searchItems.length - 1 : searchIdx - 1
+          highlightSearch()
+        } else if (e.key === 'Enter' && searchIdx >= 0 && searchItems[searchIdx]?.href) {
+          e.preventDefault()
+          closeAllDropdowns()
+          window.location.href = searchItems[searchIdx]!.href
+        }
+      },
+      { signal }
+    )
 
     // ── Login / User dropdown ──
     function openLoginDropdown() {
@@ -384,7 +499,10 @@ const siteTitle = tsukiConfig.site.title
       if (user && loggedEl && notLoggedEl) {
         notLoggedEl.style.display = 'none'
         loggedEl.style.display = 'block'
-        if (avatar) { avatar.src = user.avatar_url; avatar.alt = user.login }
+        if (avatar) {
+          avatar.src = user.avatar_url
+          avatar.alt = user.login
+        }
         if (username) username.textContent = user.login
       } else if (loggedEl && notLoggedEl) {
         notLoggedEl.style.display = 'block'
@@ -394,69 +512,98 @@ const siteTitle = tsukiConfig.site.title
       loginDropdown?.classList.add('open')
     }
 
-    loginBtn?.addEventListener('click', (e) => {
-      e.stopPropagation()
-      openLoginDropdown()
-    }, { signal })
+    loginBtn?.addEventListener(
+      'click',
+      (e) => {
+        e.stopPropagation()
+        openLoginDropdown()
+      },
+      { signal }
+    )
 
-    userAvatarBtn?.addEventListener('click', (e) => {
-      e.stopPropagation()
-      openLoginDropdown()
-    }, { signal })
+    userAvatarBtn?.addEventListener(
+      'click',
+      (e) => {
+        e.stopPropagation()
+        openLoginDropdown()
+      },
+      { signal }
+    )
 
     // Custom event for React comment area
     window.addEventListener('tsuki:open-login', () => openLoginDropdown(), { signal })
 
     // Logout
     const logoutBtn = document.getElementById('login-dd-logout-btn')
-    logoutBtn?.addEventListener('click', async () => {
-      try {
-        await fetch(`${AUTH_API_BASE}/auth/logout`, {
-          method: 'POST',
-          credentials: 'include',
-        })
-      } catch {
-        // Ignore
-      }
-      tsukiWindow.__tsukiCurrentUser = null
-      tsukiWindow.__tsukiAuthCheckDone = false
-      loginDropdown?.classList.remove('open')
-      applyAuthState()
-    }, { signal })
+    logoutBtn?.addEventListener(
+      'click',
+      async () => {
+        try {
+          await fetch(`${AUTH_API_BASE}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include',
+          })
+        } catch {
+          // Ignore
+        }
+        tsukiWindow.__tsukiCurrentUser = null
+        tsukiWindow.__tsukiAuthCheckDone = false
+        loginDropdown?.classList.remove('open')
+        applyAuthState()
+      },
+      { signal }
+    )
 
     // Ctrl+K / Cmd+K
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        if (searchDropdown?.classList.contains('open')) {
-          closeAllDropdowns()
-        } else {
-          closeAllDropdowns()
-          searchDropdown?.classList.add('open')
-          requestAnimationFrame(() => searchInput?.focus())
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault()
+          if (searchDropdown?.classList.contains('open')) {
+            closeAllDropdowns()
+          } else {
+            closeAllDropdowns()
+            searchDropdown?.classList.add('open')
+            requestAnimationFrame(() => searchInput?.focus())
+          }
         }
-      }
-    }, { signal })
+      },
+      { signal }
+    )
 
     // ── Click outside / Escape ──
-    document.addEventListener('click', (e) => {
-      const target = e.target as Node
-      // Check if click is outside all dropdowns
-      const inDropdown =
-        dropdown?.contains(target) || target === toggle ||
-        mobileNav?.contains(target) || target === mobileMenuBtn ||
-        searchDropdown?.contains(target) || target === searchToggle ||
-        loginDropdown?.contains(target) || target === loginBtn || target === userAvatarBtn
-      if (!inDropdown) {
-        closeAllDropdowns()
-      }
-    }, { signal })
+    document.addEventListener(
+      'click',
+      (e) => {
+        const target = e.target as Node
+        // Check if click is outside all dropdowns
+        const inDropdown =
+          dropdown?.contains(target) ||
+          target === toggle ||
+          mobileNav?.contains(target) ||
+          target === mobileMenuBtn ||
+          searchDropdown?.contains(target) ||
+          target === searchToggle ||
+          loginDropdown?.contains(target) ||
+          target === loginBtn ||
+          target === userAvatarBtn
+        if (!inDropdown) {
+          closeAllDropdowns()
+        }
+      },
+      { signal }
+    )
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeAllDropdowns()
-      }
-    }, { signal })
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape') {
+          closeAllDropdowns()
+        }
+      },
+      { signal }
+    )
 
     updateHeaderState()
     window.addEventListener('scroll', updateHeaderState, { passive: true, signal })
@@ -486,12 +633,14 @@ const siteTitle = tsukiConfig.site.title
     const loginBtn = document.getElementById('header-login-btn')
     const userMenu = document.getElementById('header-user-menu')
     const avatar = document.getElementById('header-user-avatar') as HTMLImageElement | null
+    const notifArea = document.getElementById('notif-area')
 
     if (!loginBtn || !userMenu) return
 
     if (user) {
       loginBtn.style.display = 'none'
       userMenu.style.display = 'block'
+      if (notifArea) notifArea.style.display = ''
       if (avatar) {
         avatar.src = user.avatar_url
         avatar.alt = user.login
@@ -499,6 +648,7 @@ const siteTitle = tsukiConfig.site.title
     } else {
       loginBtn.style.display = ''
       userMenu.style.display = 'none'
+      if (notifArea) notifArea.style.display = 'none'
     }
   }
 
@@ -542,9 +692,10 @@ const siteTitle = tsukiConfig.site.title
     z-index: 100;
     --tsuki-header-collapse-offset: -78px;
     --tsuki-header-track-duration: 220ms;
-    transition: background-color 150ms,
-                opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
-                transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      background-color 150ms,
+      opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .header-inner {
@@ -562,16 +713,11 @@ const siteTitle = tsukiConfig.site.title
     gap: clamp(1.1rem, 3vw, 2.4rem);
     position: relative;
     margin-top: calc(
-      -1 * (
-        var(--tsuki-header-frame-top-gap) +
-        var(--tsuki-header-frame-top-overflow)
-      )
+      -1 * (var(--tsuki-header-frame-top-gap) + var(--tsuki-header-frame-top-overflow))
     );
     margin-inline: 0;
-    padding: calc(
-      var(--tsuki-header-frame-top-gap) +
-      var(--tsuki-header-frame-top-overflow)
-    ) var(--tsuki-header-frame-side-gap) var(--tsuki-header-frame-bottom-gap);
+    padding: calc(var(--tsuki-header-frame-top-gap) + var(--tsuki-header-frame-top-overflow))
+      var(--tsuki-header-frame-side-gap) var(--tsuki-header-frame-bottom-gap);
     border-radius: var(--tsuki-header-frame-radius);
     --tsuki-header-track-shift-y: 0px;
     transform: translateY(var(--tsuki-header-track-shift-y));
@@ -604,7 +750,10 @@ const siteTitle = tsukiConfig.site.title
     background: var(--tsuki-header-pill-bg);
     border: 1px solid var(--tsuki-header-track-border);
     box-shadow: var(--tsuki-shadow-header);
-    transition: background-color 150ms, border-color 150ms, box-shadow 150ms;
+    transition:
+      background-color 150ms,
+      border-color 150ms,
+      box-shadow 150ms;
     position: relative;
     z-index: 1;
   }
@@ -787,7 +936,9 @@ const siteTitle = tsukiConfig.site.title
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--tsuki-header-dropdown-border);
     border-radius: 0.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.06);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px) scale(0.98);
@@ -957,7 +1108,9 @@ const siteTitle = tsukiConfig.site.title
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--tsuki-header-dropdown-border);
     border-radius: 0.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.06);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px) scale(0.98);
@@ -1000,7 +1153,9 @@ const siteTitle = tsukiConfig.site.title
     color: var(--tsuki-fg);
     padding: 0;
   }
-  .search-dd-input::placeholder { color: var(--tsuki-muted-fg); }
+  .search-dd-input::placeholder {
+    color: var(--tsuki-muted-fg);
+  }
   .search-dd-input::-webkit-search-cancel-button,
   .search-dd-input::-webkit-search-decoration {
     -webkit-appearance: none;
@@ -1018,8 +1173,14 @@ const siteTitle = tsukiConfig.site.title
     flex-shrink: 0;
     animation: sp 0.55s linear infinite;
   }
-  .search-dd-spinner.on { display: block; }
-  @keyframes sp { to { transform: rotate(360deg); } }
+  .search-dd-spinner.on {
+    display: block;
+  }
+  @keyframes sp {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   .search-dd-loading {
     display: flex;
@@ -1029,7 +1190,9 @@ const siteTitle = tsukiConfig.site.title
     color: var(--tsuki-text-secondary, #888);
     font-size: 0.8125rem;
   }
-  .search-dd-loading .search-dd-spinner { display: block; }
+  .search-dd-loading .search-dd-spinner {
+    display: block;
+  }
 
   .search-dd-body {
     border-top: 1px solid var(--tsuki-header-dropdown-border-soft);
@@ -1038,7 +1201,9 @@ const siteTitle = tsukiConfig.site.title
     overscroll-behavior: contain;
     padding: 0.375rem;
   }
-  .search-dd-body:empty { display: none; }
+  .search-dd-body:empty {
+    display: none;
+  }
 
   .search-dd-nil {
     padding: 1.25rem 0.625rem;
@@ -1058,7 +1223,9 @@ const siteTitle = tsukiConfig.site.title
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--tsuki-header-dropdown-border);
     border-radius: 0.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 2px 6px rgba(0, 0, 0, 0.06);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px) scale(0.98);
@@ -1328,9 +1495,11 @@ const siteTitle = tsukiConfig.site.title
     content: '';
     position: absolute;
     inset: 2px;
-    background: linear-gradient(90deg,
+    background: linear-gradient(
+      90deg,
       color-mix(in srgb, var(--tsuki-theme-accent) 14%, transparent),
-      color-mix(in srgb, var(--tsuki-theme-accent) 4%, transparent));
+      color-mix(in srgb, var(--tsuki-theme-accent) 4%, transparent)
+    );
     border-radius: inherit;
     opacity: 0;
     transition: opacity 150ms ease;

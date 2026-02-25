@@ -206,3 +206,15 @@ export interface AdminCommitResponse {
   sha: string
   url: string
 }
+
+// 通知 DTO
+export interface NotificationDTO {
+  id: string
+  type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+  actor: { login: string; avatar_url: string } | null
+  comment_id: string | null
+  target_type: 'post' | 'moment'
+  target_id: string
+  is_read: boolean
+  created_at: TimeDTO
+}

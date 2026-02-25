@@ -16,6 +16,7 @@ export function settingsRoutes() {
       settingsPort: c.get('ports').settings,
     })
 
+    c.header('Cache-Control', 'public, max-age=300, stale-while-revalidate=600')
     return c.json({
       ok: true,
       data,

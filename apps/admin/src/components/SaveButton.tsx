@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { usePendingChanges } from '@/stores/pending-changes'
+import { useT } from '@/i18n/context'
 
 export default function SaveButton() {
   const { count, save, saving } = usePendingChanges()
   const [message, setMessage] = useState('')
   const [showDialog, setShowDialog] = useState(false)
+  const t = useT()
 
   if (count === 0) return null
 
@@ -17,11 +19,7 @@ export default function SaveButton() {
 
   return (
     <>
-      <button
-        className="save-fab"
-        onClick={() => setShowDialog(true)}
-        disabled={saving}
-      >
+      <button className="save-fab" onClick={() => setShowDialog(true)} disabled={saving}>
         {saving ? (
           <span className="spinner-small" />
         ) : (
@@ -34,24 +32,24 @@ export default function SaveButton() {
 
       {showDialog && (
         <div className="modal-overlay" onClick={() => setShowDialog(false)}>
-          <div className="modal-dialog" onClick={e => e.stopPropagation()}>
-            <h3>提交变更</h3>
-            <p className="text-muted">{count} 个文件将被提交到 Git</p>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <h3>{t('admin.save.title')}</h3>
+            <p className="text-muted">{t('admin.save.countMsg', { count })}</p>
             <input
               type="text"
               className="input"
-              placeholder="提交信息（可选）"
+              placeholder={t('admin.save.commitPlaceholder')}
               value={message}
-              onChange={e => setMessage(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSave()}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
               autoFocus
             />
             <div className="modal-actions">
               <button className="btn btn-ghost" onClick={() => setShowDialog(false)}>
-                取消
+                {t('admin.save.cancel')}
               </button>
               <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-                {saving ? '提交中...' : '提交'}
+                {saving ? t('admin.save.submitting') : t('admin.save.submit')}
               </button>
             </div>
           </div>

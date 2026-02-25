@@ -53,3 +53,11 @@ export class ApiException extends Error {
     this.name = 'ApiException'
   }
 }
+
+/**
+ * Safely extract a human-readable message from an unknown error value.
+ */
+export function extractErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  return String(err)
+}

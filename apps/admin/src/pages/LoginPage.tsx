@@ -1,9 +1,11 @@
 import { useAuth } from '@/stores/auth'
+import { useT } from '@/i18n/context'
 
 const API_BASE = '/v1'
 
 export default function LoginPage() {
   const { user, loading } = useAuth()
+  const t = useT()
 
   if (loading) {
     return (
@@ -25,9 +27,9 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <h1>Tsuki Admin</h1>
-        <p>使用 GitHub 管理员账号登录</p>
+        <p>{t('admin.login.desc')}</p>
         <a href={loginUrl} className="btn btn-primary btn-lg">
-          使用 GitHub 登录
+          {t('admin.login.github')}
         </a>
       </div>
     </div>

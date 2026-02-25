@@ -1,16 +1,19 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '@/stores/auth'
+import { useT } from '@/i18n/context'
+import type { TranslationKey } from '@tsuki/i18n'
 
-const navItems = [
-  { to: '/', label: '概览', icon: '📊' },
-  { to: '/posts', label: '文章', icon: '📝' },
-  { to: '/comments', label: '评论', icon: '💬' },
-  { to: '/friends', label: '友链', icon: '🔗' },
-  { to: '/settings', label: '设置', icon: '⚙️' },
+const navItems: { to: string; labelKey: TranslationKey; icon: string }[] = [
+  { to: '/', labelKey: 'admin.nav.dashboard', icon: '📊' },
+  { to: '/posts', labelKey: 'admin.nav.posts', icon: '📝' },
+  { to: '/comments', labelKey: 'admin.nav.comments', icon: '💬' },
+  { to: '/friends', labelKey: 'admin.nav.friends', icon: '🔗' },
+  { to: '/settings', labelKey: 'admin.nav.settings', icon: '⚙️' },
 ]
 
 export default function Sidebar() {
   const { user } = useAuth()
+  const t = useT()
 
   return (
     <aside className="sidebar">
@@ -20,7 +23,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map(item => (
+        {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -28,7 +31,7 @@ export default function Sidebar() {
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
           >
             <span className="sidebar-icon">{item.icon}</span>
-            <span>{item.label}</span>
+            <span>{t(item.labelKey)}</span>
           </NavLink>
         ))}
       </nav>

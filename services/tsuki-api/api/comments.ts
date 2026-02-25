@@ -21,13 +21,13 @@ import {
   unpinComment,
   adminDeleteComment,
 } from '@usecases/comments'
+import { createNotification } from '@usecases/notifications'
 
 export function commentsRoutes() {
   const router = new Hono<{ Bindings: Env; Variables: AppContext }>()
   const idempotencyMiddleware = createIdempotencyMiddleware(
     (c) =>
-      (c as { get: <K extends keyof AppContext>(key: K) => AppContext[K] }).get('ports')
-        .idempotency
+      (c as { get: <K extends keyof AppContext>(key: K) => AppContext[K] }).get('ports').idempotency
   )
 
   // 获取评论列表（公开）
@@ -63,6 +63,7 @@ export function commentsRoutes() {
       commentsPort: ports.comments,
     })
 
+    c.header('Cache-Control', 'public, max-age=30, stale-while-revalidate=60')
     return c.json({ ok: true, data })
   })
 
@@ -123,6 +124,7 @@ export function commentsRoutes() {
       ua,
       hashSalt: c.env.TSUKI_CSRF_SALT,
       commentsPort: ports.comments,
+      notificationsPort: ports.notifications,
     })
 
     return c.json({ ok: true, data }, 201)
@@ -216,11 +218,24 @@ function _adminCommentsRoutes() {
   router.post('/:id/hide', csrfMiddleware, async (c) => {
     const commentId = c.req.param('id')
     const ports = c.get('ports')
+    const comment = await ports.comments.getById(commentId)
 
     await hideComment({
       commentId,
       commentsPort: ports.comments,
     })
+
+    if (comment) {
+      await createNotification({
+        userId: comment.author_user_id,
+        type: 'comment_hidden',
+        actorId: c.get('currentUser')?.id ?? null,
+        commentId,
+        targetType: comment.target_type,
+        targetId: comment.target_id,
+        notificationsPort: ports.notifications,
+      }).catch(() => {})
+    }
 
     return c.json({ ok: true, data: null })
   })
@@ -242,11 +257,24 @@ function _adminCommentsRoutes() {
   router.post('/:id/pin', csrfMiddleware, async (c) => {
     const commentId = c.req.param('id')
     const ports = c.get('ports')
+    const comment = await ports.comments.getById(commentId)
 
     await pinComment({
       commentId,
       commentsPort: ports.comments,
     })
+
+    if (comment) {
+      await createNotification({
+        userId: comment.author_user_id,
+        type: 'comment_pinned',
+        actorId: c.get('currentUser')?.id ?? null,
+        commentId,
+        targetType: comment.target_type,
+        targetId: comment.target_id,
+        notificationsPort: ports.notifications,
+      }).catch(() => {})
+    }
 
     return c.json({ ok: true, data: null })
   })
@@ -268,11 +296,24 @@ function _adminCommentsRoutes() {
   router.delete('/:id', csrfMiddleware, async (c) => {
     const commentId = c.req.param('id')
     const ports = c.get('ports')
+    const comment = await ports.comments.getById(commentId)
 
     await adminDeleteComment({
       commentId,
       commentsPort: ports.comments,
     })
+
+    if (comment) {
+      await createNotification({
+        userId: comment.author_user_id,
+        type: 'comment_deleted',
+        actorId: c.get('currentUser')?.id ?? null,
+        commentId,
+        targetType: comment.target_type,
+        targetId: comment.target_id,
+        notificationsPort: ports.notifications,
+      }).catch(() => {})
+    }
 
     return c.json({ ok: true, data: null })
   })

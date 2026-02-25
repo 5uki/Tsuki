@@ -7,6 +7,7 @@ import { Icon } from 'astro-icon/components'
 import { getMomentById, getMomentEntries } from '@/lib/content'
 import { filterSafeMedia } from '@/lib/utils/moment-cards'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
+import { t } from '@/config/tsuki-config'
 
 export const prerender = true
 
@@ -103,7 +104,29 @@ const momentOgImage = media.length > 0 ? media[0] : undefined
             <ImageGrid images={media} maxDisplay={99} />
           </div>
         )}
-        <CommentSection client:visible targetType="moment" targetId={id!} />
+        <CommentSection
+          client:visible
+          targetType="moment"
+          targetId={id!}
+          i18n={{
+            placeholder: t('comment.placeholder'),
+            submit: t('comment.submit'),
+            submitError: t('comment.submitError'),
+            submitting: t('comment.submitting'),
+            cancel: t('comment.cancel'),
+            save: t('comment.save'),
+            replyTo: t('comment.replyTo'),
+            deleted: t('comment.deleted'),
+            reply: t('comment.reply'),
+            edit: t('comment.edit'),
+            delete: t('comment.delete'),
+            replyPlaceholder: t('comment.replyPlaceholder'),
+            confirmDelete: t('comment.confirmDelete'),
+            confirmBtn: t('comment.confirmBtn'),
+            loginToComment: t('comment.loginToComment'),
+            count: t('comment.count'),
+          }}
+        />
       </article>
     ) : (
       <div class="tsuki-content-card">

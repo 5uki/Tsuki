@@ -4,7 +4,8 @@
     "url": "https://example.com",
     "description": "在这里记录你的思考与创作。",
     "defaultTheme": "mauve",
-    "faviconHref": "./contents/favicon.svg"
+    "faviconHref": "./contents/favicon.svg",
+    "locale": "zh"
   },
   "hero": {
     "title": "欢迎来到我的博客",

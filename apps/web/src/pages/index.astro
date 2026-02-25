@@ -1,7 +1,7 @@
 ---
 import Default from '@/layouts/Default.astro'
 import PostCard from '@/components/content/PostCard.astro'
-import tsukiConfig from '@/config/tsuki-config'
+import tsukiConfig, { t } from '@/config/tsuki-config'
 import { toPostCardItems, toSlug } from '@/lib/utils/post-cards'
 import { getPostEntries } from '@/lib/content'
 
@@ -28,31 +28,55 @@ const seriesList = Array.from(seriesMap.values()).sort((a, b) => b.count - a.cou
 
 <Default description={tsukiConfig.site.description}>
   <section class="page-section">
-    {seriesList.length > 0 && (
-      <div class="series-filter-bar" id="series-filter-bar">
-        <div class="series-filter-indicator" id="series-filter-indicator"></div>
-        <button class="series-filter-home is-active" data-series-filter="" aria-label="全部文章">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        </button>
-        {seriesList.map((s) => (
-          <button class="series-filter-item" data-series-filter={s.slug}>
-            {s.name}
-            <span class="series-filter-count">{s.count}</span>
+    {
+      seriesList.length > 0 && (
+        <div class="series-filter-bar" id="series-filter-bar">
+          <div class="series-filter-indicator" id="series-filter-indicator" />
+          <button
+            class="series-filter-home is-active"
+            data-series-filter=""
+            aria-label={t('page.allPosts')}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <>
+                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              </>
+            </svg>
           </button>
-        ))}
-      </div>
-    )}
+          {seriesList.map((s) => (
+            <button class="series-filter-item" data-series-filter={s.slug}>
+              {s.name}
+              <span class="series-filter-count">{s.count}</span>
+            </button>
+          ))}
+        </div>
+      )
+    }
 
-    {recentPosts.length > 0 ? (
-      <div class="tsuki-card-list" id="home-post-list">
-        {recentPosts.map((post) => (
-          <PostCard post={post} />
-        ))}
-      </div>
-    ) : (
-      <p class="tsuki-empty-state">暂无文章</p>
-    )}
-    <p class="tsuki-empty-state series-filter-empty" id="series-filter-empty">该系列暂无文章</p>
+    {
+      recentPosts.length > 0 ? (
+        <div class="tsuki-card-list" id="home-post-list">
+          {recentPosts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="tsuki-empty-state">{t('page.noPosts')}</p>
+      )
+    }
+    <p class="tsuki-empty-state series-filter-empty" id="series-filter-empty">
+      {t('page.noPostsInSeries')}
+    </p>
   </section>
 </Default>
 
@@ -99,46 +123,50 @@ const seriesList = Array.from(seriesMap.values()).sort((a, b) => b.count - a.cou
     }
 
     allButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const filter = btn.dataset.seriesFilter!
+      btn.addEventListener(
+        'click',
+        () => {
+          const filter = btn.dataset.seriesFilter!
 
-        // 更新 active 状态
-        allButtons.forEach((b) => b.classList.remove('is-active'))
-        btn.classList.add('is-active')
+          // 更新 active 状态
+          allButtons.forEach((b) => b.classList.remove('is-active'))
+          btn.classList.add('is-active')
 
-        // 滑动指示器
-        moveIndicator(btn, true)
+          // 滑动指示器
+          moveIndicator(btn, true)
 
-        // 先淡出整个列表
-        list.classList.add('is-switching')
+          // 先淡出整个列表
+          list.classList.add('is-switching')
 
-        // 等淡出完成后切换可见性，再淡入
-        setTimeout(() => {
-          let visibleCount = 0
-          cards.forEach((card) => {
-            if (filter === '') {
-              card.classList.remove('is-hidden')
-              visibleCount++
-            } else {
-              const seriesSlug = card.getAttribute('data-series') || ''
-              if (seriesSlug === filter) {
+          // 等淡出完成后切换可见性，再淡入
+          setTimeout(() => {
+            let visibleCount = 0
+            cards.forEach((card) => {
+              if (filter === '') {
                 card.classList.remove('is-hidden')
                 visibleCount++
               } else {
-                card.classList.add('is-hidden')
+                const seriesSlug = card.getAttribute('data-series') || ''
+                if (seriesSlug === filter) {
+                  card.classList.remove('is-hidden')
+                  visibleCount++
+                } else {
+                  card.classList.add('is-hidden')
+                }
               }
+            })
+
+            if (empty) {
+              empty.classList.toggle('is-visible', visibleCount === 0)
             }
-          })
 
-          if (empty) {
-            empty.classList.toggle('is-visible', visibleCount === 0)
-          }
-
-          // 触发 reflow 后淡入
-          void list.offsetHeight
-          list.classList.remove('is-switching')
-        }, 180)
-      }, { signal })
+            // 触发 reflow 后淡入
+            void list.offsetHeight
+            list.classList.remove('is-switching')
+          }, 180)
+        },
+        { signal }
+      )
     })
 
     tsukiWin.__tsukiSeriesCleanup = () => controller.abort()
@@ -238,8 +266,7 @@ const seriesList = Array.from(seriesMap.values()).sort((a, b) => b.count - a.cou
     font-family: inherit;
     color: var(--tsuki-muted-fg);
     white-space: nowrap;
-    transition:
-      color 160ms ease;
+    transition: color 160ms ease;
   }
   .series-filter-item:hover {
     color: var(--tsuki-fg);
@@ -266,7 +293,9 @@ const seriesList = Array.from(seriesMap.values()).sort((a, b) => b.count - a.cou
 <style is:global>
   /* ── Card list transition ── */
   .tsuki-card-list {
-    transition: opacity 180ms ease, transform 180ms ease;
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
   }
   .tsuki-card-list.is-switching {
     opacity: 0;

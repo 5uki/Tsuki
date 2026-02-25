@@ -1,6 +1,6 @@
 ---
 import '@/styles/global.css'
-import tsukiConfig from '@/config/tsuki-config'
+import tsukiConfig, { locale, t } from '@/config/tsuki-config'
 import { DEFAULT_THEME, getSafeTheme } from '@tsuki/shared/theme'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
@@ -21,7 +21,7 @@ interface Props {
 const defaultTheme = getSafeTheme(tsukiConfig.site.defaultTheme ?? DEFAULT_THEME)
 const {
   title,
-  description = tsukiConfig.site.description ?? 'Tsuki 博客',
+  description = tsukiConfig.site.description ?? t('page.about'),
   noindex = false,
   ogType = 'website',
   ogImage,
@@ -79,7 +79,7 @@ const VALID_THEMES = ['mauve']
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-default-theme={defaultTheme}>
+<html lang={locale === 'en' ? 'en' : 'zh-CN'} data-default-theme={defaultTheme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

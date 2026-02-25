@@ -4,7 +4,6 @@
  */
 
 import type { GitHubRepoPort } from '@contracts/ports'
-import type { AdminFileChange } from '@contracts/dto'
 import { AppError } from '@contracts/errors'
 
 const GITHUB_API = 'https://api.github.com'
@@ -47,22 +46,23 @@ export function createGitHubRepoAdapter(
         encoding: string
       }>(`/repos/${owner}/${repo}/contents/${path}`)
 
-      const content = data.encoding === 'base64'
-        ? atob(data.content.replace(/\n/g, ''))
-        : data.content
+      const content =
+        data.encoding === 'base64' ? atob(data.content.replace(/\n/g, '')) : data.content
 
       return { content, sha: data.sha }
     },
 
     async listDirectory(path) {
-      const data = await ghFetch<Array<{
-        name: string
-        path: string
-        type: 'file' | 'dir'
-        sha: string
-      }>>(`/repos/${owner}/${repo}/contents/${path}`)
+      const data = await ghFetch<
+        Array<{
+          name: string
+          path: string
+          type: 'file' | 'dir'
+          sha: string
+        }>
+      >(`/repos/${owner}/${repo}/contents/${path}`)
 
-      return data.map(item => ({
+      return data.map((item) => ({
         name: item.name,
         path: item.path,
         type: item.type,
@@ -99,16 +99,13 @@ export function createGitHubRepoAdapter(
         } else {
           // create or update
           const encoding = change.encoding === 'base64' ? 'base64' : 'utf-8'
-          const blobData = await ghFetch<{ sha: string }>(
-            `/repos/${owner}/${repo}/git/blobs`,
-            {
-              method: 'POST',
-              body: JSON.stringify({
-                content: change.content ?? '',
-                encoding,
-              }),
-            }
-          )
+          const blobData = await ghFetch<{ sha: string }>(`/repos/${owner}/${repo}/git/blobs`, {
+            method: 'POST',
+            body: JSON.stringify({
+              content: change.content ?? '',
+              encoding,
+            }),
+          })
           treeItems.push({
             path: change.path,
             mode: '100644',
@@ -119,16 +116,13 @@ export function createGitHubRepoAdapter(
       }
 
       // 4. Create tree
-      const treeData = await ghFetch<{ sha: string }>(
-        `/repos/${owner}/${repo}/git/trees`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            base_tree: baseTreeSha,
-            tree: treeItems,
-          }),
-        }
-      )
+      const treeData = await ghFetch<{ sha: string }>(`/repos/${owner}/${repo}/git/trees`, {
+        method: 'POST',
+        body: JSON.stringify({
+          base_tree: baseTreeSha,
+          tree: treeItems,
+        }),
+      })
 
       // 5. Create commit
       const newCommitData = await ghFetch<{ sha: string; html_url: string }>(
@@ -144,15 +138,12 @@ export function createGitHubRepoAdapter(
       )
 
       // 6. Update ref
-      await ghFetch(
-        `/repos/${owner}/${repo}/git/refs/heads/${branch}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({
-            sha: newCommitData.sha,
-          }),
-        }
-      )
+      await ghFetch(`/repos/${owner}/${repo}/git/refs/heads/${branch}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          sha: newCommitData.sha,
+        }),
+      })
 
       return { sha: newCommitData.sha, url: newCommitData.html_url }
     },

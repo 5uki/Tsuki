@@ -20,6 +20,7 @@ import { createIdempotencyAdapter } from '@adapters/idempotency'
 import { createGitHubRepoAdapter } from '@adapters/github-repo'
 import { createTurnstileAdapter } from '@adapters/turnstile'
 import { createDraftsAdapter } from '@adapters/drafts'
+import { createNotificationsAdapter } from '@adapters/notifications'
 import { sessionMiddleware } from '@api/middleware/session'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -52,8 +53,7 @@ app.use(
   '*',
   cors({
     origin: (origin, c) => {
-      const allowedOrigins = c.env.TSUKI_PUBLIC_ORIGIN
-        .split(',')
+      const allowedOrigins = c.env.TSUKI_PUBLIC_ORIGIN.split(',')
         .map((s: string) => s.trim())
         .filter(Boolean)
       if (allowedOrigins.includes(origin)) {
@@ -78,9 +78,10 @@ app.use('*', async (c, next) => {
     .filter((n) => !isNaN(n))
 
   // GitHub Repo adapter (optional)
-  const githubRepo = c.env.GITHUB_TOKEN && c.env.GITHUB_REPO_OWNER && c.env.GITHUB_REPO_NAME
-    ? createGitHubRepoAdapter(c.env.GITHUB_TOKEN, c.env.GITHUB_REPO_OWNER, c.env.GITHUB_REPO_NAME)
-    : null
+  const githubRepo =
+    c.env.GITHUB_TOKEN && c.env.GITHUB_REPO_OWNER && c.env.GITHUB_REPO_NAME
+      ? createGitHubRepoAdapter(c.env.GITHUB_TOKEN, c.env.GITHUB_REPO_OWNER, c.env.GITHUB_REPO_NAME)
+      : null
 
   // Turnstile adapter (optional)
   const turnstile = c.env.CF_TURNSTILE_SECRET_KEY
@@ -100,6 +101,7 @@ app.use('*', async (c, next) => {
     githubRepo,
     turnstile,
     drafts: createDraftsAdapter(c.env.DB),
+    notifications: createNotificationsAdapter(c.env.DB),
   })
 
   await next()
@@ -191,14 +193,21 @@ export default {
         : null
 
     if (!githubRepoPort) {
-      console.log(JSON.stringify({ level: 'warn', message: 'Scheduled: GitHub Repo not configured, skipping' }))
+      console.log(
+        JSON.stringify({
+          level: 'warn',
+          message: 'Scheduled: GitHub Repo not configured, skipping',
+        })
+      )
       return
     }
 
     const { publishScheduledDrafts } = await import('@usecases/admin-drafts')
     const count = await publishScheduledDrafts({ draftsPort, githubRepoPort })
     if (count > 0) {
-      console.log(JSON.stringify({ level: 'info', message: `Scheduled: published ${count} draft(s)` }))
+      console.log(
+        JSON.stringify({ level: 'info', message: `Scheduled: published ${count} draft(s)` })
+      )
     }
   },
 }

@@ -5,7 +5,7 @@
 
 import { Hono } from 'hono'
 import type { Env, AppContext } from '@contracts/env'
-import type { SaveDraftRequest, PublishDraftRequest } from '@contracts/dto'
+import type { SaveDraftRequest, PublishDraftRequest, AdminFileChange } from '@contracts/dto'
 import { AppError } from '@contracts/errors'
 import { csrfMiddleware } from './middleware/csrf'
 import { listPosts, getPost } from '@usecases/admin-posts'
@@ -72,13 +72,13 @@ export function adminContentRoutes() {
 
   // POST /v1/admin/commit — 批量提交到 Git
   router.post('/commit', csrfMiddleware, async (c) => {
-    const body = await c.req.json<{ message?: string; changes?: unknown[] }>()
+    const body = await c.req.json<{ message?: string; changes?: AdminFileChange[] }>()
     if (!body.message || !Array.isArray(body.changes)) {
       throw new AppError('VALIDATION_FAILED', 'message and changes are required')
     }
     const githubRepoPort = getGitHubRepo(c)
     const data = await batchCommit({
-      changes: body.changes as any,
+      changes: body.changes,
       message: body.message,
       githubRepoPort,
     })
@@ -125,7 +125,7 @@ export function adminContentRoutes() {
   // POST /v1/admin/drafts/:id/publish — 发布草稿到 Git
   router.post('/drafts/:id/publish', csrfMiddleware, async (c) => {
     const id = c.req.param('id')
-    const body = await c.req.json<PublishDraftRequest>().catch(() => ({} as PublishDraftRequest))
+    const body = await c.req.json<PublishDraftRequest>().catch(() => ({}) as PublishDraftRequest)
     const draftsPort = c.get('ports').drafts
     const githubRepoPort = getGitHubRepo(c)
     const data = await publishDraft({

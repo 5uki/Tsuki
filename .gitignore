@@ -31,5 +31,11 @@
 !README.md
 !README.zh-CN.md
 
+# ── CI / Tooling ───────────────────────────
+!.github/
+!.github/**
+!.husky/
+!.husky/**
+
 # Generated image optimization artifacts
 contents/.tsuki-avif/
