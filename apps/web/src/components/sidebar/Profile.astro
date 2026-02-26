@@ -3,6 +3,7 @@ import tsukiConfig from '@/config/tsuki-config'
 import { t } from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
 import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
+import { Icon } from 'astro-icon/components'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 interface Props {
@@ -22,7 +23,6 @@ const { stats: statsData } = Astro.props
 const overlayIcon = uiIcons.idCard
 
 const isExternalLink = (url: string) => /^https?:\/\//i.test(url)
-const isInlineSvg = (icon: string) => icon.trim().startsWith('<svg')
 const isImageIcon = (icon: string) =>
   /^https?:\/\//i.test(icon) ||
   icon.startsWith('/') ||
@@ -31,10 +31,7 @@ const isImageIcon = (icon: string) =>
 
 const resolveIcon = (icon: string) => {
   if (iconRegistry[icon]) {
-    return { type: 'inline', value: iconRegistry[icon] }
-  }
-  if (isInlineSvg(icon)) {
-    return { type: 'inline', value: icon }
+    return { type: 'icon', value: iconRegistry[icon] }
   }
   if (isImageIcon(icon)) {
     return { type: 'image', value: toOptimizedImageUrl(icon) ?? icon }
@@ -52,7 +49,7 @@ const resolveIcon = (icon: string) => {
         aria-label={t('sidebar.viewProfile')}
       >
         <span class="avatar-overlay" aria-hidden="true">
-          <span class="overlay-icon" set:html={overlayIcon} />
+          <Icon name={overlayIcon} class="overlay-icon" width={52} height={52} aria-hidden="true" />
         </span>
         <img
           src={safeProfile.avatar}
@@ -109,8 +106,14 @@ const resolveIcon = (icon: string) => {
                   loading="lazy"
                   decoding="async"
                 />
-              ) : icon.type === 'inline' ? (
-                <span class="link-icon-svg" set:html={icon.value} />
+              ) : icon.type === 'icon' ? (
+                <Icon
+                  name={icon.value}
+                  class="link-icon-svg"
+                  width={20}
+                  height={20}
+                  aria-hidden="true"
+                />
               ) : (
                 <span class="link-icon-text">{icon.value}</span>
               )}

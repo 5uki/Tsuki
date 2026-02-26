@@ -27,6 +27,8 @@ export const GET: APIRoute = async ({ site }) => {
   const moments = await getMomentEntries()
 
   type FeedItem = {
+    sourceType: 'post' | 'moment'
+    category: string
     title: string
     link: string
     guid: string
@@ -41,6 +43,8 @@ export const GET: APIRoute = async ({ site }) => {
     const ts = new Date(post.frontmatter.publishedAt).getTime()
     if (ts > now) continue
     items.push({
+      sourceType: 'post',
+      category: '文章',
       title: post.frontmatter.title,
       link: `${siteUrl}/posts/${post.slug}`,
       guid: `${siteUrl}/posts/${post.slug}`,
@@ -60,6 +64,8 @@ export const GET: APIRoute = async ({ site }) => {
           .slice(0, 200)
       : ''
     items.push({
+      sourceType: 'moment',
+      category: '动态',
       title: moment.frontmatter.title,
       link: `${siteUrl}/moments/${moment.id}`,
       guid: `${siteUrl}/moments/${moment.id}`,
@@ -84,10 +90,11 @@ export const GET: APIRoute = async ({ site }) => {
 ${feedItems
   .map(
     (item) => `    <item>
-      <title>${escapeXml(item.title)}</title>
+      <title>${escapeXml(`[${item.category}] ${item.title}`)}</title>
       <link>${item.link}</link>
       <guid>${item.guid}</guid>
       <pubDate>${item.pubDate}</pubDate>
+      <category>${escapeXml(item.category)}</category>
       <description>${escapeXml(item.description)}</description>
     </item>`
   )
