@@ -1,5 +1,6 @@
 ---
 import tsukiConfig from '@/config/tsuki-config'
+import { Icon } from 'astro-icon/components'
 import { t } from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
 import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
@@ -29,9 +30,14 @@ const isImageIcon = (icon: string) =>
   /^data:image\//i.test(icon) ||
   /\.(svg|png|jpe?g|webp|gif)$/i.test(icon)
 
+const isIconifyIcon = (icon: string) => /^[a-z0-9-]+:[a-z0-9-]+$/i.test(icon)
+
 const resolveIcon = (icon: string) => {
   if (iconRegistry[icon]) {
     return { type: 'inline', value: iconRegistry[icon] }
+  }
+  if (isIconifyIcon(icon)) {
+    return { type: 'iconify', value: icon }
   }
   if (isInlineSvg(icon)) {
     return { type: 'inline', value: icon }
@@ -109,6 +115,8 @@ const resolveIcon = (icon: string) => {
                   loading="lazy"
                   decoding="async"
                 />
+              ) : icon.type === 'iconify' ? (
+                <Icon name={icon.value} class="link-icon-lib" width="20" height="20" aria-hidden="true" />
               ) : icon.type === 'inline' ? (
                 <span class="link-icon-svg" set:html={icon.value} />
               ) : (
@@ -285,6 +293,12 @@ const resolveIcon = (icon: string) => {
     height: var(--tsuki-icon-size-md);
     width: var(--tsuki-icon-size-md);
     object-fit: contain;
+  }
+
+  .link-icon-lib {
+    display: block;
+    width: 20px;
+    height: 20px;
   }
 
   .link-icon-svg {
