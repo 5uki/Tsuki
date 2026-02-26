@@ -11,17 +11,44 @@
     "title": "欢迎来到我的博客",
     "subtitle": "这是一个可快速定制的博客模板。",
     "backgroundImages": [
-      { "href": "./contents/banners/1.png", "positionX": 32, "positionY": 25 },
-      { "href": "./contents/banners/2.png", "positionX": 32, "positionY": 25 },
-      { "href": "./contents/banners/3.png", "positionX": 32, "positionY": 25 }
+      {
+        "href": "./contents/banners/1.png",
+        "positionX": 32,
+        "positionY": 25
+      },
+      {
+        "href": "./contents/banners/2.png",
+        "positionX": 32,
+        "positionY": 25
+      },
+      {
+        "href": "./contents/banners/3.png",
+        "positionX": 32,
+        "positionY": 25
+      }
     ]
   },
   "nav": [
-    { "label": "首页", "href": "/" },
-    { "label": "归档", "href": "/archives" },
-    { "label": "动态", "href": "/moments" },
-    { "label": "关于", "href": "/about" },
-    { "label": "友链", "href": "/friends" }
+    {
+      "label": "首页",
+      "href": "/"
+    },
+    {
+      "label": "归档",
+      "href": "/archives"
+    },
+    {
+      "label": "动态",
+      "href": "/moments"
+    },
+    {
+      "label": "关于",
+      "href": "/about"
+    },
+    {
+      "label": "友链",
+      "href": "/friends"
+    }
   ],
   "profile": {
     "avatar": "./contents/avatar.webp",
@@ -33,6 +60,21 @@
         "name": "GitHub",
         "icon": "fa6-brands:github",
         "url": "https://github.com/yourname"
+      },
+      {
+        "name": "微博",
+        "icon": "fa6-brands:weibo",
+        "url": "https://weibo.com"
+      },
+      {
+        "name": "微信",
+        "icon": "fa6-brands:weixin",
+        "url": "https://weixin.qq.com"
+      },
+      {
+        "name": "QQ",
+        "icon": "fa6-brands:qq",
+        "url": "https://im.qq.com"
       }
     ]
   },

@@ -35,8 +35,10 @@ const ogImageUrl = optimizedOgImage
     ? optimizedOgImage
     : `${siteUrl}${optimizedOgImage.startsWith('/') ? '' : '/'}${optimizedOgImage}`
   : undefined
-const faviconHref = toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? '/favicon.svg'
-const faviconType = faviconHref.endsWith('.svg') ? 'image/svg+xml' : undefined
+const faviconHref = tsukiConfig.site.faviconHref
+  ? (toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? tsukiConfig.site.faviconHref)
+  : undefined
+const faviconType = faviconHref?.endsWith('.svg') ? 'image/svg+xml' : undefined
 
 // defineConfig 已归一化路径，此处直接使用
 const bgImages = (tsukiConfig.hero?.backgroundImages ?? [])
@@ -88,9 +90,10 @@ const VALID_THEMES = ['mauve']
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
-    <link rel="icon" href={faviconHref} type={faviconType} />
-    <link rel="apple-touch-icon" href={faviconHref} />
+    <link rel="alternate" type="application/rss+xml" title="RSS Posts" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="RSS Moments" href="/rss-moments.xml" />
+    {faviconHref && <link rel="icon" href={faviconHref} type={faviconType} />}
+    {faviconHref && <link rel="apple-touch-icon" href={faviconHref} />}
     <link rel="prefetch" href="/pagefind/pagefind.js" />
 
     <!-- Open Graph -->

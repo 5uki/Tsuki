@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { getPostEntries } from '@/lib/content'
+import { getMomentEntries } from '@/lib/content'
 import tsukiConfig from '@/config/tsuki-config'
 
 export const prerender = true
@@ -20,13 +20,12 @@ function toRfc822(dateStr: string): string {
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.origin ?? 'https://example.com'
   const siteTitle = tsukiConfig.site.title
-  const siteDescription = tsukiConfig.site.description ?? ''
 
   const now = Date.now()
-  const posts = await getPostEntries()
+  const moments = await getMomentEntries()
 
-  const feedItems = posts
-    .filter((post) => new Date(post.frontmatter.publishedAt).getTime() <= now)
+  const feedItems = moments
+    .filter((moment) => new Date(moment.frontmatter.publishedAt).getTime() <= now)
     .sort(
       (a, b) =>
         new Date(b.frontmatter.publishedAt).getTime() - new Date(a.frontmatter.publishedAt).getTime()
@@ -36,22 +35,29 @@ export const GET: APIRoute = async ({ site }) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(siteTitle)} - Posts</title>
-    <description>${escapeXml(siteDescription)}</description>
-    <link>${siteUrl}</link>
-    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
+    <title>${escapeXml(siteTitle)} - Moments</title>
+    <description>${escapeXml(siteTitle)} moments feed</description>
+    <link>${siteUrl}/moments</link>
+    <atom:link href="${siteUrl}/rss-moments.xml" rel="self" type="application/rss+xml" />
     <language>zh-CN</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${feedItems
-  .map(
-    (post) => `    <item>
-      <title>${escapeXml(post.frontmatter.title)}</title>
-      <link>${siteUrl}/posts/${post.slug}</link>
-      <guid>${siteUrl}/posts/${post.slug}</guid>
-      <pubDate>${toRfc822(post.frontmatter.publishedAt)}</pubDate>
-      <description>${escapeXml(post.frontmatter.summary ?? '')}</description>
+  .map((moment) => {
+    const bodyExcerpt = moment.body
+      ? moment.body
+          .replace(/[#*_`>[\]()!~]/g, '')
+          .trim()
+          .slice(0, 200)
+      : ''
+
+    return `    <item>
+      <title>${escapeXml(moment.frontmatter.title)}</title>
+      <link>${siteUrl}/moments/${moment.id}</link>
+      <guid>${siteUrl}/moments/${moment.id}</guid>
+      <pubDate>${toRfc822(moment.frontmatter.publishedAt)}</pubDate>
+      <description>${escapeXml(bodyExcerpt)}</description>
     </item>`
-  )
+  })
   .join('\n')}
   </channel>
 </rss>`

@@ -2,7 +2,7 @@
 import tsukiConfig from '@/config/tsuki-config'
 import { t } from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
-import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
+import { iconRegistry, socialIconNames, uiIcons } from '@tsuki/shared/icons'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 interface Props {
@@ -35,6 +35,9 @@ const resolveIcon = (icon: string) => {
   }
   if (isInlineSvg(icon)) {
     return { type: 'inline', value: icon }
+  }
+  if (socialIconNames[icon]) {
+    return { type: 'image', value: socialIconNames[icon] }
   }
   if (isImageIcon(icon)) {
     return { type: 'image', value: toOptimizedImageUrl(icon) ?? icon }
@@ -109,7 +112,7 @@ const resolveIcon = (icon: string) => {
                   loading="lazy"
                   decoding="async"
                 />
-              ) : icon.type === 'inline' ? (
+) : icon.type === 'inline' ? (
                 <span class="link-icon-svg" set:html={icon.value} />
               ) : (
                 <span class="link-icon-text">{icon.value}</span>
