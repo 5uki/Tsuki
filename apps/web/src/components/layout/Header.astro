@@ -3,11 +3,15 @@
 import { THEME_METAS } from '@tsuki/shared/theme'
 import { uiIcons } from '@tsuki/shared/icons'
 import tsukiConfig, { t } from '@/config/tsuki-config'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 import type { NavLink } from '@tsuki/config'
 import NotificationBell from '@/components/notifications/NotificationBell'
 
 const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
+const faviconHref = tsukiConfig.site.faviconHref
+  ? (toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? tsukiConfig.site.faviconHref)
+  : undefined
 const searchI18nData = JSON.stringify({
   loading: t('header.searchLoading'),
   noResults: t('header.searchNoResults'),
@@ -30,7 +34,7 @@ const notifI18n = {
     <div class="header-track">
       <div class="header-pill header-brand">
         <a href="/" class="logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="22" height="22" />
+          {faviconHref && <img src={faviconHref} alt="" class="logo-favicon" width="22" height="22" />}
           <span class="logo-text">{siteTitle}</span>
         </a>
       </div>
@@ -49,7 +53,7 @@ const notifI18n = {
       <div class="header-pill actions">
         <div class="mobile-left">
           <a href="/" class="logo mobile-logo">
-            <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
+            {faviconHref && <img src={faviconHref} alt="" class="logo-favicon" width="20" height="20" />}
             <span class="logo-text">{siteTitle}</span>
           </a>
         </div>

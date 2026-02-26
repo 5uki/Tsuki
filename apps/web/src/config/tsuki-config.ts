@@ -11,7 +11,7 @@ const navIconMap: Record<string, string> = {
 }
 
 const config = defineConfig({
-  ...configJson,
+  ...(configJson as Parameters<typeof defineConfig>[0]),
   nav: (configJson.nav ?? []).map((link) => ({
     ...link,
     icon: navIconMap[link.href] ?? undefined,

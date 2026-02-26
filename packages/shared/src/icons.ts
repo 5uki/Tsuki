@@ -24,6 +24,22 @@ export const socialIcons = {
   mail: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
 } as const
 
+
+
+export const socialIconNames: Record<string, string> = {
+  'fa6-brands:github': 'https://cdn.simpleicons.org/github',
+  'fa6-brands:x-twitter': 'https://cdn.simpleicons.org/x',
+  'fa6-brands:qq': 'https://cdn.simpleicons.org/tencentqq',
+  'fa6-brands:weixin': 'https://cdn.simpleicons.org/wechat',
+  'fa6-brands:weibo': 'https://cdn.simpleicons.org/sinaweibo',
+  'fa6-brands:telegram': 'https://cdn.simpleicons.org/telegram',
+  'fa6-brands:discord': 'https://cdn.simpleicons.org/discord',
+  'fa6-brands:bilibili': 'https://cdn.simpleicons.org/bilibili',
+  'fa6-brands:zhihu': 'https://cdn.simpleicons.org/zhihu',
+  'simple-icons:rss': 'https://cdn.simpleicons.org/rss',
+}
+
+
 /* ── UI 图标（Header 等组件使用） ── */
 
 export const uiIcons = {
@@ -43,7 +59,6 @@ export const iconRegistry: Record<string, string> = {
   'fa6-brands:github': socialIcons.github,
   'fa6-brands:x-twitter': socialIcons.twitter,
   'fa6-solid:mail': socialIcons.mail,
-  'fa6-solid:envelope': socialIcons.mail,
   // 导航
   home: navIcons.home,
   posts: navIcons.posts,

@@ -138,9 +138,9 @@
 </div>
 
 <script>
-  interface TsukiBackToTopWindow extends Window {
-    __tsukiBackToTopCleanup?: () => void
-    __tsukiBackToTopBound?: boolean
+  interface TsukiFloatingActionsWindow extends Window {
+    __tsukiFloatingActionsCleanup?: () => void
+    __tsukiFloatingActionsBound?: boolean
     __tsukiMovedTocPlaceholder?: Comment
     __tsukiMovedTocParent?: HTMLElement | null
     __tsukiMovedTocCard?: HTMLElement | null
@@ -149,7 +149,7 @@
     __tsukiMovedInfoPanel?: HTMLElement | null
   }
 
-  const tsukiWindow = window as TsukiBackToTopWindow
+  const tsukiWindow = window as TsukiFloatingActionsWindow
 
   function isPostDetailPage(pathname: string) {
     return /^\/posts\/[^/]+\/?$/.test(pathname)
@@ -187,8 +187,8 @@
     tsukiWindow.__tsukiMovedInfoParent = null
   }
 
-  function initBackToTop() {
-    tsukiWindow.__tsukiBackToTopCleanup?.()
+  function initFloatingActions() {
+    tsukiWindow.__tsukiFloatingActionsCleanup?.()
 
     const wrapper = document.querySelector('.floating-actions') as HTMLDivElement | null
     const openBtn = document.getElementById('fab-open') as HTMLButtonElement | null
@@ -451,7 +451,7 @@
       { signal }
     )
 
-    tsukiWindow.__tsukiBackToTopCleanup = () => {
+    tsukiWindow.__tsukiFloatingActionsCleanup = () => {
       closeMenu()
       restoreTocCard()
       restoreInfoPanel()
@@ -459,12 +459,12 @@
     }
   }
 
-  if (!tsukiWindow.__tsukiBackToTopBound) {
-    document.addEventListener('astro:page-load', initBackToTop)
-    tsukiWindow.__tsukiBackToTopBound = true
+  if (!tsukiWindow.__tsukiFloatingActionsBound) {
+    document.addEventListener('astro:page-load', initFloatingActions)
+    tsukiWindow.__tsukiFloatingActionsBound = true
   }
 
-  initBackToTop()
+  initFloatingActions()
 </script>
 
 <style>
@@ -505,12 +505,16 @@
       opacity 0.2s ease;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 8px 20px color-mix(in srgb, var(--tsuki-theme-accent) 18%, transparent),
+      0 3px 10px rgba(0, 0, 0, 0.14);
     padding: 0;
   }
 
   .floating-btn:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow:
+      0 12px 24px color-mix(in srgb, var(--tsuki-theme-accent) 22%, transparent),
+      0 6px 16px rgba(0, 0, 0, 0.18);
     transform: translateY(-2px);
   }
 
