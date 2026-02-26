@@ -2,6 +2,8 @@
 // 顶部导航栏组件
 import { THEME_METAS } from '@tsuki/shared/theme'
 import { uiIcons } from '@tsuki/shared/icons'
+import { Icon } from 'astro-icon/components'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 import tsukiConfig, { t } from '@/config/tsuki-config'
 import type { NavLink } from '@tsuki/config'
 import NotificationBell from '@/components/notifications/NotificationBell'
@@ -14,6 +16,8 @@ const searchI18nData = JSON.stringify({
   noTitle: t('header.searchNoTitle'),
   error: t('header.searchError'),
 })
+const faviconHref =
+  toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? tsukiConfig.site.faviconHref
 const notifI18n = {
   title: t('notification.title'),
   empty: t('notification.empty'),
@@ -30,7 +34,7 @@ const notifI18n = {
     <div class="header-track">
       <div class="header-pill header-brand">
         <a href="/" class="logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="22" height="22" />
+          <img src={faviconHref} alt="" class="logo-favicon" width="22" height="22" />
           <span class="logo-text">{siteTitle}</span>
         </a>
       </div>
@@ -39,7 +43,9 @@ const notifI18n = {
         {
           navLinks.map((link) => (
             <a href={link.href}>
-              {link.icon && <span class="nav-icon" set:html={link.icon} />}
+              {link.icon && (
+                <Icon name={link.icon} class="nav-icon" width={16} height={16} aria-hidden="true" />
+              )}
               {link.label}
             </a>
           ))
@@ -49,29 +55,24 @@ const notifI18n = {
       <div class="header-pill actions">
         <div class="mobile-left">
           <a href="/" class="logo mobile-logo">
-            <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
+            <img src={faviconHref} alt="" class="logo-favicon" width="20" height="20" />
             <span class="logo-text">{siteTitle}</span>
           </a>
         </div>
 
         <div class="search-area">
           <button class="action-btn search-btn" id="search-toggle" aria-label={t('header.search')}>
-            <span set:html={uiIcons.search} />
+            <Icon name={uiIcons.search} width={18} height={18} aria-hidden="true" />
           </button>
           <div id="search-dropdown" class="search-dropdown">
             <div class="search-dd-header">
-              <svg
+              <Icon
+                name={uiIcons.search}
                 class="search-dd-icon"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg
-              >
+                width={14}
+                height={14}
+                aria-hidden="true"
+              />
               <input
                 type="search"
                 id="search-dd-input"
@@ -92,7 +93,13 @@ const notifI18n = {
             aria-label={t('header.toggleTheme')}
             aria-haspopup="true"
           >
-            <span class="theme-icon" set:html={uiIcons.palette} />
+            <Icon
+              name={uiIcons.palette}
+              class="theme-icon"
+              width={18}
+              height={18}
+              aria-hidden="true"
+            />
           </button>
           <div id="theme-dropdown" class="theme-dropdown" role="menu">
             <div class="theme-dropdown-header">{t('header.selectTheme')}</div>
@@ -119,7 +126,13 @@ const notifI18n = {
 
         <div class="user-area" id="user-area">
           <button class="login-btn" id="header-login-btn" aria-label={t('header.login')}>
-            <span class="login-icon" set:html={uiIcons.githubLogin} />
+            <Icon
+              name={uiIcons.githubLogin}
+              class="login-icon"
+              width={16}
+              height={16}
+              aria-hidden="true"
+            />
             <span class="login-text">{t('header.login')}</span>
           </button>
           <div class="user-menu" id="header-user-menu" style="display: none;">
@@ -143,7 +156,13 @@ const notifI18n = {
             <div id="login-dd-not-logged" class="login-dd-state">
               <p class="login-dd-desc">{t('header.loginDesc')}</p>
               <a id="login-dd-github-btn" href="#" class="login-dd-github-btn">
-                <span class="login-dd-gh-icon" set:html={uiIcons.githubLogin} />
+                <Icon
+                  name={uiIcons.githubLogin}
+                  class="login-dd-gh-icon"
+                  width={16}
+                  height={16}
+                  aria-hidden="true"
+                />
                 <span>{t('header.loginWithGithub')}</span>
               </a>
             </div>
@@ -176,13 +195,21 @@ const notifI18n = {
             aria-label={t('header.menu')}
             aria-haspopup="true"
           >
-            <span set:html={uiIcons.menu} />
+            <Icon name={uiIcons.menu} width={18} height={18} aria-hidden="true" />
           </button>
           <nav id="mobile-nav" class="mobile-nav-dropdown" role="menu">
             {
               navLinks.map((link) => (
                 <a href={link.href} class="mobile-nav-link">
-                  {link.icon && <span class="nav-icon" set:html={link.icon} />}
+                  {link.icon && (
+                    <Icon
+                      name={link.icon}
+                      class="nav-icon"
+                      width={16}
+                      height={16}
+                      aria-hidden="true"
+                    />
+                  )}
                   {link.label}
                 </a>
               ))
