@@ -5,6 +5,8 @@ import { uiIcons } from '@tsuki/shared/icons'
 import tsukiConfig, { t } from '@/config/tsuki-config'
 import type { NavLink } from '@tsuki/config'
 import NotificationBell from '@/components/notifications/NotificationBell'
+import { toOptimizedImageUrl } from '@/lib/utils/image-url'
+import { Icon } from 'astro-icon/components'
 
 const navLinks: NavLink[] = tsukiConfig.nav ?? []
 const siteTitle = tsukiConfig.site.title
@@ -14,6 +16,8 @@ const searchI18nData = JSON.stringify({
   noTitle: t('header.searchNoTitle'),
   error: t('header.searchError'),
 })
+const headerFaviconHref = toOptimizedImageUrl(tsukiConfig.site.faviconHref) ?? '/favicon.svg'
+
 const notifI18n = {
   title: t('notification.title'),
   empty: t('notification.empty'),
@@ -30,7 +34,7 @@ const notifI18n = {
     <div class="header-track">
       <div class="header-pill header-brand">
         <a href="/" class="logo">
-          <img src="/favicon.svg" alt="" class="logo-favicon" width="22" height="22" />
+          <img src={headerFaviconHref} alt="" class="logo-favicon" width="22" height="22" />
           <span class="logo-text">{siteTitle}</span>
         </a>
       </div>
@@ -49,7 +53,7 @@ const notifI18n = {
       <div class="header-pill actions">
         <div class="mobile-left">
           <a href="/" class="logo mobile-logo">
-            <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
+            <img src={headerFaviconHref} alt="" class="logo-favicon" width="20" height="20" />
             <span class="logo-text">{siteTitle}</span>
           </a>
         </div>
@@ -60,18 +64,12 @@ const notifI18n = {
           </button>
           <div id="search-dropdown" class="search-dropdown">
             <div class="search-dd-header">
-              <svg
+              <Icon
+                name="material-symbols:search-rounded"
                 class="search-dd-icon"
                 width="14"
                 height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg
-              >
+              />
               <input
                 type="search"
                 id="search-dd-input"

@@ -16,15 +16,15 @@ export const navIcons = {
   archive: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>',
 } as const
 
-/* ── 社交图标（20×20） ── */
-
 export const socialIcons = {
   github: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>',
   twitter: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  telegram: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.65 6.476-1.64 7.73c-.124.548-.448.684-.907.426l-2.508-1.848-1.21 1.165c-.133.133-.244.244-.5.244l.178-2.55 4.64-4.19c.202-.177-.044-.275-.313-.098l-5.733 3.61-2.47-.773c-.537-.167-.548-.537.112-.795l9.656-3.724c.447-.167.837.098.693.803z"/></svg>',
+  discord: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.554 1.116a18.27 18.27 0 0 0-5.318 0A11.64 11.64 0 0 0 9.46 3a19.736 19.736 0 0 0-4.435 1.371C2.218 8.589 1.458 12.703 1.84 16.758a19.9 19.9 0 0 0 5.437 2.721c.437-.586.826-1.204 1.16-1.852a12.9 12.9 0 0 1-1.824-.876c.153-.112.302-.23.447-.35 3.517 1.654 7.34 1.654 10.816 0 .147.12.296.238.447.35-.577.34-1.186.635-1.825.876.334.648.723 1.266 1.16 1.852a19.88 19.88 0 0 0 5.44-2.721c.455-4.698-.778-8.775-3.281-12.389zM8.02 14.329c-1.058 0-1.925-.968-1.925-2.159 0-1.19.848-2.158 1.925-2.158 1.086 0 1.943.978 1.924 2.158 0 1.19-.848 2.159-1.924 2.159zm7.114 0c-1.058 0-1.924-.968-1.924-2.159 0-1.19.847-2.158 1.924-2.158 1.086 0 1.943.978 1.924 2.158 0 1.19-.838 2.159-1.924 2.159z"/></svg>',
+  weibo: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10.2 10.8c-2.6.2-4.7 1.8-4.8 3.6-.1 1.9 2 3.4 4.8 3.3 2.7-.1 4.9-1.8 4.9-3.7 0-1.9-2.2-3.3-4.9-3.2zm-.1 5.8c-1.4.1-2.6-.6-2.7-1.6-.1-.9 1-1.8 2.4-1.9 1.4-.1 2.6.6 2.7 1.6.1 1-1 1.8-2.4 1.9zM20 10.4c-.4-1.2-1.4-1.8-2.4-1.6-.4.1-.7.5-.6.9.1.4.5.7.9.6.4-.1.9.2 1.1.8.3.7.1 1.3-.2 1.5-.3.2-.4.7-.2 1 .2.3.7.4 1 .2.9-.4 1.2-1.9.8-3.4zM18.4 7.5c-.2-.4-.7-.6-1.1-.4-.4.2-.6.7-.4 1.1.2.4.5.9.5 1.3 0 .5.3.8.8.8.4 0 .8-.3.8-.8 0-.7-.2-1.4-.6-2z"/></svg>',
+  zhihu: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 7.2V4.5H7.8v2.7H3v1.6h4.7c-.2 2.3-.8 4.5-1.8 6.2l1.5.9c.9-1.6 1.6-3.6 1.9-5.7h2.2v7.4h1.7V7.2H9.5zm11.1 2h-2.3V4.4h-1.7v4.8h-2.2v1.7h2.2V16c-.8.1-1.6.2-2.3.2l.2 1.7c2.1-.2 4.6-.5 6.4-.8v-1.6c-.8.1-1.7.2-2.6.3v-4.9h2.3V9.2z"/></svg>',
   mail: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
 } as const
-
-/* ── UI 图标（Header 等组件使用） ── */
 
 export const uiIcons = {
   search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>',
@@ -34,17 +34,15 @@ export const uiIcons = {
   idCard: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="52" height="52" fill="currentColor"><path d="M528 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 176c0-44.2 35.8-80 80-80s80 35.8 80 80-35.8 80-80 80-80-35.8-80-80zm256 208H64v-16c0-53 43-96 96-96h32c53 0 96 43 96 96v16zm160 0H384v-64h128v64zm0-128H384v-64h128v64z"/></svg>',
 } as const
 
-/**
- * 图标名称 → SVG 查找表
- * 用于从字符串配置解析图标（如 Profile links 中的 icon 字段）
- */
 export const iconRegistry: Record<string, string> = {
-  // 社交/品牌
   'fa6-brands:github': socialIcons.github,
   'fa6-brands:x-twitter': socialIcons.twitter,
+  'fa6-brands:telegram': socialIcons.telegram,
+  'fa6-brands:discord': socialIcons.discord,
+  'fa6-brands:weibo': socialIcons.weibo,
+  'fa6-brands:zhihu': socialIcons.zhihu,
   'fa6-solid:mail': socialIcons.mail,
   'fa6-solid:envelope': socialIcons.mail,
-  // 导航
   home: navIcons.home,
   posts: navIcons.posts,
   moments: navIcons.moments,
