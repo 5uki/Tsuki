@@ -12,7 +12,8 @@
     "./validation": "./src/validation.ts",
     "./theme": "./src/theme.ts",
     "./time": "./src/time.ts",
-    "./icons": "./src/icons.ts"
+    "./icons": "./src/icons.ts",
+    "./constants": "./src/constants.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

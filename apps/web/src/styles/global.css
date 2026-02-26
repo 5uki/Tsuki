@@ -15,7 +15,8 @@
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
-    padding: var(--tsuki-sidebar-card-title-top-padding) var(--tsuki-sidebar-card-padding-inline) var(--tsuki-sidebar-card-padding);
+    padding: var(--tsuki-sidebar-card-title-top-padding) var(--tsuki-sidebar-card-padding-inline)
+      var(--tsuki-sidebar-card-padding);
     box-shadow: var(--tsuki-sidebar-card-shadow);
     transition:
       transform var(--tsuki-motion-card) var(--tsuki-motion-card-ease),
@@ -31,7 +32,8 @@
   }
   @media (min-width: 640px) {
     .tsuki-sidebar-card {
-      padding: var(--tsuki-sidebar-card-title-top-padding-compact) var(--tsuki-sidebar-card-padding-inline-compact) var(--tsuki-sidebar-card-padding-compact);
+      padding: var(--tsuki-sidebar-card-title-top-padding-compact)
+        var(--tsuki-sidebar-card-padding-inline-compact) var(--tsuki-sidebar-card-padding-compact);
     }
   }
 
@@ -69,8 +71,9 @@
     font-weight: 500;
     color: var(--tsuki-theme-accent);
     text-decoration: none;
-    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+    transition:
+      background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .tsuki-tag-pill:hover {
     transform: translateY(-2px);

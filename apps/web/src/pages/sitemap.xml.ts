@@ -23,9 +23,7 @@ export const GET: APIRoute = async ({ site }) => {
   const posts = await getPostEntries()
   const moments = await getMomentEntries()
 
-  const publishedPosts = posts.filter(
-    (p) => new Date(p.frontmatter.publishedAt).getTime() <= now
-  )
+  const publishedPosts = posts.filter((p) => new Date(p.frontmatter.publishedAt).getTime() <= now)
   const publishedMoments = moments.filter(
     (m) => new Date(m.frontmatter.publishedAt).getTime() <= now
   )

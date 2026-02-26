@@ -4,11 +4,34 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "python -m http.server 5174",
-    "build": "mkdir -p dist && cp index.html dist/index.html",
-    "preview": "python -m http.server 4174 --directory dist",
-    "lint": "echo 'admin shell lint skipped'",
-    "typecheck": "echo 'admin shell typecheck skipped'",
-    "test": "echo 'No tests for admin shell yet'"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'No tests for admin yet'"
+  },
+  "dependencies": {
+    "@tsuki/i18n": "workspace:*",
+    "@tiptap/extension-image": "^2.11.0",
+    "@tiptap/extension-link": "^2.11.0",
+    "@tiptap/react": "^2.11.0",
+    "@tiptap/starter-kit": "^2.11.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-easy-crop": "^5.1.0",
+    "react-router-dom": "^7.1.0",
+    "tiptap-markdown": "^0.8.10"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@tsuki/shared": "workspace:*",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^9.18.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vite": "^6.0.0"
   }
 }

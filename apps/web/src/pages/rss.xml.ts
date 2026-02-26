@@ -54,7 +54,10 @@ export const GET: APIRoute = async ({ site }) => {
     const ts = new Date(moment.frontmatter.publishedAt).getTime()
     if (ts > now) continue
     const bodyExcerpt = moment.body
-      ? moment.body.replace(/[#*_`>[\]()!~]/g, '').trim().slice(0, 200)
+      ? moment.body
+          .replace(/[#*_`>[\]()!~]/g, '')
+          .trim()
+          .slice(0, 200)
       : ''
     items.push({
       title: moment.frontmatter.title,

@@ -1,0 +1,22 @@
+{
+  "name": "@tsuki/i18n",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./locales/zh": "./src/locales/zh.ts",
+    "./locales/en": "./src/locales/en.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "echo 'no tests'",
+    "lint": "echo 'lint ok'"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

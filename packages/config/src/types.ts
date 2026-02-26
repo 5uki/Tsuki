@@ -105,6 +105,8 @@ export interface SiteConfig {
    * - 支持外部 URL（如 https://example.com/favicon.ico）
    */
   faviconHref?: string
+  /** 界面语言 */
+  locale?: 'zh' | 'en'
 }
 
 /**

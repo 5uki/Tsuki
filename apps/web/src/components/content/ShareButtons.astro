@@ -1,0 +1,265 @@
+---
+import { t } from '@/config/tsuki-config'
+
+interface Props {
+  url: string
+  title: string
+  description?: string
+}
+
+const { url, title, description = '' } = Astro.props
+
+const encodedUrl = encodeURIComponent(url)
+const encodedTitle = encodeURIComponent(title)
+const encodedDesc = encodeURIComponent(description)
+
+const platforms = [
+  {
+    name: 'Twitter',
+    href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+  },
+  {
+    name: '微博',
+    href: `https://service.weibo.com/share/share.php?url=${encodedUrl}&title=${encodedTitle}`,
+    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.74 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.86 1.799-.578.625.283.816.993.436 1.569zm1.6-1.988c-.146.233-.467.345-.718.253-.247-.089-.33-.345-.186-.574.144-.229.453-.34.7-.255.251.09.338.35.204.576zm.406-3.079c-1.88-.449-4.004.459-4.818 2.082-.832 1.66-.03 3.506 1.869 4.095 1.969.612 4.324-.331 5.118-2.062.783-1.704-.168-3.618-2.169-4.115zM20.5 11.93c-.222-.68-.762-.955-1.387-.774-.323.09-.494.194-.636.524l-.011.024-.014.03c-.201.39-.44.746-.723 1.065-1.24 1.392-3.149 1.82-4.275 1.137-.17-.103-.379-.08-.52.067l-.039.055c-.067.095-.117.194-.088.292.034.12.11.215.213.308 1.445 1.298 3.89.756 5.518-.816.53-.512.936-1.13 1.205-1.811l.016-.042c.02-.053.04-.12.043-.173.12-.444-.087-.785-.302-.886zm1.036-1.487c-.524-1.628-1.793-2.543-2.991-2.392-.49.062-.781.466-.703.926.078.465.438.757.926.693.455-.06 1.072.362 1.396 1.315.325.952.03 1.855-.438 2.123-.399.228-.522.672-.292 1.058.23.386.67.54 1.068.314.996-.566 1.558-2.408 1.034-4.037z"/></svg>',
+  },
+  {
+    name: 'Telegram',
+    href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>',
+  },
+  {
+    name: 'QQ',
+    href: `https://connect.qq.com/widget/shareqq/index.html?url=${encodedUrl}&title=${encodedTitle}&desc=${encodedDesc}`,
+    icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.395 15.035a39.548 39.548 0 0 0-1.278-2.833c.004-.013-.002-.025-.003-.038a14.162 14.162 0 0 0 .57-3.921c0-4.168-2.693-7.543-6.684-7.543S7.316 4.075 7.316 8.243a14.162 14.162 0 0 0 .57 3.921c-.001.013-.007.025-.003.038a39.548 39.548 0 0 0-1.278 2.833c-.618 1.53-1.394 4.1-.39 4.893.494.39 1.466-.032 2.418-.676.082.078.176.142.258.221-.31.478-.585 1.016-.685 1.515-.16.795.063 1.31.556 1.31.372 0 .934-.244 1.545-.71.333.155.679.285 1.043.374a4.17 4.17 0 0 0-.168 1.05c0 .627.237.89.586.89.303 0 .654-.212.93-.6.276.388.627.6.93.6.349 0 .586-.263.586-.89a4.17 4.17 0 0 0-.168-1.05c.364-.089.71-.219 1.043-.374.611.466 1.173.71 1.545.71.493 0 .716-.515.556-1.31-.1-.499-.375-1.037-.685-1.515.082-.079.176-.143.258-.221.952.644 1.924 1.066 2.418.676 1.004-.793.228-3.363-.39-4.893z"/></svg>',
+  },
+]
+---
+
+<div class="share-buttons">
+  <span class="share-label">{t('share.title')}</span>
+  <div class="share-icons">
+    {
+      platforms.map((p) => (
+        <a
+          href={p.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="share-btn"
+          aria-label={p.name}
+          title={p.name}
+        >
+          <span set:html={p.icon} />
+        </a>
+      ))
+    }
+    <button
+      class="share-btn share-wechat-btn"
+      aria-label="WeChat"
+      title="WeChat"
+      data-share-url={url}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+        ><path
+          d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm3.68 4.025c-3.781 0-6.843 2.57-6.843 5.742 0 3.172 3.062 5.742 6.843 5.742.715 0 1.403-.1 2.063-.29a.67.67 0 0 1 .553.074l1.47.859a.252.252 0 0 0 .13.04c.123 0 .223-.1.223-.222a.232.232 0 0 0-.038-.164l-.301-1.142a.459.459 0 0 1 .164-.51c1.413-1.037 2.319-2.573 2.319-4.287 0-3.172-3.062-5.742-6.583-5.742zm-2.108 3.237c.496 0 .898.407.898.91a.904.904 0 0 1-.898.91.904.904 0 0 1-.898-.91c0-.503.402-.91.898-.91zm4.217 0c.496 0 .898.407.898.91a.904.904 0 0 1-.898.91.904.904 0 0 1-.898-.91c0-.503.402-.91.898-.91z"
+        ></path></svg
+      >
+    </button>
+    <button
+      class="share-btn share-copy-btn"
+      aria-label={t('share.copyLink')}
+      title={t('share.copyLink')}
+      data-share-url={url}
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        ><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path
+          d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg
+      >
+    </button>
+  </div>
+</div>
+
+<div class="share-wechat-popup" id="share-wechat-popup" style="display:none;">
+  <div class="share-wechat-overlay" data-close-wechat></div>
+  <div class="share-wechat-card">
+    <p class="share-wechat-tip">{t('share.wechatTip')}</p>
+    <canvas id="share-qr-canvas" width="200" height="200"></canvas>
+    <button class="share-wechat-close" data-close-wechat>&times;</button>
+  </div>
+</div>
+
+<script>
+  function initShareButtons() {
+    // Copy link
+    document.querySelectorAll<HTMLButtonElement>('.share-copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const url = btn.dataset.shareUrl
+        if (!url) return
+        try {
+          await navigator.clipboard.writeText(url)
+          btn.classList.add('copied')
+          setTimeout(() => btn.classList.remove('copied'), 2000)
+        } catch {
+          // fallback
+        }
+      })
+    })
+
+    // WeChat QR popup
+    document.querySelectorAll<HTMLButtonElement>('.share-wechat-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const url = btn.dataset.shareUrl
+        const popup = document.getElementById('share-wechat-popup')
+        const canvas = document.getElementById('share-qr-canvas') as HTMLCanvasElement | null
+        if (!url || !popup || !canvas) return
+
+        popup.style.display = 'flex'
+
+        // Dynamic import qrcode-generator
+        try {
+          const qrcode = (await import('qrcode-generator')).default
+          const qr = qrcode(0, 'M')
+          qr.addData(url)
+          qr.make()
+
+          const ctx = canvas.getContext('2d')
+          if (!ctx) return
+          const size = 200
+          const cellSize = size / qr.getModuleCount()
+          ctx.fillStyle = '#ffffff'
+          ctx.fillRect(0, 0, size, size)
+          ctx.fillStyle = '#000000'
+          for (let r = 0; r < qr.getModuleCount(); r++) {
+            for (let c = 0; c < qr.getModuleCount(); c++) {
+              if (qr.isDark(r, c)) {
+                ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize)
+              }
+            }
+          }
+        } catch {
+          // qrcode-generator not available
+        }
+      })
+    })
+
+    // Close popup
+    document.querySelectorAll('[data-close-wechat]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const popup = document.getElementById('share-wechat-popup')
+        if (popup) popup.style.display = 'none'
+      })
+    })
+  }
+
+  initShareButtons()
+  document.addEventListener('astro:page-load', initShareButtons)
+</script>
+
+<style>
+  .share-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--tsuki-space-md);
+    margin-top: var(--tsuki-space-2xl);
+    padding-top: var(--tsuki-space-lg);
+    border-top: 1px solid var(--tsuki-surface-border);
+  }
+
+  .share-label {
+    font-size: var(--tsuki-text-sm);
+    font-weight: 500;
+    color: var(--tsuki-muted-fg);
+    white-space: nowrap;
+  }
+
+  .share-icons {
+    display: flex;
+    gap: var(--tsuki-space-xs);
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--tsuki-radius-md);
+    background: var(--tsuki-surface-muted-soft);
+    border: 1px solid var(--tsuki-surface-border);
+    color: var(--tsuki-muted-fg);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color 150ms,
+      background-color 150ms,
+      border-color 150ms;
+    font-family: inherit;
+  }
+
+  .share-btn:hover {
+    color: var(--tsuki-theme-accent);
+    border-color: color-mix(in srgb, var(--tsuki-theme-accent) 40%, transparent);
+    background: color-mix(in srgb, var(--tsuki-theme-accent) 8%, transparent);
+  }
+
+  .share-copy-btn.copied {
+    color: var(--tsuki-theme-accent);
+    border-color: var(--tsuki-theme-accent);
+  }
+
+  .share-wechat-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .share-wechat-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .share-wechat-card {
+    position: relative;
+    background: var(--tsuki-sidebar-card-bg);
+    border-radius: var(--tsuki-radius-lg);
+    padding: var(--tsuki-space-xl);
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  }
+
+  .share-wechat-tip {
+    margin: 0 0 var(--tsuki-space-md);
+    font-size: var(--tsuki-text-sm);
+    color: var(--tsuki-muted-fg);
+  }
+
+  .share-wechat-close {
+    position: absolute;
+    top: var(--tsuki-space-sm);
+    right: var(--tsuki-space-sm);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--tsuki-muted-fg);
+    cursor: pointer;
+  }
+</style>

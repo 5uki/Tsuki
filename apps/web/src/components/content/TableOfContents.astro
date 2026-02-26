@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from 'astro'
+import { t } from '@/config/tsuki-config'
 
 interface Props {
   headings: MarkdownHeading[]
@@ -20,7 +21,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
 ---
 
 <div class="tsuki-sidebar-card toc-card">
-  <h3 class="tsuki-section-title">目录</h3>
+  <h3 class="tsuki-section-title">{t('toc.title')}</h3>
   {
     displayHeadings.length > 0 ? (
       <div class="toc-wrapper" id="toc-wrapper">
@@ -46,7 +47,7 @@ const headingsWithNumber = displayHeadings.map((heading) => {
         </ul>
       </div>
     ) : (
-      <p class="toc-empty">暂无目录</p>
+      <p class="toc-empty">{t('toc.empty')}</p>
     )
   }
 </div>

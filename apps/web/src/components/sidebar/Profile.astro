@@ -1,5 +1,6 @@
 ---
 import tsukiConfig from '@/config/tsuki-config'
+import { t } from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
 import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
@@ -45,7 +46,11 @@ const resolveIcon = (icon: string) => {
 <div class="tsuki-sidebar-card profile-card">
   {
     safeProfile.avatar && (
-      <a href={safeProfile.avatarLink || '#'} class="avatar-link" aria-label="查看个人资料">
+      <a
+        href={safeProfile.avatarLink || '#'}
+        class="avatar-link"
+        aria-label={t('sidebar.viewProfile')}
+      >
         <span class="avatar-overlay" aria-hidden="true">
           <span class="overlay-icon" set:html={overlayIcon} />
         </span>
@@ -66,17 +71,17 @@ const resolveIcon = (icon: string) => {
 
   {
     stats?.enable && statsData && (
-      <div class="profile-stats" aria-label="站点统计">
+      <div class="profile-stats" aria-label={t('sidebar.siteStats')}>
         <div class="profile-stat-cell">
-          <span class="profile-stat-label">文章</span>
+          <span class="profile-stat-label">{t('sidebar.posts')}</span>
           <span class="profile-stat-value">{statsData.posts.toLocaleString()}</span>
         </div>
         <div class="profile-stat-cell profile-stat-divider">
-          <span class="profile-stat-label">标签</span>
+          <span class="profile-stat-label">{t('sidebar.tags')}</span>
           <span class="profile-stat-value">{statsData.tags.toLocaleString()}</span>
         </div>
         <div class="profile-stat-cell profile-stat-divider">
-          <span class="profile-stat-label">分组</span>
+          <span class="profile-stat-label">{t('sidebar.groups')}</span>
           <span class="profile-stat-value">{statsData.groups.toLocaleString()}</span>
         </div>
       </div>

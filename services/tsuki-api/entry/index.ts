@@ -17,6 +17,10 @@ import { createSessionsAdapter } from '@adapters/sessions'
 import { createGitHubOAuthAdapter } from '@adapters/github-oauth'
 import { createCommentsAdapter } from '@adapters/comments'
 import { createIdempotencyAdapter } from '@adapters/idempotency'
+import { createGitHubRepoAdapter } from '@adapters/github-repo'
+import { createTurnstileAdapter } from '@adapters/turnstile'
+import { createDraftsAdapter } from '@adapters/drafts'
+import { createNotificationsAdapter } from '@adapters/notifications'
 import { sessionMiddleware } from '@api/middleware/session'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -44,13 +48,15 @@ const structuredLogger = createMiddleware<{ Bindings: Env; Variables: AppContext
 )
 app.use('*', structuredLogger)
 
-// 全局中间件：CORS
+// 全局中间件：CORS（支持逗号分隔的多 origin）
 app.use(
   '*',
   cors({
     origin: (origin, c) => {
-      const allowedOrigin = c.env.TSUKI_PUBLIC_ORIGIN
-      if (origin === allowedOrigin) {
+      const allowedOrigins = c.env.TSUKI_PUBLIC_ORIGIN.split(',')
+        .map((s: string) => s.trim())
+        .filter(Boolean)
+      if (allowedOrigins.includes(origin)) {
         return origin
       }
       return null
@@ -71,6 +77,17 @@ app.use('*', async (c, next) => {
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => !isNaN(n))
 
+  // GitHub Repo adapter (optional)
+  const githubRepo =
+    c.env.GITHUB_TOKEN && c.env.GITHUB_REPO_OWNER && c.env.GITHUB_REPO_NAME
+      ? createGitHubRepoAdapter(c.env.GITHUB_TOKEN, c.env.GITHUB_REPO_OWNER, c.env.GITHUB_REPO_NAME)
+      : null
+
+  // Turnstile adapter (optional)
+  const turnstile = c.env.CF_TURNSTILE_SECRET_KEY
+    ? createTurnstileAdapter(c.env.CF_TURNSTILE_SECRET_KEY)
+    : null
+
   c.set('ports', {
     settings: createSettingsAdapter(c.env.DB),
     users: createUsersAdapter(c.env.DB, adminGithubIds),
@@ -81,6 +98,10 @@ app.use('*', async (c, next) => {
     ),
     comments: createCommentsAdapter(c.env.DB),
     idempotency: createIdempotencyAdapter(c.env.DB),
+    githubRepo,
+    turnstile,
+    drafts: createDraftsAdapter(c.env.DB),
+    notifications: createNotificationsAdapter(c.env.DB),
   })
 
   await next()
@@ -162,4 +183,31 @@ app.notFound((c) => {
   )
 })
 
-export default app
+export default {
+  fetch: app.fetch,
+  async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext) {
+    const draftsPort = createDraftsAdapter(env.DB)
+    const githubRepoPort =
+      env.GITHUB_TOKEN && env.GITHUB_REPO_OWNER && env.GITHUB_REPO_NAME
+        ? createGitHubRepoAdapter(env.GITHUB_TOKEN, env.GITHUB_REPO_OWNER, env.GITHUB_REPO_NAME)
+        : null
+
+    if (!githubRepoPort) {
+      console.log(
+        JSON.stringify({
+          level: 'warn',
+          message: 'Scheduled: GitHub Repo not configured, skipping',
+        })
+      )
+      return
+    }
+
+    const { publishScheduledDrafts } = await import('@usecases/admin-drafts')
+    const count = await publishScheduledDrafts({ draftsPort, githubRepoPort })
+    if (count > 0) {
+      console.log(
+        JSON.stringify({ level: 'info', message: `Scheduled: published ${count} draft(s)` })
+      )
+    }
+  },
+}

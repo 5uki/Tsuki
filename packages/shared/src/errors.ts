@@ -10,6 +10,9 @@ export const ErrorCodes = {
   RATE_LIMITED: 'RATE_LIMITED',
   COMMENT_DEPTH_EXCEEDED: 'COMMENT_DEPTH_EXCEEDED',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
+  GITHUB_API_ERROR: 'GITHUB_API_ERROR',
+  TURNSTILE_FAILED: 'TURNSTILE_FAILED',
+  COMMIT_CONFLICT: 'COMMIT_CONFLICT',
 } as const
 
 export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes]
@@ -25,6 +28,9 @@ export const ErrorMessages: Record<ErrorCode, string> = {
   RATE_LIMITED: '请求过于频繁，请稍后再试',
   COMMENT_DEPTH_EXCEEDED: '评论层级已达上限',
   INTERNAL_ERROR: '服务器内部错误',
+  GITHUB_API_ERROR: 'GitHub API 请求失败',
+  TURNSTILE_FAILED: '人机验证失败',
+  COMMIT_CONFLICT: '提交冲突，请刷新后重试',
 }
 
 /**
@@ -46,4 +52,12 @@ export class ApiException extends Error {
     super(message || ErrorMessages[code])
     this.name = 'ApiException'
   }
+}
+
+/**
+ * Safely extract a human-readable message from an unknown error value.
+ */
+export function extractErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  return String(err)
 }

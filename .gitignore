@@ -27,9 +27,15 @@
 !pnpm-workspace.yaml
 !tsconfig.base.json
 !tsconfig.json
-!tsuki.config.ts
+!tsuki.config.json
 !README.md
 !README.zh-CN.md
+
+# ── CI / Tooling ───────────────────────────
+!.github/
+!.github/**
+!.husky/
+!.husky/**
 
 # Generated image optimization artifacts
 contents/.tsuki-avif/

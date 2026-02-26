@@ -6,16 +6,23 @@
   "description": "A full-stack blogging framework built on Cloudflare + GitHub",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build",
+    "build": "pnpm -r build && mkdir -p dist/admin && cp -r apps/admin/dist/* dist/admin/ && cp apps/web/public/_redirects dist/_redirects 2>/dev/null || true",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,astro}\""
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,astro}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --max-warnings 0",
+    "*.{ts,tsx,js,jsx,json,md,css,astro}": "prettier --write"
   },
   "devDependencies": {
     "@tsuki/config": "workspace:*",
     "@types/node": "^22.10.5",
+    "husky": "^9.1.0",
     "lighthouse": "^13.0.3",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.4.2",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.7.3"

@@ -18,6 +18,7 @@ interface CommentJoinRow {
   body_markdown: string
   body_html: string
   status: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
+  pinned: number
   created_at: number
   updated_at: number
   deleted_at: number | null
@@ -34,7 +35,7 @@ interface CommentJoinRow {
 
 const SELECT_WITH_AUTHOR = `
   c.id, c.target_type, c.target_id, c.parent_id, c.depth,
-  c.author_user_id, c.body_markdown, c.body_html, c.status,
+  c.author_user_id, c.body_markdown, c.body_html, c.status, c.pinned,
   c.created_at, c.updated_at, c.deleted_at, c.ip_hash, c.user_agent_hash,
   u.id AS author_id, u.github_id AS author_github_id, u.login AS author_login,
   u.avatar_url AS author_avatar_url, u.profile_url AS author_profile_url,
@@ -83,7 +84,10 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
         LIMIT ?
       `
 
-      const { results } = await db.prepare(sql).bind(...params).all<CommentJoinRow>()
+      const { results } = await db
+        .prepare(sql)
+        .bind(...params)
+        .all<CommentJoinRow>()
       const rows = results ?? []
 
       let nextCursor: string | null = null
@@ -141,6 +145,7 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
         body_markdown: input.body_markdown,
         body_html: input.body_html,
         status: 'visible',
+        pinned: 0,
         created_at: now,
         updated_at: now,
         deleted_at: null,
@@ -152,7 +157,9 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
     async update(id, bodyMarkdown, bodyHtml): Promise<void> {
       const now = Date.now()
       await db
-        .prepare('UPDATE comments SET body_markdown = ?, body_html = ?, updated_at = ? WHERE id = ?')
+        .prepare(
+          'UPDATE comments SET body_markdown = ?, body_html = ?, updated_at = ? WHERE id = ?'
+        )
         .bind(bodyMarkdown, bodyHtml, now, id)
         .run()
     },
@@ -161,9 +168,7 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
       const now = Date.now()
       const status = deletedBy === 'admin' ? 'deleted_by_admin' : 'deleted_by_user'
       await db
-        .prepare(
-          'UPDATE comments SET status = ?, deleted_at = ?, updated_at = ? WHERE id = ?'
-        )
+        .prepare('UPDATE comments SET status = ?, deleted_at = ?, updated_at = ? WHERE id = ?')
         .bind(status, now, now, id)
         .run()
     },
@@ -187,9 +192,7 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
     async countRecentByUser(userId, windowMs): Promise<number> {
       const since = Date.now() - windowMs
       const row = await db
-        .prepare(
-          'SELECT COUNT(*) AS cnt FROM comments WHERE author_user_id = ? AND created_at > ?'
-        )
+        .prepare('SELECT COUNT(*) AS cnt FROM comments WHERE author_user_id = ? AND created_at > ?')
         .bind(userId, since)
         .first<{ cnt: number }>()
       return row?.cnt ?? 0
@@ -198,9 +201,7 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
     async countRecentByIpHash(ipHash, windowMs): Promise<number> {
       const since = Date.now() - windowMs
       const row = await db
-        .prepare(
-          'SELECT COUNT(*) AS cnt FROM comments WHERE ip_hash = ? AND created_at > ?'
-        )
+        .prepare('SELECT COUNT(*) AS cnt FROM comments WHERE ip_hash = ? AND created_at > ?')
         .bind(ipHash, since)
         .first<{ cnt: number }>()
       return row?.cnt ?? 0
@@ -210,7 +211,9 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
       if (targetType === 'post') {
         // target_id = post.slug
         const row = await db
-          .prepare("SELECT 1 AS ok FROM posts WHERE slug = ? AND status IN ('published', 'unlisted') LIMIT 1")
+          .prepare(
+            "SELECT 1 AS ok FROM posts WHERE slug = ? AND status IN ('published', 'unlisted') LIMIT 1"
+          )
           .bind(targetId)
           .first<{ ok: number }>()
         return row !== null
@@ -262,7 +265,10 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
         LIMIT ?
       `
 
-      const { results } = await db.prepare(sql).bind(...params).all<CommentJoinRow>()
+      const { results } = await db
+        .prepare(sql)
+        .bind(...params)
+        .all<CommentJoinRow>()
       const rows = results ?? []
 
       let nextCursor: string | null = null
@@ -275,6 +281,22 @@ export function createCommentsAdapter(db: D1Database): CommentsPort {
       }
 
       return { items: rows as CommentWithAuthorRecord[], next_cursor: nextCursor }
+    },
+
+    async pin(id): Promise<void> {
+      const now = Date.now()
+      await db
+        .prepare('UPDATE comments SET pinned = 1, updated_at = ? WHERE id = ?')
+        .bind(now, id)
+        .run()
+    },
+
+    async unpin(id): Promise<void> {
+      const now = Date.now()
+      await db
+        .prepare('UPDATE comments SET pinned = 0, updated_at = ? WHERE id = ?')
+        .bind(now, id)
+        .run()
     },
   }
 }

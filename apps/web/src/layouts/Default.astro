@@ -4,8 +4,6 @@ import Header from '@/components/layout/Header.astro'
 import Banner from '@/components/layout/Banner.astro'
 import Footer from '@/components/layout/Footer.astro'
 import BackToTop from '@/components/layout/BackToTop.astro'
-import SearchModal from '@/components/content/SearchModal.astro'
-import LoginModal from '@/components/layout/LoginModal.astro'
 import SakuraEffect from '@/components/layout/SakuraEffect.astro'
 import MainLayout from '@/components/layout/MainLayout.astro'
 import CalendarCard from '@/components/sidebar/CalendarCard.astro'
@@ -88,8 +86,6 @@ const calendarIndex = needsCalendar ? await getCalendarIndex() : null
       <Footer />
     </div>
     <BackToTop />
-    <SearchModal />
-    <LoginModal />
     <SakuraEffect />
   </div>
 </Base>

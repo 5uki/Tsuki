@@ -3,10 +3,47 @@
  * adapters 必须实现这些接口
  */
 
-import type {
-  SettingsPublicDTO,
-  PaginatedResponse,
-} from './dto'
+import type { SettingsPublicDTO, PaginatedResponse, AdminFileChange } from './dto'
+
+/**
+ * 通知数据库记录
+ */
+export interface NotificationRecord {
+  id: string
+  user_id: string
+  type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+  actor_id: string | null
+  comment_id: string | null
+  target_type: 'post' | 'moment'
+  target_id: string
+  is_read: number
+  created_at: number
+}
+
+/**
+ * 通知端口
+ */
+export interface NotificationsPort {
+  create(input: {
+    id: string
+    user_id: string
+    type: 'comment_reply' | 'comment_pinned' | 'comment_hidden' | 'comment_deleted'
+    actor_id: string | null
+    comment_id: string | null
+    target_type: 'post' | 'moment'
+    target_id: string
+  }): Promise<void>
+
+  listByUser(
+    userId: string,
+    limit: number,
+    cursor: string | null
+  ): Promise<PaginatedResponse<NotificationRecord>>
+
+  countUnread(userId: string): Promise<number>
+
+  markRead(userId: string, ids?: string[]): Promise<void>
+}
 
 /**
  * 设置端口
@@ -28,6 +65,7 @@ export interface CommentRecord {
   body_markdown: string
   body_html: string
   status: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
+  pinned: number
   created_at: number
   updated_at: number
   deleted_at: number | null
@@ -109,6 +147,12 @@ export interface CommentsPort {
       status?: 'visible' | 'hidden' | 'deleted_by_user' | 'deleted_by_admin'
     }
   ): Promise<PaginatedResponse<CommentWithAuthorRecord>>
+
+  /** 管理员：置顶评论 */
+  pin(id: string): Promise<void>
+
+  /** 管理员：取消置顶评论 */
+  unpin(id: string): Promise<void>
 }
 
 /**
@@ -176,7 +220,11 @@ export interface GitHubOAuthPort {
  */
 export interface IdempotencyPort {
   /** 查找已缓存的响应 */
-  find(route: string, userId: string | null, idemKey: string): Promise<{
+  find(
+    route: string,
+    userId: string | null,
+    idemKey: string
+  ): Promise<{
     response_status: number
     response_json: string
   } | null>
@@ -194,4 +242,97 @@ export interface IdempotencyPort {
 
   /** 清理过期条目 */
   cleanup(): Promise<void>
+}
+
+/**
+ * GitHub Repo 端口（管理后台内容操作）
+ */
+export interface GitHubRepoPort {
+  /** 读取文件内容 + SHA */
+  getFile(path: string): Promise<{ content: string; sha: string }>
+
+  /** 列出目录文件 */
+  listDirectory(
+    path: string
+  ): Promise<Array<{ name: string; path: string; type: 'file' | 'dir'; sha: string }>>
+
+  /** 批量提交（通过 Git Trees API 创建单次提交） */
+  batchCommit(changes: AdminFileChange[], message: string): Promise<{ sha: string; url: string }>
+}
+
+/**
+ * Cloudflare Turnstile 验证端口
+ */
+export interface TurnstilePort {
+  /** 验证 Turnstile token */
+  verify(token: string, remoteIp: string): Promise<boolean>
+}
+
+/**
+ * 草稿数据库记录
+ */
+export interface DraftRecord {
+  id: string
+  slug: string
+  title: string
+  summary: string
+  cover_url: string | null
+  status: 'draft'
+  scheduled_at: number | null
+  updated_at: number
+  created_at: number
+  content_markdown: string
+  content_html: string
+  content_text: string
+  reading_time_minutes: number
+}
+
+/**
+ * 草稿端口
+ */
+export interface DraftsPort {
+  /** 创建草稿 */
+  create(input: {
+    id: string
+    slug: string
+    title: string
+    summary: string
+    cover_url: string | null
+    content_markdown: string
+    content_html: string
+    content_text: string
+    reading_time_minutes: number
+    scheduled_at: number | null
+  }): Promise<DraftRecord>
+
+  /** 更新草稿 */
+  update(
+    id: string,
+    input: {
+      slug?: string
+      title?: string
+      summary?: string
+      cover_url?: string | null
+      content_markdown?: string
+      content_html?: string
+      content_text?: string
+      reading_time_minutes?: number
+      scheduled_at?: number | null
+    }
+  ): Promise<DraftRecord>
+
+  /** 按 ID 查询 */
+  getById(id: string): Promise<DraftRecord | null>
+
+  /** 按 slug 查询 */
+  getBySlug(slug: string): Promise<DraftRecord | null>
+
+  /** 列出所有草稿 */
+  list(): Promise<DraftRecord[]>
+
+  /** 删除草稿 */
+  delete(id: string): Promise<void>
+
+  /** 列出到期的定时草稿 */
+  listScheduledDue(nowMs: number): Promise<DraftRecord[]>
 }
