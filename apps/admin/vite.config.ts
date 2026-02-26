@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'node:fs'
-import path from 'node:path'
+import path, { resolve } from 'node:path'
 
 function resolveFaviconHref() {
   try {
@@ -17,6 +17,7 @@ function resolveFaviconHref() {
 const faviconHref = resolveFaviconHref()
 
 export default defineConfig({
+  base: '/admin/',
   plugins: [
     react(),
     {
@@ -26,6 +27,20 @@ export default defineConfig({
       },
     },
   ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
+  server: {
+    port: 5174,
+    proxy: {
+      '/v1': {
+        target: 'http://localhost:8787',
+        changeOrigin: true,
+      },
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify('0.0.1'),
   },
