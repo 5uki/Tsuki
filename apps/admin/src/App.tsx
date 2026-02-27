@@ -10,6 +10,7 @@ import SettingsPage from '@/pages/SettingsPage'
 import CommentsPage from '@/pages/CommentsPage'
 import FriendsPage from '@/pages/FriendsPage'
 import LoginPage from '@/pages/LoginPage'
+import SetupPage from '@/pages/SetupPage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <PendingChangesProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/setup" element={<SetupPage />} />
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
                 <Route index element={<DashboardPage />} />

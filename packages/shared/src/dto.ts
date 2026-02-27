@@ -218,3 +218,26 @@ export interface NotificationDTO {
   is_read: boolean
   created_at: TimeDTO
 }
+
+// 首次启用向导配置
+export interface SetupConfigDTO {
+  public_origin: string
+  admin_github_ids: string
+  github_oauth_client_id: string
+  github_oauth_client_secret: string
+  github_repo_owner: string
+  github_repo_name: string
+  github_token: string
+}
+
+export interface SetupStatusDTO {
+  ready: boolean
+  mode: 'env' | 'd1' | 'mixed' | 'none'
+  missing: string[]
+  config: SetupConfigDTO
+  guides: {
+    oauth_callback_url: string
+    oauth_note: string
+    publish_note: string
+  }
+}

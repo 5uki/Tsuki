@@ -22,6 +22,7 @@ import { createTurnstileAdapter } from '@adapters/turnstile'
 import { createDraftsAdapter } from '@adapters/drafts'
 import { createNotificationsAdapter } from '@adapters/notifications'
 import { sessionMiddleware } from '@api/middleware/session'
+import { resolveRuntimeConfig } from '@atoms/runtime-config'
 
 const app = new Hono<{ Bindings: Env; Variables: AppContext }>()
 
@@ -72,15 +73,22 @@ app.use(
 app.use('*', async (c, next) => {
   c.set('requestId', crypto.randomUUID())
 
-  const adminGithubIds = (c.env.TSUKI_ADMIN_GITHUB_IDS || '')
+  const settingsPort = createSettingsAdapter(c.env.DB)
+  const runtime = await resolveRuntimeConfig(c.env, settingsPort)
+
+  const adminGithubIds = (runtime.config.adminGithubIds || '')
     .split(',')
     .map((s) => parseInt(s.trim(), 10))
     .filter((n) => !isNaN(n))
 
   // GitHub Repo adapter (optional)
   const githubRepo =
-    c.env.GITHUB_TOKEN && c.env.GITHUB_REPO_OWNER && c.env.GITHUB_REPO_NAME
-      ? createGitHubRepoAdapter(c.env.GITHUB_TOKEN, c.env.GITHUB_REPO_OWNER, c.env.GITHUB_REPO_NAME)
+    runtime.config.githubToken && runtime.config.githubRepoOwner && runtime.config.githubRepoName
+      ? createGitHubRepoAdapter(
+          runtime.config.githubToken,
+          runtime.config.githubRepoOwner,
+          runtime.config.githubRepoName
+        )
       : null
 
   // Turnstile adapter (optional)
@@ -89,12 +97,12 @@ app.use('*', async (c, next) => {
     : null
 
   c.set('ports', {
-    settings: createSettingsAdapter(c.env.DB),
+    settings: settingsPort,
     users: createUsersAdapter(c.env.DB, adminGithubIds),
     sessions: createSessionsAdapter(c.env.DB),
     githubOAuth: createGitHubOAuthAdapter(
-      c.env.GITHUB_OAUTH_CLIENT_ID,
-      c.env.GITHUB_OAUTH_CLIENT_SECRET
+      runtime.config.oauthClientId,
+      runtime.config.oauthClientSecret
     ),
     comments: createCommentsAdapter(c.env.DB),
     idempotency: createIdempotencyAdapter(c.env.DB),
@@ -186,10 +194,16 @@ app.notFound((c) => {
 export default {
   fetch: app.fetch,
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext) {
+    const settingsPort = createSettingsAdapter(env.DB)
+    const runtime = await resolveRuntimeConfig(env, settingsPort)
     const draftsPort = createDraftsAdapter(env.DB)
     const githubRepoPort =
-      env.GITHUB_TOKEN && env.GITHUB_REPO_OWNER && env.GITHUB_REPO_NAME
-        ? createGitHubRepoAdapter(env.GITHUB_TOKEN, env.GITHUB_REPO_OWNER, env.GITHUB_REPO_NAME)
+      runtime.config.githubToken && runtime.config.githubRepoOwner && runtime.config.githubRepoName
+        ? createGitHubRepoAdapter(
+            runtime.config.githubToken,
+            runtime.config.githubRepoOwner,
+            runtime.config.githubRepoName
+          )
         : null
 
     if (!githubRepoPort) {
