@@ -32,6 +32,7 @@ export const GET: APIRoute = async ({ site }) => {
     guid: string
     pubDate: string
     description: string
+    category: 'post' | 'moment'
     publishedTs: number
   }
 
@@ -46,6 +47,7 @@ export const GET: APIRoute = async ({ site }) => {
       guid: `${siteUrl}/posts/${post.slug}`,
       pubDate: toRfc822(post.frontmatter.publishedAt),
       description: post.frontmatter.summary ?? '',
+      category: 'post',
       publishedTs: ts,
     })
   }
@@ -65,6 +67,7 @@ export const GET: APIRoute = async ({ site }) => {
       guid: `${siteUrl}/moments/${moment.id}`,
       pubDate: toRfc822(moment.frontmatter.publishedAt),
       description: bodyExcerpt,
+      category: 'moment',
       publishedTs: ts,
     })
   }
@@ -89,6 +92,7 @@ ${feedItems
       <guid>${item.guid}</guid>
       <pubDate>${item.pubDate}</pubDate>
       <description>${escapeXml(item.description)}</description>
+      <category>${item.category}</category>
     </item>`
   )
   .join('\n')}

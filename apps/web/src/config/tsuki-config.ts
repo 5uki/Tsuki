@@ -1,4 +1,5 @@
 import { defineConfig, navIcons } from '@tsuki/config'
+import type { TsukiUserConfig } from '@tsuki/config'
 import { createT } from '@tsuki/i18n'
 import configJson from '../../../../tsuki.config.json'
 
@@ -11,7 +12,7 @@ const navIconMap: Record<string, string> = {
 }
 
 const config = defineConfig({
-  ...configJson,
+  ...(configJson as TsukiUserConfig),
   nav: (configJson.nav ?? []).map((link) => ({
     ...link,
     icon: navIconMap[link.href] ?? undefined,

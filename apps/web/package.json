@@ -17,6 +17,8 @@
     "@astrojs/react": "^4.2.0",
     "@expressive-code/plugin-collapsible-sections": "^0.41.6",
     "@expressive-code/plugin-line-numbers": "^0.41.6",
+    "@iconify-json/fa6-brands": "^1.2.1",
+    "@iconify-json/fa6-solid": "^1.2.1",
     "@iconify-json/material-symbols": "^1.2.54",
     "@swup/astro": "^1.8.0",
     "@tsuki/config": "workspace:*",

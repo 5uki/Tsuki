@@ -2,7 +2,8 @@
 import tsukiConfig from '@/config/tsuki-config'
 import { t } from '@/config/tsuki-config'
 import type { SidebarStats } from '@/lib/types/content'
-import { iconRegistry, uiIcons } from '@tsuki/shared/icons'
+import { iconRegistry, uiIcons, isIconifyName } from '@tsuki/shared/icons'
+import { Icon } from 'astro-icon/components'
 import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 
 interface Props {
@@ -29,7 +30,16 @@ const isImageIcon = (icon: string) =>
   /^data:image\//i.test(icon) ||
   /\.(svg|png|jpe?g|webp|gif)$/i.test(icon)
 
-const resolveIcon = (icon: string) => {
+type ResolvedIcon =
+  | { type: 'iconify'; value: string }
+  | { type: 'inline'; value: string }
+  | { type: 'image'; value: string }
+  | { type: 'text'; value: string }
+
+const resolveIcon = (icon: string): ResolvedIcon => {
+  if (isIconifyName(icon)) {
+    return { type: 'iconify', value: icon }
+  }
   if (iconRegistry[icon]) {
     return { type: 'inline', value: iconRegistry[icon] }
   }
@@ -101,7 +111,9 @@ const resolveIcon = (icon: string) => {
               class="link-icon-btn"
               aria-label={link.name}
             >
-              {icon.type === 'image' ? (
+              {icon.type === 'iconify' ? (
+                <Icon name={icon.value} class="link-icon-svg" width="20" height="20" />
+              ) : icon.type === 'image' ? (
                 <img
                   src={icon.value}
                   alt=""

@@ -3,6 +3,9 @@
  *
  * 仅作用于 .main-content（中间内容区），
  * 侧边栏和 Footer 等不变区域保持静止。
+ *
+ * 注意：animationClass 配置为 'transition-'，
+ * 因此 Swup 在 <html> 上添加的类名前缀为 transition-（而非默认的 is-）。
  */
 
 /* ── 进入：从下方淡入滑入 ── */
@@ -13,14 +16,14 @@
 }
 
 /* ── 离开：更快的缓动 ── */
-html.is-leaving .transition-main {
+html.transition-leaving .transition-main {
   transition:
     opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
     transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
 /* ── 动画目标状态 ── */
-html.is-animating .transition-main {
+html.transition-animating .transition-main {
   opacity: 0;
   transform: translateY(1rem);
 }

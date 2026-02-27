@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ site }) => {
   const entries: SitemapEntry[] = [
     { loc: `${siteUrl}/`, changefreq: 'daily', priority: '1.0' },
     { loc: `${siteUrl}/posts`, changefreq: 'daily', priority: '0.8' },
-    { loc: `${siteUrl}/moments`, changefreq: 'daily', priority: '0.8' },
+    { loc: `${siteUrl}/moments`, changefreq: 'daily', priority: '0.7' },
     { loc: `${siteUrl}/about`, changefreq: 'monthly', priority: '0.5' },
   ]
 
@@ -47,7 +47,7 @@ export const GET: APIRoute = async ({ site }) => {
       loc: `${siteUrl}/posts/${post.slug}`,
       lastmod: toIsoDate(post.frontmatter.publishedAt),
       changefreq: 'weekly',
-      priority: '0.6',
+      priority: '0.7',
     })
   }
 
@@ -55,8 +55,8 @@ export const GET: APIRoute = async ({ site }) => {
     entries.push({
       loc: `${siteUrl}/moments/${moment.id}`,
       lastmod: toIsoDate(moment.frontmatter.publishedAt),
-      changefreq: 'weekly',
-      priority: '0.6',
+      changefreq: 'monthly',
+      priority: '0.4',
     })
   }
 
