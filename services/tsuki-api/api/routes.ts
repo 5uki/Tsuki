@@ -13,6 +13,7 @@ import { settingsRoutes } from './settings'
 import { adminContentRoutes } from './admin-content'
 import { notificationsRoutes } from './notifications'
 import { requireAdmin } from './middleware/guards'
+import { setupRoutes } from './setup'
 
 export function createRoutes() {
   const api = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -21,6 +22,7 @@ export function createRoutes() {
   api.route('/comments', commentsRoutes())
   api.route('/settings', settingsRoutes())
   api.route('/notifications', notificationsRoutes())
+  api.route('/setup', setupRoutes())
 
   // 管理员路由组
   const admin = new Hono<{ Bindings: Env; Variables: AppContext }>()
@@ -41,3 +43,4 @@ export * from './auth'
 export * from './comments'
 export * from './settings'
 export * from './admin-content'
+export * from './setup'

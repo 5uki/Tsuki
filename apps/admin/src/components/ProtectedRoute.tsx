@@ -1,16 +1,31 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/stores/auth'
+import { useEffect, useState } from 'react'
+import { fetchSetupStatus } from '@/api/setup'
 
 export default function ProtectedRoute() {
   const { user, loading } = useAuth()
+  const [setupReady, setSetupReady] = useState(true)
+  const [setupLoading, setSetupLoading] = useState(true)
 
-  if (loading) {
+  useEffect(() => {
+    fetchSetupStatus()
+      .then((status) => setSetupReady(status.ready))
+      .catch(() => setSetupReady(true))
+      .finally(() => setSetupLoading(false))
+  }, [])
+
+  if (loading || setupLoading) {
     return (
       <div className="auth-loading">
         <div className="spinner" />
         <p>验证登录状态...</p>
       </div>
     )
+  }
+
+  if (!setupReady) {
+    return <Navigate to="/setup" replace />
   }
 
   if (!user) {

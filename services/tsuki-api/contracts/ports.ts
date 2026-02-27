@@ -50,6 +50,8 @@ export interface NotificationsPort {
  */
 export interface SettingsPort {
   getPublicSettings(): Promise<SettingsPublicDTO>
+  getValue<T>(key: string): Promise<T | null>
+  setValue(key: string, value: unknown): Promise<void>
 }
 
 /**

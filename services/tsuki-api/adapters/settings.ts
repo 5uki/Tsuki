@@ -42,15 +42,18 @@ export function createSettingsAdapter(db: D1Database): SettingsPort {
         }
 
         return {
-          site_title: typeof map.get('site_title') === 'string'
-            ? (map.get('site_title') as string)
-            : DEFAULT_SETTINGS.site_title,
-          site_description: typeof map.get('site_description') === 'string'
-            ? (map.get('site_description') as string)
-            : DEFAULT_SETTINGS.site_description,
-          default_theme: typeof map.get('default_theme') === 'string'
-            ? (map.get('default_theme') as string)
-            : DEFAULT_SETTINGS.default_theme,
+          site_title:
+            typeof map.get('site_title') === 'string'
+              ? (map.get('site_title') as string)
+              : DEFAULT_SETTINGS.site_title,
+          site_description:
+            typeof map.get('site_description') === 'string'
+              ? (map.get('site_description') as string)
+              : DEFAULT_SETTINGS.site_description,
+          default_theme:
+            typeof map.get('default_theme') === 'string'
+              ? (map.get('default_theme') as string)
+              : DEFAULT_SETTINGS.default_theme,
           nav_links: Array.isArray(map.get('nav_links'))
             ? (map.get('nav_links') as NavLink[])
             : DEFAULT_SETTINGS.nav_links,
@@ -58,6 +61,34 @@ export function createSettingsAdapter(db: D1Database): SettingsPort {
       } catch {
         return DEFAULT_SETTINGS
       }
+    },
+
+    async getValue<T>(key: string): Promise<T | null> {
+      try {
+        const row = await db
+          .prepare('SELECT value_json FROM settings WHERE key = ?')
+          .bind(key)
+          .first<{ value_json: string }>()
+
+        if (!row) return null
+        const parsed = JSON.parse(row.value_json) as { value?: T }
+        return parsed.value ?? null
+      } catch {
+        return null
+      }
+    },
+
+    async setValue(key: string, value: unknown): Promise<void> {
+      const now = Date.now()
+      const valueJson = JSON.stringify({ value })
+      await db
+        .prepare(
+          `INSERT INTO settings (key, value_json, updated_at)
+           VALUES (?, ?, ?)
+           ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at`
+        )
+        .bind(key, valueJson, now)
+        .run()
     },
   }
 }
