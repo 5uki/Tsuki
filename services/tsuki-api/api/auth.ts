@@ -68,7 +68,8 @@ export function authRoutes() {
     const ip = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown'
     const ua = c.req.header('User-Agent') || 'unknown'
 
-    const sessionTtlMs = parseInt(c.env.TSUKI_SESSION_TTL_MS, 10) || 1209600000
+    const config = c.get('resolvedConfig')
+    const sessionTtlMs = parseInt(config.TSUKI_SESSION_TTL_MS, 10) || 1209600000
     const ports = c.get('ports')
 
     const result = await handleGithubCallback({
@@ -78,7 +79,7 @@ export function authRoutes() {
       returnTo: storedData.returnTo,
       ip,
       ua,
-      hashSalt: c.env.TSUKI_CSRF_SALT,
+      hashSalt: config.TSUKI_CSRF_SALT,
       sessionTtlMs,
       oauthPort: ports.githubOAuth,
       usersPort: ports.users,
@@ -97,7 +98,7 @@ export function authRoutes() {
     c.header('Set-Cookie', clearOAuthCookie, { append: true })
 
     // 重定向到前端域名（API 与前端跨域，return_to 是前端路径）
-    const frontendOrigin = c.env.TSUKI_PUBLIC_ORIGIN
+    const frontendOrigin = config.TSUKI_PUBLIC_ORIGIN.split(',')[0]?.trim() || ''
     return c.redirect(`${frontendOrigin}${result.returnTo}`, 302)
   })
 

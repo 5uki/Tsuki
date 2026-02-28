@@ -1,0 +1,84 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # ── 创建/查找 D1 数据库 ──
+      - name: Setup D1 Database
+        id: d1
+        run: |
+          DB_ID=$(npx wrangler d1 list --json 2>/dev/null | \
+            node -e "
+              let d='';
+              process.stdin.on('data',c=>d+=c);
+              process.stdin.on('end',()=>{
+                try{const r=JSON.parse(d);const m=r.find(x=>x.name==='tsuki_db');if(m)console.log(m.uuid)}catch{}
+              })" || true)
+          if [ -z "$DB_ID" ]; then
+            CREATE_OUT=$(npx wrangler d1 create tsuki_db 2>&1)
+            DB_ID=$(echo "$CREATE_OUT" | grep -oP 'database_id\s*=\s*"\K[^"]+')
+          fi
+          echo "db_id=$DB_ID" >> "$GITHUB_OUTPUT"
+          sed -i "s/placeholder-replace-with-actual-id/$DB_ID/" services/tsuki-api/wrangler.toml
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # ── 执行 D1 迁移 ──
+      - name: Run D1 Migrations
+        run: npx wrangler d1 migrations apply tsuki_db --remote
+        working-directory: services/tsuki-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # ── 部署 Worker API（自动注入 git 仓库信息） ──
+      - name: Deploy Worker
+        id: worker
+        run: |
+          DEPLOY_OUT=$(npx wrangler deploy \
+            --var GITHUB_REPO_OWNER:${{ github.repository_owner }} \
+            --var GITHUB_REPO_NAME:${{ github.event.repository.name }} \
+            2>&1)
+          echo "$DEPLOY_OUT"
+          WORKER_URL=$(echo "$DEPLOY_OUT" | grep -oP 'https://[^\s]+\.workers\.dev' | head -1)
+          echo "url=$WORKER_URL" >> "$GITHUB_OUTPUT"
+        working-directory: services/tsuki-api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # ── 构建前端（注入 Worker URL 作为 API 地址） ──
+      - name: Build
+        run: pnpm build
+        env:
+          PUBLIC_TSUKI_API_BASE: ${{ steps.worker.outputs.url }}/v1
+
+      # ── 部署 Pages ──
+      - name: Deploy Pages
+        run: npx wrangler pages deploy dist --project-name=tsuki
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # ── 输出 Setup URL ──
+      - name: Setup Instructions
+        run: |
+          echo "::notice::Deployment complete! Visit ${{ steps.worker.outputs.url }}/setup to configure your blog."
