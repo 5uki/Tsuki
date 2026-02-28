@@ -2,7 +2,7 @@
 
 [English README](./README.md)
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki/tree/main/services/tsuki-api)
 
 Tsuki 是一个面向 Cloudflare 部署的博客模板（Astro + Workers），目标是”可直接上线”，而不是仅用于演示。
 

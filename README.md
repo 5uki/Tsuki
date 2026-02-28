@@ -2,7 +2,7 @@
 
 [中文文档（README.zh-CN.md）](./README.zh-CN.md)
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki/tree/main/services/tsuki-api)
 
 Tsuki is a Cloudflare-first blogging template built with Astro + Workers.
 It is designed for real deployment, not demo-only usage.
