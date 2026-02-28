@@ -9,12 +9,22 @@ It is designed for real deployment, not demo-only usage.
 
 ## One-Click Deploy
 
-1. Click the **Deploy to Cloudflare** button above
-2. It will fork the repo and trigger the GitHub Actions deploy workflow
-3. Set `CF_API_TOKEN` and `CF_ACCOUNT_ID` as repository secrets
-4. The workflow creates a D1 database, runs migrations, and deploys Worker + Pages
-5. Visit your Worker URL at `/setup` to complete first-time configuration (GitHub OAuth, Admin ID)
-6. Done! Your blog is live
+```bash
+pnpm install
+pnpm run setup
+```
+
+This single command will:
+
+1. Log in to Cloudflare (if needed)
+2. Create a D1 database and run migrations
+3. Deploy the Worker API
+4. Build and deploy the frontend (Pages)
+5. Print the `/setup` URL for first-time configuration
+
+Then visit your Worker URL at `/setup` to configure GitHub OAuth and admin settings.
+
+> **CI/CD (optional)**: To enable automatic deployment on push, set the repository variable `CF_DEPLOY_ENABLED=true` and add `CF_API_TOKEN` / `CF_ACCOUNT_ID` as repository secrets.
 
 ## What this template includes
 

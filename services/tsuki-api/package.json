@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "setup": "node scripts/setup.js",
+    "setup:worker": "node scripts/setup.js --worker-only",
     "lint": "eslint . --ext .ts --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

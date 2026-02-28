@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build && mkdir -p dist/admin && cp -r apps/admin/dist/* dist/admin/ && cp apps/web/public/_redirects dist/_redirects 2>/dev/null || true",
+    "setup": "pnpm --filter @tsuki/api run setup",
+    "setup:worker": "pnpm --filter @tsuki/api run setup:worker",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
