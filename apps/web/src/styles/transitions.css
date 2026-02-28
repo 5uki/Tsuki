@@ -1,25 +1,26 @@
 /**
  * Swup 页面过渡动画
  *
- * 仅作用于 .main-content（中间内容区），
- * 侧边栏和 Footer 等不变区域保持静止。
+ * animationClass: 'transition-' 映射为 animationSelector: '[class*="transition-"]'，
+ * 它仅决定 Swup 监听哪些元素的动画完成事件。
+ * Swup 在 <html> 上添加的类名始终为 is-changing / is-animating / is-leaving / is-rendering。
  */
 
-/* ── 进入：从下方淡入滑入 ── */
+/* ── 基础过渡 ── */
 .transition-main {
   transition:
     opacity 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
     transform 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* ── 离开：更快的缓动 ── */
+/* ── 离开阶段：更快的缓动 ── */
 html.is-leaving .transition-main {
   transition:
     opacity 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19),
     transform 120ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-/* ── 动画目标状态 ── */
+/* ── 动画目标状态（离开 + 进入前） ── */
 html.is-animating .transition-main {
   opacity: 0;
   transform: translateY(1rem);

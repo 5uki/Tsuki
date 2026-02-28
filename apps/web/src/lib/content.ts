@@ -24,7 +24,7 @@ import type {
 
 export async function getPostEntries(): Promise<PostEntry[]> {
   const entries = await getCollection('posts')
-  return entries.map((entry) => ({
+  return entries.map((entry: { id: string; data: PostEntry['frontmatter']; body?: string }) => ({
     slug: entry.id,
     frontmatter: entry.data,
     words: countWords(entry.body ?? ''),
@@ -46,7 +46,7 @@ export async function getPostBySlug(slug: string): Promise<PostContent | null> {
 
 export async function getMomentEntries(): Promise<MomentEntry[]> {
   const entries = await getCollection('moments')
-  return entries.map((entry) => ({
+  return entries.map((entry: { id: string; data: MomentEntry['frontmatter']; body?: string }) => ({
     id: entry.id,
     frontmatter: entry.data,
     body: entry.body,
@@ -113,10 +113,7 @@ export async function getSidebarData(): Promise<SidebarData> {
   }
 }
 
-export async function getCalendarData(
-  year: number,
-  month: number
-): Promise<CalendarData> {
+export async function getCalendarData(year: number, month: number): Promise<CalendarData> {
   const posts = await getPostEntries()
   const articles = posts
     .filter((post) => {
