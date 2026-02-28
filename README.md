@@ -2,8 +2,19 @@
 
 [中文文档（README.zh-CN.md）](./README.zh-CN.md)
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki)
+
 Tsuki is a Cloudflare-first blogging template built with Astro + Workers.
 It is designed for real deployment, not demo-only usage.
+
+## One-Click Deploy
+
+1. Click the **Deploy to Cloudflare** button above
+2. It will fork the repo and trigger the GitHub Actions deploy workflow
+3. Set `CF_API_TOKEN` and `CF_ACCOUNT_ID` as repository secrets
+4. The workflow creates a D1 database, runs migrations, and deploys Worker + Pages
+5. Visit your Worker URL at `/setup` to complete first-time configuration (GitHub OAuth, Admin ID)
+6. Done! Your blog is live
 
 ## What this template includes
 

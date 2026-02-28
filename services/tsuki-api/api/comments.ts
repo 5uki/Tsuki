@@ -122,7 +122,7 @@ export function commentsRoutes() {
       currentUser,
       ip,
       ua,
-      hashSalt: c.env.TSUKI_CSRF_SALT,
+      hashSalt: c.get('resolvedConfig').TSUKI_CSRF_SALT,
       commentsPort: ports.comments,
       notificationsPort: ports.notifications,
     })

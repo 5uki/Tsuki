@@ -2,7 +2,18 @@
 
 [English README](./README.md)
 
-Tsuki 是一个面向 Cloudflare 部署的博客模板（Astro + Workers），目标是“可直接上线”，而不是仅用于演示。
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/5uki/Tsuki)
+
+Tsuki 是一个面向 Cloudflare 部署的博客模板（Astro + Workers），目标是”可直接上线”，而不是仅用于演示。
+
+## 一键部署
+
+1. 点击上方 **Deploy to Cloudflare** 按钮
+2. 自动 fork 仓库并触发 GitHub Actions 部署工作流
+3. 在 fork 后的仓库 Settings > Secrets 中配置 `CF_API_TOKEN` 和 `CF_ACCOUNT_ID`
+4. 工作流会自动创建 D1 数据库、执行迁移、部署 Worker 和 Pages
+5. 访问 Worker URL 的 `/setup` 页面完成首次设置（GitHub OAuth、管理员 ID）
+6. 大功告成！博客已上线
 
 ## 模板包含内容
 

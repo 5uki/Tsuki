@@ -12,10 +12,14 @@ import { commentsRoutes, adminCommentsRoutes } from './comments'
 import { settingsRoutes } from './settings'
 import { adminContentRoutes } from './admin-content'
 import { notificationsRoutes } from './notifications'
+import { setupRoutes } from './setup'
 import { requireAdmin } from './middleware/guards'
 
 export function createRoutes() {
   const api = new Hono<{ Bindings: Env; Variables: AppContext }>()
+  // Setup 路由（不需要 admin guard，由 setup guard 中间件控制访问）
+  api.route('/setup', setupRoutes())
+
   // 挂载各模块路由
   api.route('/auth', authRoutes())
   api.route('/comments', commentsRoutes())
