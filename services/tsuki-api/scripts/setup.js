@@ -118,7 +118,7 @@ try {
 } catch (err) {
   console.error('❌ 迁移失败')
   // 恢复 wrangler.toml（如果我们改了它）
-  writeFileSync(WRANGLER_TOML, modifiedToml, 'utf-8')
+  writeFileSync(WRANGLER_TOML, originalToml, 'utf-8')
   process.exit(1)
 }
 console.log('')
