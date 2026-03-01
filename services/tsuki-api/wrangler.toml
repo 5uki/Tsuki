@@ -1,38 +1,13 @@
-name = "tsuki-api"
+name = "tsuki"
 main = "entry/index.ts"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# ── 公开配置（可提交到 Git）──────────────────
+# ── 公开配置 ─────────────────────────────────
+# 所有配置项均可通过部署后访问 /setup 页面填写
+# 高级用户也可通过 wrangler secret put 或 .dev.vars 设置（优先级更高）
 [vars]
-# 站点前端地址（用于 CORS Origin 校验，多个用逗号分隔）
-# 也可在首次 /setup 中配置
-TSUKI_PUBLIC_ORIGIN = "http://localhost:4321,http://localhost:5174"
-
-# 管理员的 GitHub 用户 ID（逗号分隔）
-# 也可在首次 /setup 中配置
-TSUKI_ADMIN_GITHUB_IDS = ""
-
-# 会话有效期（毫秒），默认 14 天
 TSUKI_SESSION_TTL_MS = "1209600000"
-
-# GitHub 仓库信息（Admin 内容管理用）
-# 一键部署时由 GitHub Actions 自动注入
-GITHUB_REPO_OWNER = ""
-GITHUB_REPO_NAME = ""
-
-# ── 秘密配置 ────────────────────────────────
-# 以下配置可以通过两种方式设置：
-#
-# 方式一（推荐新手）：部署后访问 /setup 页面填写
-#   - GITHUB_OAUTH_CLIENT_ID
-#   - GITHUB_OAUTH_CLIENT_SECRET
-#   - TSUKI_ADMIN_GITHUB_IDS
-#   - TSUKI_SESSION_SIGNING_SECRET（自动生成）
-#   - TSUKI_CSRF_SALT（自动生成）
-#
-# 方式二（高级用户）：写入 .dev.vars 或 wrangler secret put
-#   env var 优先级高于 D1 存储的值
 
 # ── D1 数据库绑定 ────────────────────────────
 [[d1_databases]]
