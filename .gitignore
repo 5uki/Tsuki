@@ -24,8 +24,7 @@
 !.prettierrc
 !eslint.config.mjs
 !package.json
-!pnpm-lock.yaml
-!pnpm-workspace.yaml
+!bun.lock
 !tsconfig.base.json
 !tsconfig.json
 !tsuki.config.json
@@ -35,8 +34,6 @@
 # ── CI / Tooling ───────────────────────────
 !.github/
 !.github/**
-!.husky/
-!.husky/**
 
 # Generated image optimization artifacts
 contents/.tsuki-avif/

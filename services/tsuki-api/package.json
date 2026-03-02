@@ -2,10 +2,10 @@
   "name": "@tsuki/api",
   "version": "0.0.1",
   "type": "module",
-  "packageManager": "pnpm@9.15.4",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "npm run db:migrate && wrangler deploy",
+    "db:migrate": "wrangler d1 migrations apply DB --remote",
     "setup": "node scripts/setup.js",
     "setup:worker": "node scripts/setup.js --worker-only",
     "lint": "eslint . --ext .ts --max-warnings 0",

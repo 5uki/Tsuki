@@ -13,8 +13,8 @@
  * 7. 输出 /setup URL
  *
  * 使用方式：
- *   pnpm run setup          # 完整部署（Worker + Pages）
- *   pnpm run setup:worker   # 只部署 Worker
+ *   bun run setup          # 完整部署（Worker + Pages）
+ *   bun run setup:worker   # 只部署 Worker
  */
 
 import { execSync } from 'child_process'
@@ -52,11 +52,11 @@ console.log('')
 // Step 1: 检查 wrangler 登录状态
 log('🔑', 'Step 1: 检查 Cloudflare 认证...')
 try {
-  run('pnpm exec wrangler whoami')
+  run('bunx wrangler whoami')
   log('✅', '已登录 Cloudflare')
 } catch {
   log('⚠️ ', '未登录 Cloudflare，正在打开登录...')
-  runInherit('pnpm exec wrangler login')
+  runInherit('bunx wrangler login')
 }
 console.log('')
 
@@ -65,7 +65,7 @@ log('🗄️', 'Step 2: 设置 D1 数据库...')
 let dbId = ''
 
 try {
-  const listOutput = run('pnpm exec wrangler d1 list --json 2>/dev/null')
+  const listOutput = run('bunx wrangler d1 list --json 2>/dev/null')
   const databases = JSON.parse(listOutput)
   const existing = databases.find((db) => db.name === 'tsuki_db')
   if (existing) {
@@ -78,7 +78,7 @@ try {
 
 if (!dbId) {
   log('📦', '创建新数据库 tsuki_db...')
-  const createOutput = run('pnpm exec wrangler d1 create tsuki_db 2>&1')
+  const createOutput = run('bunx wrangler d1 create tsuki_db 2>&1')
   const match = createOutput.match(/database_id\s*=\s*"([^"]+)"/)
   if (match) {
     dbId = match[1]
@@ -113,7 +113,7 @@ console.log('')
 // Step 4: 执行 D1 迁移
 log('🔄', 'Step 4: 执行数据库迁移...')
 try {
-  runInherit('pnpm exec wrangler d1 migrations apply tsuki_db --remote')
+  runInherit('bunx wrangler d1 migrations apply tsuki_db --remote')
   log('✅', '迁移完成')
 } catch (err) {
   console.error('❌ 迁移失败')
@@ -154,7 +154,7 @@ try {
   if (repoOwner) varArgs.push(`--var GITHUB_REPO_OWNER:${repoOwner}`)
   if (repoName) varArgs.push(`--var GITHUB_REPO_NAME:${repoName}`)
 
-  const deployCmd = `pnpm exec wrangler deploy ${varArgs.join(' ')}`
+  const deployCmd = `bunx wrangler deploy ${varArgs.join(' ')}`
   const deployOutput = run(deployCmd)
   console.log(deployOutput)
 
@@ -175,12 +175,12 @@ try {
     const buildEnv = workerUrl
       ? { ...process.env, PUBLIC_TSUKI_API_BASE: `${workerUrl}/v1` }
       : process.env
-    execSync('pnpm build', { stdio: 'inherit', cwd: ROOT_DIR, env: buildEnv })
+    execSync('bun run build', { stdio: 'inherit', cwd: ROOT_DIR, env: buildEnv })
     log('✅', '构建完成')
     console.log('')
 
     log('📤', 'Step 8: 部署 Pages...')
-    execSync('pnpm exec wrangler pages deploy dist --project-name=tsuki', {
+    execSync('bunx wrangler pages deploy dist --project-name=tsuki', {
       stdio: 'inherit',
       cwd: ROOT_DIR,
     })

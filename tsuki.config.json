@@ -4,7 +4,7 @@
     "url": "https://example.com",
     "description": "在这里记录你的思考与创作。",
     "defaultTheme": "mauve",
-    "faviconHref": "./contents/favicon.svg",
+    "faviconHref": "./contents/favicon.png",
     "locale": "zh"
   },
   "hero": {
@@ -24,7 +24,7 @@
     { "label": "友链", "href": "/friends" }
   ],
   "profile": {
-    "avatar": "./contents/avatar.webp",
+    "avatar": "./contents/avatar.png",
     "avatarLink": "/about",
     "name": "Suki",
     "bio": "一句简短的自我介绍。",
@@ -32,7 +32,7 @@
       {
         "name": "GitHub",
         "icon": "fa6-brands:github",
-        "url": "https://github.com/yourname"
+        "url": "https://github.com/5uki"
       }
     ]
   },

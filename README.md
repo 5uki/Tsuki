@@ -10,8 +10,8 @@ It is designed for real deployment, not demo-only usage.
 ## One-Click Deploy
 
 ```bash
-pnpm install
-pnpm run setup
+bun install
+bun run setup
 ```
 
 This single command will:
@@ -38,19 +38,19 @@ Then visit your Worker URL at `/setup` to configure GitHub OAuth and admin setti
 ### 1) Install dependencies
 
 ```bash
-pnpm install
+bun install
 ```
 
 ### 2) Run development servers
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 ### 3) Build
 
 ```bash
-pnpm build
+bun run build
 ```
 
 ## Cloudflare deployment overview
