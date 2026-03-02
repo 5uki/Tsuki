@@ -7,6 +7,16 @@
   /* ── 字体 ── */
   --font-family-fallback: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
+  /* ── 字重对比 ── */
+  --tsuki-weight-display: 700;
+  --tsuki-weight-body: 400;
+  --tsuki-weight-meta: 500;
+
+  /* ── 字距 ── */
+  --tsuki-tracking-tight: -0.02em;
+  --tsuki-tracking-normal: 0;
+  --tsuki-tracking-wide: 0.04em;
+
   /* ── 行高 ── */
   --tsuki-line-height-base: 1.7;
   --tsuki-line-height-prose: 1.8;
@@ -57,6 +67,8 @@
   --tsuki-motion-ease-out: ease-out;
   --tsuki-motion-card: 130ms;
   --tsuki-motion-card-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tsuki-motion-enter: 0.4s;
+  --tsuki-motion-enter-stagger: 0.06s;
 
   /* ── 缩放 ── */
   --tsuki-scale-avatar-hover: 1.02;
@@ -78,6 +90,21 @@
   --tsuki-profile-avatar-overlay: rgba(0, 0, 0, 0.55);
   --tsuki-profile-avatar-overlay-icon: var(--tsuki-color-on-primary);
   --tsuki-profile-avatar-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+  /* ── 玻璃材质分层 ── */
+  --tsuki-glass-bg: rgba(255, 255, 255, 0.65);
+  --tsuki-glass-bg-heavy: rgba(255, 255, 255, 0.8);
+  --tsuki-glass-border: rgba(255, 255, 255, 0.5);
+  --tsuki-glass-border-subtle: rgba(255, 255, 255, 0.35);
+  --tsuki-blur-subtle: 12px;
+  --tsuki-blur-medium: 20px;
+  --tsuki-blur-heavy: 40px;
+
+  /* ── 卡片光效 ── */
+  --tsuki-glow-card: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --tsuki-glow-card-hover: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 16px rgba(0, 0, 0, 0.06);
+  --tsuki-reveal-size: 600px;
+  --tsuki-reveal-opacity: 0.06;
 
   /* ── 布局 ── */
   --tsuki-content-width: 48rem;
@@ -108,11 +135,11 @@
   --tsuki-sidebar-body-text-size-desktop: 0.9rem;
 
   /* Sidebar 派生色 */
-  --tsuki-sidebar-card-bg: color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%);
-  --tsuki-sidebar-card-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 80%, transparent);
+  --tsuki-sidebar-card-bg: var(--tsuki-glass-bg);
+  --tsuki-sidebar-card-border: var(--tsuki-glass-border);
   --tsuki-sidebar-card-border-hover: var(--tsuki-theme-accent);
-  --tsuki-sidebar-card-shadow: 0 1px 3px color-mix(in srgb, var(--tsuki-theme-accent) 12%, transparent);
-  --tsuki-sidebar-card-shadow-hover: var(--tsuki-shadow-theme-preview-hover);
+  --tsuki-sidebar-card-shadow: var(--tsuki-glow-card);
+  --tsuki-sidebar-card-shadow-hover: var(--tsuki-glow-card-hover);
   --tsuki-sidebar-card-hover-translate: -0.125rem;
 
   /* Link Icon */
@@ -198,11 +225,11 @@
     var(--tsuki-header-frame-top-overflow)
   );
   --tsuki-header-dropdown-bg: #ffffff;
-  --tsuki-header-frame-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%) 84%, transparent);
-  --tsuki-header-frame-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 72%, transparent);
+  --tsuki-header-frame-bg: var(--tsuki-glass-bg-heavy);
+  --tsuki-header-frame-border: var(--tsuki-glass-border);
   --tsuki-header-frame-shadow: var(--tsuki-shadow-header);
   --tsuki-header-track-border: color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff);
-  --tsuki-header-pill-bg: color-mix(in srgb, color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%) 88%, transparent);
+  --tsuki-header-pill-bg: var(--tsuki-glass-bg-heavy);
   --tsuki-header-action-border: color-mix(in srgb, color-mix(in srgb, var(--tsuki-theme-secondary) 64%, #ffffff) 60%, transparent);
   --tsuki-header-action-hover-bg: color-mix(in srgb, #ffffff 80%, var(--tsuki-theme-secondary) 20%);
   --tsuki-header-action-hover-border: var(--tsuki-theme-accent);

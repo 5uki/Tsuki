@@ -216,6 +216,31 @@ const VALID_THEMES = ['mauve']
       // 首次加载和每次 swup 导航后触发
       document.addEventListener('astro:page-load', updateBannerHeight)
     </script>
+    <script>
+      // Reveal highlight — 鼠标跟随光晕效果
+      function initRevealHighlight() {
+        const selector = '.post-card-wrapper, .tsuki-sidebar-card'
+        document.addEventListener('mousemove', (e) => {
+          const cards = document.querySelectorAll<HTMLElement>(selector)
+          cards.forEach((card) => {
+            const rect = card.getBoundingClientRect()
+            // 只处理视口内且鼠标附近的卡片
+            if (
+              e.clientY > rect.top - 100 &&
+              e.clientY < rect.bottom + 100 &&
+              e.clientX > rect.left - 100 &&
+              e.clientX < rect.right + 100
+            ) {
+              card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+              card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
+            }
+          })
+        }, { passive: true })
+      }
+
+      // 只需初始化一次（事件绑定在 document 上，SPA 导航后自动生效）
+      initRevealHighlight()
+    </script>
   </head>
   <body style={bodyStyle} data-is-home={isHome ? '' : undefined}>
     <slot />

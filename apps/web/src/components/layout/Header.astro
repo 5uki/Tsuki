@@ -51,7 +51,7 @@ const notifI18n = {
       <div class="header-pill actions">
         <div class="mobile-left">
           <a href="/" class="logo mobile-logo">
-            <img src="/favicon.svg" alt="" class="logo-favicon" width="20" height="20" />
+            <img src={faviconHref} alt="" class="logo-favicon" width="20" height="20" />
             <span class="logo-text">{siteTitle}</span>
           </a>
         </div>
@@ -738,6 +738,8 @@ const notifI18n = {
 
   .header.scrolled .header-track {
     background: var(--tsuki-header-frame-bg);
+    -webkit-backdrop-filter: blur(var(--tsuki-blur-heavy));
+    backdrop-filter: blur(var(--tsuki-blur-heavy));
     border-color: var(--tsuki-header-frame-border);
     box-shadow: var(--tsuki-header-frame-shadow);
   }

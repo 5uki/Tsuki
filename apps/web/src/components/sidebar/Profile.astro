@@ -108,7 +108,7 @@ const resolveIcon = (icon: string): ResolvedIcon => {
               href={link.url}
               target={isExternalLink(link.url) ? '_blank' : undefined}
               rel={isExternalLink(link.url) ? 'noopener noreferrer' : undefined}
-              class="link-icon-btn"
+              class="tsuki-icon-btn link-icon-btn"
               aria-label={link.name}
             >
               {icon.type === 'iconify' ? (
@@ -273,24 +273,8 @@ const resolveIcon = (icon: string): ResolvedIcon => {
     gap: var(--tsuki-space-sm);
   }
 
-  .link-icon-btn {
-    display: flex;
-    height: var(--tsuki-icon-button-size);
-    width: var(--tsuki-icon-button-size);
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--tsuki-radius-md);
-    background: var(--tsuki-link-icon-bg);
-    color: var(--tsuki-fg);
-    box-shadow: var(--tsuki-shadow-icon);
-    text-decoration: none;
-    transition:
-      background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
-  }
   .link-icon-btn:hover {
-    transform: translateY(-2px);
-    background: var(--tsuki-link-icon-bg-hover);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
   }
 
   .link-icon-img {

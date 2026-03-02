@@ -28,7 +28,7 @@ const hasMore = items.length > visibleCount
       items.map((item, i) => (
         <a
           href={`/archives?${queryKey}=${toSlug(item.name)}`}
-          class:list={['sidebar-list-item', { 'is-hidden': hasMore && i >= visibleCount }]}
+          class:list={['tsuki-pill-btn sidebar-list-item', { 'is-hidden': hasMore && i >= visibleCount }]}
         >
           <span class="item-name">{item.name}</span>
           <span class="item-count">{item.count}</span>
@@ -79,22 +79,8 @@ const hasMore = items.length > visibleCount
 
   .sidebar-list-item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    border-radius: var(--tsuki-radius-md);
-    border: 1px solid var(--tsuki-surface-border);
-    background: var(--tsuki-surface-muted-soft);
     padding: var(--tsuki-space-sm) var(--tsuki-space-md);
-    color: var(--tsuki-fg);
-    text-decoration: none;
-    transition: background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-                border-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-                transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
-  }
-  .sidebar-list-item:hover {
-    transform: translateY(-2px);
-    border-color: var(--tsuki-theme-accent);
-    background: var(--tsuki-surface-muted-strong);
   }
 
   .is-hidden {

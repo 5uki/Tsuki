@@ -7,9 +7,10 @@ import { toOptimizedImageUrl } from '@/lib/utils/image-url'
 interface Props {
   post: PostCardItem
   class?: string
+  style?: string
 }
 
-const { post, class: className } = Astro.props
+const { post, class: className, style } = Astro.props
 const postHref = `/posts/${post.slug}`
 const optimizedCover = toOptimizedImageUrl(post.cover)
 const hasCover = !!optimizedCover
@@ -25,6 +26,7 @@ const hasCover = !!optimizedCover
     },
     className,
   ]}
+  style={style}
   data-tags={post.tags.map((t) => toSlug(t)).join(',')}
   data-category={post.category ? toSlug(post.category) : ''}
   data-series={post.series ? toSlug(post.series) : ''}
@@ -132,16 +134,38 @@ const hasCover = !!optimizedCover
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
+    -webkit-backdrop-filter: blur(var(--tsuki-blur-medium));
+    backdrop-filter: blur(var(--tsuki-blur-medium));
     box-shadow: var(--tsuki-sidebar-card-shadow);
+    animation: tsuki-enter var(--tsuki-motion-enter) var(--tsuki-motion-card-ease) both;
+    animation-delay: calc(var(--enter-index, 0) * var(--tsuki-motion-enter-stagger));
     transition:
-      transform var(--tsuki-motion-card) var(--tsuki-motion-card-ease),
       box-shadow var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
-      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out);
+      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
+      filter var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+  }
+  /* Reveal highlight — 鼠标跟随光晕 */
+  .post-card-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      var(--tsuki-reveal-size) circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      color-mix(in srgb, var(--tsuki-theme-accent) var(--tsuki-reveal-opacity), transparent),
+      transparent 40%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  .post-card-wrapper:hover::after {
+    opacity: 1;
   }
   .post-card-wrapper:hover {
-    transform: translateY(var(--tsuki-sidebar-card-hover-translate));
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
     border-color: var(--tsuki-sidebar-card-border-hover);
+    filter: brightness(1.02);
   }
   .post-card-wrapper.is-pinned,
   .post-card-wrapper.is-pinned:hover {
@@ -183,7 +207,8 @@ const hasCover = !!optimizedCover
     align-items: center;
     margin-bottom: var(--tsuki-space-md);
     font-size: var(--tsuki-text-post-title);
-    font-weight: 700;
+    font-weight: var(--tsuki-weight-display);
+    letter-spacing: var(--tsuki-tracking-tight);
     line-height: var(--tsuki-line-height-heading);
     color: var(--tsuki-post-title-fg);
     text-decoration: none;
@@ -363,5 +388,15 @@ const hasCover = !!optimizedCover
   }
   :global(.grid-mode) .has-cover .post-card-title::before {
     top: var(--tsuki-space-xl);
+  }
+
+  /* ── 减弱动画偏好 ── */
+  @media (prefers-reduced-motion: reduce) {
+    .post-card-wrapper {
+      animation: none;
+    }
+    .post-card-wrapper::after {
+      display: none;
+    }
   }
 </style>

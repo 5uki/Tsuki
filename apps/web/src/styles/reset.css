@@ -33,12 +33,41 @@ body {
   margin: 0;
   padding: 0;
   color: var(--tsuki-fg);
-  background: var(--tsuki-theme-secondary);
+  background:
+    radial-gradient(ellipse at 20% 30%, color-mix(in srgb, var(--tsuki-theme-secondary) 50%, transparent) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, color-mix(in srgb, var(--tsuki-theme-accent) 6%, transparent) 0%, transparent 50%),
+    var(--tsuki-theme-secondary);
+  background-size: 150% 150%;
+  animation: tsuki-bg-drift 30s ease-in-out infinite alternate;
   position: relative;
   isolation: isolate;
   transition:
     color var(--tsuki-motion-fast);
   min-height: 100vh;
+}
+
+/* ── 背景渐变微漂移 ── */
+@keyframes tsuki-bg-drift {
+  from { background-position: 0% 0%; }
+  to   { background-position: 100% 100%; }
+}
+
+/* ── 选中文字样式 ── */
+::selection {
+  background: color-mix(in srgb, var(--tsuki-theme-accent) 20%, transparent);
+  color: var(--tsuki-fg);
+}
+
+/* ── 卡片进场动画 ── */
+@keyframes tsuki-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 a {

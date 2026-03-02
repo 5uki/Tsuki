@@ -222,13 +222,13 @@ const articleDays = new Set(articles.map((a) => a.day))
   }
 
   .calendar-title {
-    font-size: var(--tsuki-sidebar-body-text-size);
+    font-size: var(--tsuki-text-base);
     font-weight: 600;
     color: var(--tsuki-fg);
   }
   @media (min-width: 640px) {
     .calendar-title {
-      font-size: var(--tsuki-sidebar-body-text-size-desktop);
+      font-size: var(--tsuki-text-base);
     }
   }
 
@@ -240,7 +240,7 @@ const articleDays = new Set(articles.map((a) => a.day))
   }
 
   .calendar-weekdays span {
-    font-size: var(--tsuki-text-xs);
+    font-size: var(--tsuki-text-sm);
     font-weight: 600;
     color: var(--tsuki-muted-fg);
     padding: var(--tsuki-space-3xs) 0;
@@ -257,7 +257,7 @@ const articleDays = new Set(articles.map((a) => a.day))
   .calendar-articles {
     display: flex;
     flex-direction: column;
-    gap: var(--tsuki-space-xs);
+    gap: var(--tsuki-space-2xs);
     border-top: 1px solid var(--tsuki-surface-border);
     padding-top: var(--tsuki-space-sm);
     transition: opacity 120ms ease;
@@ -290,7 +290,7 @@ const articleDays = new Set(articles.map((a) => a.day))
   }
 
   .calendar-card .calendar-day.has-article {
-    font-size: var(--tsuki-text-base);
+    font-size: var(--tsuki-text-sm);
     font-weight: 700;
   }
 
@@ -324,18 +324,19 @@ const articleDays = new Set(articles.map((a) => a.day))
   }
   .calendar-card .calendar-article-item:hover {
     background: var(--tsuki-surface-accent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
   }
 
   .calendar-card .article-day {
     flex-shrink: 0;
-    font-size: var(--tsuki-text-xs);
+    font-size: var(--tsuki-text-sm);
     font-weight: 400;
     color: var(--tsuki-muted-fg);
     font-variant-numeric: tabular-nums;
   }
 
   .calendar-card .article-title {
-    font-size: var(--tsuki-text-xs);
+    font-size: var(--tsuki-text-sm);
     font-weight: 500;
     color: var(--tsuki-fg);
     white-space: nowrap;
@@ -344,12 +345,12 @@ const articleDays = new Set(articles.map((a) => a.day))
   }
   @media (min-width: 640px) {
     .calendar-card .article-title {
-      font-size: var(--tsuki-text-2xs);
+      font-size: var(--tsuki-text-sm);
     }
   }
 
   .calendar-card .empty-text {
-    font-size: var(--tsuki-sidebar-body-text-size);
+    font-size: var(--tsuki-text-sm);
     font-weight: 400;
     color: var(--tsuki-muted-fg);
   }

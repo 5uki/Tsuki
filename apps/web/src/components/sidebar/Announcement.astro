@@ -16,7 +16,7 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
           href={announcement.link.url}
           target={isExternalLink(announcement.link.url) ? '_blank' : undefined}
           rel={isExternalLink(announcement.link.url) ? 'noopener noreferrer' : undefined}
-          class="announcement-link"
+          class="tsuki-pill-btn announcement-link"
         >
           {announcement.link.text || t('sidebar.viewDetails')}
         </a>
@@ -46,27 +46,6 @@ const isExternalLink = (url?: string) => !!url && /^https?:\/\//i.test(url)
 
   .announcement-link {
     margin-top: auto;
-    display: inline-flex;
-    align-items: center;
     align-self: flex-end;
-    border-radius: var(--tsuki-radius-md);
-    background: var(--tsuki-theme-secondary);
-    padding: var(--tsuki-space-xs) var(--tsuki-space-lg);
-    font-size: var(--tsuki-sidebar-body-text-size);
-    font-weight: 500;
-    color: var(--tsuki-fg);
-    text-decoration: none;
-    transition:
-      opacity var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
-  }
-  .announcement-link:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-  }
-  @media (min-width: 640px) {
-    .announcement-link {
-      font-size: var(--tsuki-sidebar-body-text-size-desktop);
-    }
   }
 </style>

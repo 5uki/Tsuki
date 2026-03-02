@@ -10,25 +10,51 @@
 @layer components {
   /* ── Sidebar Card ── */
   .tsuki-sidebar-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
+    -webkit-backdrop-filter: blur(var(--tsuki-blur-medium));
+    backdrop-filter: blur(var(--tsuki-blur-medium));
     padding: var(--tsuki-sidebar-card-title-top-padding) var(--tsuki-sidebar-card-padding-inline)
       var(--tsuki-sidebar-card-padding);
     box-shadow: var(--tsuki-sidebar-card-shadow);
+    overflow: hidden;
     transition:
-      transform var(--tsuki-motion-card) var(--tsuki-motion-card-ease),
       box-shadow var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
-      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out);
+      border-color var(--tsuki-motion-card) var(--tsuki-motion-ease-out),
+      filter var(--tsuki-motion-medium) var(--tsuki-motion-ease-out);
+  }
+  /* Reveal highlight — 鼠标跟随光晕 */
+  .tsuki-sidebar-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      var(--tsuki-reveal-size) circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      color-mix(in srgb, var(--tsuki-theme-accent) var(--tsuki-reveal-opacity), transparent),
+      transparent 40%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .tsuki-sidebar-card:hover::before {
+    opacity: 1;
+  }
+  .tsuki-sidebar-card > * {
+    position: relative;
+    z-index: 1;
   }
   .tsuki-sidebar-card:where(:hover, :focus-visible, :active) {
     box-shadow: var(--tsuki-sidebar-card-shadow-hover);
     border-color: var(--tsuki-sidebar-card-border-hover);
   }
   .tsuki-sidebar-card:hover {
-    transform: translateY(var(--tsuki-sidebar-card-hover-translate));
+    filter: brightness(1.02);
   }
   @media (min-width: 640px) {
     .tsuki-sidebar-card {
@@ -45,7 +71,8 @@
     align-items: center;
     gap: var(--tsuki-space-sm);
     font-size: var(--tsuki-sidebar-section-title-size);
-    font-weight: 600;
+    font-weight: var(--tsuki-weight-display);
+    letter-spacing: var(--tsuki-tracking-tight);
     color: var(--tsuki-fg);
   }
   .tsuki-section-title::before {
@@ -68,15 +95,16 @@
     background: var(--tsuki-surface-accent);
     padding: var(--tsuki-space-xs) var(--tsuki-space-sm);
     font-size: var(--tsuki-sidebar-body-text-size);
-    font-weight: 500;
+    font-weight: var(--tsuki-weight-meta);
     color: var(--tsuki-theme-accent);
     text-decoration: none;
     transition:
       background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
-      transform var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+      box-shadow var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
   }
   .tsuki-tag-pill:hover {
-    transform: translateY(-2px);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
+    background: color-mix(in srgb, var(--tsuki-theme-accent) 15%, white);
   }
   @media (min-width: 640px) {
     .tsuki-tag-pill {
@@ -115,7 +143,8 @@
   .tsuki-meta-text {
     white-space: nowrap;
     font-size: var(--tsuki-text-meta);
-    font-weight: 400;
+    font-weight: var(--tsuki-weight-meta);
+    letter-spacing: var(--tsuki-tracking-wide);
     line-height: var(--tsuki-line-height-meta);
     color: var(--tsuki-muted-fg);
   }
@@ -143,6 +172,8 @@
     border-radius: var(--tsuki-sidebar-card-radius);
     border: 1px solid var(--tsuki-sidebar-card-border);
     background: var(--tsuki-sidebar-card-bg);
+    -webkit-backdrop-filter: blur(var(--tsuki-blur-subtle));
+    backdrop-filter: blur(var(--tsuki-blur-subtle));
     padding: var(--tsuki-space-lg) var(--tsuki-space-2xl) var(--tsuki-space-2xl);
     box-shadow: var(--tsuki-sidebar-card-shadow);
   }
@@ -195,4 +226,59 @@
     font-size: var(--tsuki-sidebar-body-text-size);
     color: var(--tsuki-muted-fg);
   }
+}
+
+/* ── Pill Button — 移出 layer，确保优先级高于 scoped style ── */
+.tsuki-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tsuki-space-2xs);
+  padding: var(--tsuki-space-xs) var(--tsuki-space-lg);
+  border-radius: var(--tsuki-radius-md);
+  border: none;
+  background: var(--tsuki-surface-accent);
+  font-size: var(--tsuki-sidebar-body-text-size);
+  font-weight: var(--tsuki-weight-meta);
+  color: var(--tsuki-theme-accent);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+    box-shadow var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+}
+.tsuki-pill-btn:hover,
+.tsuki-pill-btn.is-active {
+  background: color-mix(in srgb, var(--tsuki-theme-accent) 18%, white);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
+}
+.tsuki-pill-btn.is-active {
+  font-weight: 600;
+}
+@media (min-width: 640px) {
+  .tsuki-pill-btn {
+    font-size: var(--tsuki-sidebar-body-text-size-desktop);
+  }
+}
+
+/* ── Icon Button — 移出 layer ── */
+.tsuki-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tsuki-icon-button-size);
+  height: var(--tsuki-icon-button-size);
+  border-radius: var(--tsuki-radius-md);
+  border: none;
+  background: var(--tsuki-surface-accent);
+  color: var(--tsuki-theme-accent);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--tsuki-motion-fast) var(--tsuki-motion-ease-out),
+    box-shadow var(--tsuki-motion-fast) var(--tsuki-motion-ease-out);
+}
+.tsuki-icon-btn:hover,
+.tsuki-icon-btn.is-active {
+  background: color-mix(in srgb, var(--tsuki-theme-accent) 18%, white);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tsuki-theme-accent) 15%, transparent);
 }

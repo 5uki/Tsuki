@@ -75,12 +75,14 @@ const hasMore = tags.length > SHOW_MORE_THRESHOLD
       list.classList.add('tag-list-collapsed')
 
       let expanded = false
+      const expandedHeight = list.scrollHeight
+
       btn.addEventListener('click', () => {
         expanded = !expanded
         btn.setAttribute('aria-expanded', String(expanded))
         btn.textContent = expanded ? '收起' : '··· 更多'
         if (expanded) {
-          list.style.maxHeight = 'none'
+          list.style.maxHeight = expandedHeight + 'px'
           list.classList.remove('tag-list-collapsed')
         } else {
           list.style.maxHeight = collapsedHeight + 'px'
@@ -99,9 +101,7 @@ const hasMore = tags.length > SHOW_MORE_THRESHOLD
     display: flex;
     flex-wrap: wrap;
     gap: var(--tsuki-space-sm);
-  }
-
-  .tag-list-collapsed {
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     overflow: hidden;
   }
 </style>
