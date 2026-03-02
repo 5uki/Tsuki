@@ -3,9 +3,9 @@
  * 重新导出共享包内容，并补充后端专用能力
  */
 
-import { createTimeDTO } from '@tsuki/shared/time'
+import { createTimeDTO } from '../shared/time'
 
-export * from '@tsuki/shared/time'
+export * from '../shared/time'
 
 /**
  * 获取当前时间（TimeDTO）

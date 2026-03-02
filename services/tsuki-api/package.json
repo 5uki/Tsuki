@@ -14,7 +14,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@tsuki/shared": "workspace:*",
     "hono": "^4.6.17"
   },
   "devDependencies": {

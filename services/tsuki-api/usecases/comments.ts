@@ -12,8 +12,8 @@ import type {
 import { AppError } from '@contracts/errors'
 import { sha256 } from '@atoms/hash'
 import { renderCommentMarkdown } from '@atoms/markdown'
-import { createTimeDTO } from '@tsuki/shared/time'
-import { EDIT_WINDOW_MS, COMMENT_MAX_DEPTH } from '@tsuki/shared/constants'
+import { createTimeDTO } from '../shared/time'
+import { EDIT_WINDOW_MS, COMMENT_MAX_DEPTH } from '../shared/constants'
 import { createNotification } from '@usecases/notifications'
 
 /** 限速常量 */

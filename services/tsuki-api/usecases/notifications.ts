@@ -4,7 +4,7 @@
 
 import type { NotificationDTO, PaginatedResponse } from '@contracts/dto'
 import type { NotificationsPort, NotificationRecord, UsersPort } from '@contracts/ports'
-import { createTimeDTO } from '@tsuki/shared/time'
+import { createTimeDTO } from '../shared/time'
 
 // ─── Helper: NotificationRecord -> NotificationDTO ───
 

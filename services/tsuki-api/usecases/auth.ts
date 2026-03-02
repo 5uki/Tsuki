@@ -6,7 +6,7 @@ import type { UserDTO } from '@contracts/dto'
 import type { SessionPort, UsersPort, GitHubOAuthPort } from '@contracts/ports'
 import { AppError } from '@contracts/errors'
 import { sha256 } from '@atoms/hash'
-import { createTimeDTO } from '@tsuki/shared/time'
+import { createTimeDTO } from '../shared/time'
 
 // ─── StartGithubOAuth ───
 

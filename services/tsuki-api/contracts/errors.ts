@@ -3,9 +3,9 @@
  * 重新导出共享包内容，并添加后端特有内容
  */
 
-export * from '@tsuki/shared/errors'
+export * from '../shared/errors'
 
-import type { ErrorCode } from '@tsuki/shared/errors'
+import type { ErrorCode } from '../shared/errors'
 
 /**
  * HTTP 状态码映射
